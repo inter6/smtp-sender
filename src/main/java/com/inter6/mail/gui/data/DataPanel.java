@@ -46,9 +46,9 @@ public class DataPanel extends JPanel implements ConfigObserver {
 		{
 			JPanel sourceSelectPanel = new JPanel(new FlowLayout());
 			{
-				this.mimeSourceButton.addActionListener(this.mimeSourceEvent);
-				this.emlSourceButton.addActionListener(this.emlSourceEvent);
-				this.dirSourceButton.addActionListener(this.dirSourceEvent);
+				this.mimeSourceButton.addActionListener(this.sourceSelectChangeEvent);
+				this.emlSourceButton.addActionListener(this.sourceSelectChangeEvent);
+				this.dirSourceButton.addActionListener(this.sourceSelectChangeEvent);
 				sourceSelectPanel.add(this.mimeSourceButton);
 				sourceSelectPanel.add(this.emlSourceButton);
 				sourceSelectPanel.add(this.dirSourceButton);
@@ -66,30 +66,20 @@ public class DataPanel extends JPanel implements ConfigObserver {
 		this.add(sourcePanel, BorderLayout.CENTER);
 	}
 
-	private final ActionListener mimeSourceEvent = new ActionListener() {
+	private final ActionListener sourceSelectChangeEvent = new ActionListener() {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			DataPanel.this.sourceInputPanel.removeAll();
-			DataPanel.this.sourceInputPanel.add(DataPanel.this.mimeSourcePanel);
-		}
-	};
-
-	private final ActionListener emlSourceEvent = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			DataPanel.this.sourceInputPanel.removeAll();
-			DataPanel.this.sourceInputPanel.add(DataPanel.this.emlSourcePanel);
-		}
-	};
-
-	private final ActionListener dirSourceEvent = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			DataPanel.this.sourceInputPanel.removeAll();
-			DataPanel.this.sourceInputPanel.add(DataPanel.this.dirSourcePanel);
+			Object sourceButton = e.getSource();
+			if (sourceButton == DataPanel.this.mimeSourceButton) {
+				DataPanel.this.sourceInputPanel.add(DataPanel.this.mimeSourcePanel);
+			} else if (sourceButton == DataPanel.this.emlSourceButton) {
+				DataPanel.this.sourceInputPanel.add(DataPanel.this.emlSourcePanel);
+			} else if (sourceButton == DataPanel.this.dirSourceButton) {
+				DataPanel.this.sourceInputPanel.add(DataPanel.this.dirSourcePanel);
+			}
+			DataPanel.this.sourceInputPanel.updateUI();
 		}
 	};
 

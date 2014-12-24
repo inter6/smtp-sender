@@ -1,6 +1,5 @@
 package com.inter6.mail.gui.setting;
 
-import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,14 +41,14 @@ public class ConfigPanel extends JPanel implements ConfigObserver {
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new FlowLayout());
-		this.add(new JLabel("Config"), BorderLayout.WEST);
-		this.add(this.getPathField(), BorderLayout.CENTER);
-		JPanel configActionPanel = new JPanel(new FlowLayout());
+		this.add(new JLabel("Config"));
+		this.add(this.getPathField());
+		JPanel actionPanel = new JPanel(new FlowLayout());
 		{
-			configActionPanel.add(this.getLoadButton());
-			configActionPanel.add(this.getSaveButton());
+			actionPanel.add(this.getLoadButton());
+			actionPanel.add(this.getSaveButton());
 		}
-		this.add(configActionPanel, BorderLayout.EAST);
+		this.add(actionPanel);
 	}
 
 	private JTextField getPathField() {

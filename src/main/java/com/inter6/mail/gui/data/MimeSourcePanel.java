@@ -1,7 +1,11 @@
 package com.inter6.mail.gui.data;
 
+import java.awt.BorderLayout;
+
 import javax.annotation.PostConstruct;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import org.springframework.stereotype.Component;
 
@@ -13,7 +17,11 @@ public class MimeSourcePanel extends JPanel implements ConfigObserver {
 
 	@PostConstruct
 	private void init() { // NOPMD
+		this.setLayout(new BorderLayout());
 
+		JTextArea mimeArea = new JTextArea();
+		JScrollPane mimeScrollPane = new JScrollPane(mimeArea);
+		this.add(mimeScrollPane, BorderLayout.CENTER);
 	}
 
 	@Override

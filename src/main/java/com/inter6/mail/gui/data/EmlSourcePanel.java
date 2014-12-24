@@ -1,7 +1,14 @@
 package com.inter6.mail.gui.data;
 
+import java.awt.BorderLayout;
+import java.io.File;
+
 import javax.annotation.PostConstruct;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.springframework.stereotype.Component;
 
@@ -13,7 +20,21 @@ public class EmlSourcePanel extends JPanel implements ConfigObserver {
 
 	@PostConstruct
 	private void init() { // NOPMD
+		this.setLayout(new BorderLayout());
 
+		JList<File> emlList = new JList<File>();
+		JScrollPane emlListScrollPane = new JScrollPane(emlList);
+		this.add(emlListScrollPane, BorderLayout.CENTER);
+
+		JPanel actionPanel = new JPanel();
+		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
+		{
+			JButton addButton = new JButton("Add");
+			JButton removeButton = new JButton("Remove");
+			actionPanel.add(addButton);
+			actionPanel.add(removeButton);
+		}
+		this.add(actionPanel, BorderLayout.EAST);
 	}
 
 	@Override
