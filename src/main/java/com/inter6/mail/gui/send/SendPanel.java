@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SendPanel extends JPanel {
-	private static final long serialVersionUID = 1398719678774376633L;
+	private static final long serialVersionUID = -1786161460680791823L;
 
 }

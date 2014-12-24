@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inter6.mail.gui.info.InfoPanel;
+import com.inter6.mail.gui.data.DataPanel;
 import com.inter6.mail.gui.send.SendPanel;
 import com.inter6.mail.gui.setting.SettingPanel;
 
@@ -19,10 +19,10 @@ public class MainFrame extends JFrame {
 	private SettingPanel settingPanel;
 
 	@Autowired
-	private SendPanel sendPanel;
+	private DataPanel dataPanel;
 
 	@Autowired
-	private InfoPanel infoPanel;
+	private SendPanel sendPanel;
 
 	public void execute() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,8 +32,10 @@ public class MainFrame extends JFrame {
 
 	private void initLayout() {
 		this.setSize(600, 800);
+
+		this.setLayout(new BorderLayout());
 		this.add(this.settingPanel, BorderLayout.NORTH);
-		this.add(this.sendPanel, BorderLayout.CENTER);
-		this.add(this.infoPanel, BorderLayout.SOUTH);
+		this.add(this.dataPanel, BorderLayout.CENTER);
+		this.add(this.sendPanel, BorderLayout.SOUTH);
 	}
 }
