@@ -1,6 +1,8 @@
 package com.inter6.mail.gui.data;
 
 import java.awt.FlowLayout;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -34,6 +36,13 @@ public class EnvelopePanel extends JPanel implements ConfigObserver {
 			toPanel.add(this.toField);
 		}
 		this.add(toPanel);
+	}
+
+	public Map<String, Object> getData() throws Throwable {
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("envelope.from", this.fromFiled.getText());
+		data.put("envelope.to", this.toField.getText());
+		return data;
 	}
 
 	@Override

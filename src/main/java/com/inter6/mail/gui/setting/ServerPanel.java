@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JCheckBox;
@@ -26,11 +28,12 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 	private final JCheckBox sslCheckBox = new JCheckBox("SSL");
 	private final JTextField idField = new JTextField(10);
 	private final JTextField passwordField = new JTextField(10);
-	private JComboBox<AuthOption> authOptionBox;
+	private final JComboBox<AuthOption> authOptionBox = new JComboBox<AuthOption>(AuthOption.allItems());
 
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new BorderLayout());
+
 		JPanel hostPanel = new JPanel(new FlowLayout());
 		{
 			hostPanel.add(new JLabel("Host"));
@@ -40,24 +43,30 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 			hostPanel.add(this.sslCheckBox);
 		}
 		this.add(hostPanel, BorderLayout.NORTH);
+
 		JPanel accountPanel = new JPanel(new FlowLayout());
 		{
 			accountPanel.add(new JLabel("ID"));
 			accountPanel.add(this.idField);
 			accountPanel.add(new JLabel("PW"));
 			accountPanel.add(this.passwordField);
-			accountPanel.add(this.getAuthComboBox());
+
+			this.authOptionBox.addActionListener(this.authChangeEvent);
+			this.authOptionBox.setSelectedIndex(0);
+			accountPanel.add(this.authOptionBox);
 		}
 		this.add(accountPanel, BorderLayout.CENTER);
 	}
 
-	private JComboBox<AuthOption> getAuthComboBox() {
-		if (this.authOptionBox == null) {
-			this.authOptionBox = new JComboBox<AuthOption>(AuthOption.allItems());
-			this.authOptionBox.addActionListener(this.authChangeEvent);
-			this.authOptionBox.setSelectedIndex(0);
-		}
-		return this.authOptionBox;
+	public Map<String, Object> getData() throws Throwable {
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("server.host", this.hostFiled.getText());
+		data.put("server.port", this.portField.getText());
+		data.put("server.ssl", this.sslCheckBox.isEnabled());
+		data.put("user.id", this.idField.getText());
+		data.put("user.password", this.passwordField.getText());
+		data.put("server.authOption", this.authOptionBox.getSelectedItem());
+		return data;
 	}
 
 	private final ActionListener authChangeEvent = new ActionListener() {

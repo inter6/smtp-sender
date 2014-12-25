@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inter6.mail.gui.advanced.AdvancedPanel;
 import com.inter6.mail.gui.data.DataPanel;
 import com.inter6.mail.gui.send.SendPanel;
 import com.inter6.mail.gui.setting.SettingPanel;
@@ -26,6 +27,9 @@ public class MainFrame extends JFrame {
 
 	@Autowired
 	private DataPanel dataPanel;
+
+	@Autowired
+	private AdvancedPanel advancedPanel;
 
 	@Autowired
 	private SendPanel sendPanel;
@@ -48,6 +52,7 @@ public class MainFrame extends JFrame {
 		this.setLayout(new BorderLayout());
 		this.add(this.settingPanel, BorderLayout.NORTH);
 		this.add(this.dataPanel, BorderLayout.CENTER);
+		this.add(this.advancedPanel, BorderLayout.EAST);
 		this.add(this.sendPanel, BorderLayout.SOUTH);
 	}
 }

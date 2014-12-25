@@ -34,37 +34,27 @@ public class ConfigPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private AppConfig appConfig;
 
-	private JTextField pathField;
-	private JButton loadButton;
-	private JButton saveButton;
+	private final JTextField pathField = new JTextField(20);
 
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new FlowLayout());
+
 		this.add(new JLabel("Config"));
-		this.add(this.getPathField());
+
+		this.pathField.setEditable(false);
+		this.add(this.pathField);
+
 		JPanel actionPanel = new JPanel(new FlowLayout());
 		{
-			actionPanel.add(this.getLoadButton());
-			actionPanel.add(this.getSaveButton());
+			JButton loadButton = new JButton("Load");
+			JButton saveButton = new JButton("Save");
+			loadButton.addActionListener(this.loadEvent);
+			saveButton.addActionListener(this.saveEvent);
+			actionPanel.add(loadButton);
+			actionPanel.add(saveButton);
 		}
 		this.add(actionPanel);
-	}
-
-	private JTextField getPathField() {
-		if (this.pathField == null) {
-			this.pathField = new JTextField(20);
-			this.pathField.setEditable(false);
-		}
-		return this.pathField;
-	}
-
-	private JButton getLoadButton() {
-		if (this.loadButton == null) {
-			this.loadButton = new JButton("Load");
-			this.loadButton.addActionListener(this.loadEvent);
-		}
-		return this.loadButton;
 	}
 
 	private final ActionListener loadEvent = new ActionListener() {
@@ -98,19 +88,11 @@ public class ConfigPanel extends JPanel implements ConfigObserver {
 		} catch (ConfigurationException e) {
 			this.appConfig.clear();
 			this.appConfig.setFile(null);
-			this.getPathField().setText("");
+			this.pathField.setText("");
 			String msg = "load config fail ! - FILE:" + configFile + " ERR:" + e.getMessage();
 			this.log.error(msg, e);
 			JOptionPane.showMessageDialog(this, msg);
 		}
-	}
-
-	private JButton getSaveButton() {
-		if (this.saveButton == null) {
-			this.saveButton = new JButton("Save");
-			this.saveButton.addActionListener(this.saveEvent);
-		}
-		return this.saveButton;
 	}
 
 	private final ActionListener saveEvent = new ActionListener() {
@@ -129,6 +111,6 @@ public class ConfigPanel extends JPanel implements ConfigObserver {
 
 	@Override
 	public void updateConfig() {
-		this.getPathField().setText(this.appConfig.getFileName());
+		this.pathField.setText(this.appConfig.getFileName());
 	}
 }
