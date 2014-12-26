@@ -1,6 +1,5 @@
-package com.inter6.mail.gui;
+package com.inter6.mail.job;
 
-import com.inter6.mail.job.Job;
 
 public interface SendJobBuilder {
 

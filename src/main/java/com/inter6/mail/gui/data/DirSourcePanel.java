@@ -18,64 +18,55 @@ import javax.swing.JScrollPane;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.SendJobBuilder;
-import com.inter6.mail.job.DirSendJob;
 import com.inter6.mail.job.Job;
+import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.send.DirSmtpSendJob;
 import com.inter6.mail.module.ModuleService;
 
 @Component
 public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
 	private static final long serialVersionUID = 3922252624456731149L;
 
-	private final DefaultListModel<File> dirListModel = new DefaultListModel<File>();
-	private final JList<File> dirList = new JList<File>(this.dirListModel);
+	private final JCheckBox recursiveButton = new JCheckBox("Recursive");
+	private final DefaultListModel dirListModel = new DefaultListModel();
+	private final JList dirList = new JList(this.dirListModel);
 
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new BorderLayout());
 
-		JPanel dirPanel = new JPanel(new BorderLayout());
+		this.add(new JLabel("Directories"), BorderLayout.NORTH);
+		this.add(new JScrollPane(this.dirList), BorderLayout.CENTER);
+
+		JPanel actionPanel = new JPanel();
+		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
 		{
-			dirPanel.add(new JLabel("Directories"), BorderLayout.NORTH);
+			JButton addButton = new JButton("Add");
+			JButton removeButton = new JButton("Remove");
+			actionPanel.add(addButton);
+			actionPanel.add(removeButton);
 
-			JScrollPane dirListScrollPane = new JScrollPane(this.dirList);
-			dirPanel.add(dirListScrollPane, BorderLayout.CENTER);
-
-			JPanel actionPanel = new JPanel();
-			actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
-			{
-				JButton addButton = new JButton("Add");
-				JButton removeButton = new JButton("Remove");
-				actionPanel.add(addButton);
-				actionPanel.add(removeButton);
-
-				JCheckBox recursiveButton = new JCheckBox("Recursive");
-				actionPanel.add(recursiveButton);
-			}
-			dirPanel.add(actionPanel, BorderLayout.EAST);
+			actionPanel.add(this.recursiveButton);
 		}
-		this.add(dirPanel, BorderLayout.NORTH);
-
-		JPanel emlPanel = new JPanel(new BorderLayout());
-		{
-			emlPanel.add(new JLabel("EMLs on Directories"), BorderLayout.NORTH);
-
-			JList<File> emlList = new JList<File>();
-			JScrollPane emlListScrollPane = new JScrollPane(emlList);
-			emlPanel.add(emlListScrollPane, BorderLayout.CENTER);
-		}
-		this.add(emlPanel, BorderLayout.CENTER);
+		this.add(actionPanel, BorderLayout.EAST);
 	}
 
 	@Override
 	public Job buildSendJob() {
-		DirSendJob dirSendJob = ModuleService.getBean(DirSendJob.class);
+		DirSmtpSendJob dirSmtpSendJob = ModuleService.getBean(DirSmtpSendJob.class);
 		List<File> files = new ArrayList<File>();
 		for (int i = 0; i < this.dirListModel.size(); i++) {
-			files.add(this.dirListModel.get(i));
+			files.add((File) this.dirListModel.get(i));
 		}
-		dirSendJob.getData().put("dirs", files);
-		return dirSendJob;
+		dirSmtpSendJob.getData().put("dirs", files);
+		dirSmtpSendJob.getData().put("recursive", this.recursiveButton.isSelected());
+		return dirSmtpSendJob;
+	}
+
+	@Override
+	public void loadConfig() {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override

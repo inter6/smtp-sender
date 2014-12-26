@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inter6.mail.gui.action.ActionPanel;
 import com.inter6.mail.gui.advanced.AdvancedPanel;
 import com.inter6.mail.gui.data.DataPanel;
-import com.inter6.mail.gui.send.SendPanel;
 import com.inter6.mail.gui.setting.SettingPanel;
 
 @Component
@@ -32,7 +32,7 @@ public class MainFrame extends JFrame {
 	private AdvancedPanel advancedPanel;
 
 	@Autowired
-	private SendPanel sendPanel;
+	private ActionPanel actionPanel;
 
 	public void execute() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,9 +41,10 @@ public class MainFrame extends JFrame {
 		} catch (Exception e) {
 			this.log.error("set look and feel fail !", e);
 		}
+
+		this.setTitle("smtp-sender by inter6.com");
 		this.setSize(600, 800);
 		this.setMinimumSize(new Dimension(500, 600));
-
 		this.initLayout();
 		this.setVisible(true);
 	}
@@ -53,6 +54,6 @@ public class MainFrame extends JFrame {
 		this.add(this.settingPanel, BorderLayout.NORTH);
 		this.add(this.dataPanel, BorderLayout.CENTER);
 		this.add(this.advancedPanel, BorderLayout.EAST);
-		this.add(this.sendPanel, BorderLayout.SOUTH);
+		this.add(this.actionPanel, BorderLayout.SOUTH);
 	}
 }

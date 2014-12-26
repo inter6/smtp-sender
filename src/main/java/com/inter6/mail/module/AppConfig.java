@@ -23,8 +23,6 @@ public class AppConfig extends PropertiesConfiguration {
 	}
 
 	public void load(File file, String encoding) throws IOException, ConfigurationException {
-		this.clear();
-
 		InputStream in = null;
 		try {
 			in = new FileInputStream(file);

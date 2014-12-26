@@ -14,10 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.job.Job;
+import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.module.AppConfig;
 
 @Component
 public class DataPanel extends JPanel implements ConfigObserver {
 	private static final long serialVersionUID = 1398719678774376633L;
+
+	@Autowired
+	private AppConfig appConfig;
 
 	@Autowired
 	private EnvelopePanel envelopePanel;
@@ -35,6 +41,7 @@ public class DataPanel extends JPanel implements ConfigObserver {
 	private final JRadioButton emlSourceButton = new JRadioButton("EML");
 	private final JRadioButton dirSourceButton = new JRadioButton("EMLs on Dir");
 	private final JPanel sourceInputPanel = new JPanel(new BorderLayout());
+	private SendJobBuilder selectedJobBuilder;
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -59,6 +66,9 @@ public class DataPanel extends JPanel implements ConfigObserver {
 				sourceSelectGroup.add(this.dirSourceButton);
 
 				this.mimeSourceButton.doClick();
+
+				// XXX 구현되면 제거
+				this.dirSourceButton.setEnabled(false);
 			}
 			sourcePanel.add(sourceSelectPanel, BorderLayout.NORTH);
 			sourcePanel.add(this.sourceInputPanel, BorderLayout.CENTER);
@@ -70,22 +80,48 @@ public class DataPanel extends JPanel implements ConfigObserver {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			DataPanel.this.sourceInputPanel.removeAll();
 			Object sourceButton = e.getSource();
 			if (sourceButton == DataPanel.this.mimeSourceButton) {
-				DataPanel.this.sourceInputPanel.add(DataPanel.this.mimeSourcePanel);
+				DataPanel.this.setSourcePanel(DataPanel.this.mimeSourcePanel);
 			} else if (sourceButton == DataPanel.this.emlSourceButton) {
-				DataPanel.this.sourceInputPanel.add(DataPanel.this.emlSourcePanel);
+				DataPanel.this.setSourcePanel(DataPanel.this.emlSourcePanel);
 			} else if (sourceButton == DataPanel.this.dirSourceButton) {
-				DataPanel.this.sourceInputPanel.add(DataPanel.this.dirSourcePanel);
+				DataPanel.this.setSourcePanel(DataPanel.this.dirSourcePanel);
 			}
-			DataPanel.this.sourceInputPanel.updateUI();
 		}
 	};
 
+	private void setSourcePanel(JPanel sourcePanel) {
+		this.selectedJobBuilder = (SendJobBuilder) sourcePanel;
+		this.sourceInputPanel.removeAll();
+		this.sourceInputPanel.add(sourcePanel);
+		this.sourceInputPanel.updateUI();
+	}
+
+	public Job getSendJob() {
+		return this.selectedJobBuilder.buildSendJob();
+	}
+
+	@Override
+	public void loadConfig() {
+		String sourcePanel = this.appConfig.getString("source.type");
+		if ("mime".equals(sourcePanel)) {
+			this.mimeSourceButton.doClick();
+		} else if ("eml".equals(sourcePanel)) {
+			this.emlSourceButton.doClick();
+		} else if ("dir".equals(sourcePanel)) {
+			this.dirSourceButton.doClick();
+		}
+	}
+
 	@Override
 	public void updateConfig() {
-		// TODO Auto-generated method stub
-
+		if (this.mimeSourceButton.isSelected()) {
+			this.appConfig.setProperty("source.type", "mime");
+		} else if (this.emlSourceButton.isSelected()) {
+			this.appConfig.setProperty("source.type", "eml");
+		} else if (this.dirSourceButton.isSelected()) {
+			this.appConfig.setProperty("source.type", "dir");
+		}
 	}
 }

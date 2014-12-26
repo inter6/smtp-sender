@@ -1,5 +1,6 @@
 package com.inter6.mail.service;
 
+
 public enum AuthOption {
 	NONE("None"), PLAIN_PASSWORD("Plain Password");
 
@@ -11,6 +12,16 @@ public enum AuthOption {
 
 	public static AuthOption[] allItems() {
 		return new AuthOption[] { NONE, PLAIN_PASSWORD };
+	}
+
+	public static AuthOption parse(String value) {
+		if (NONE.toString().equals(value)) {
+			return NONE;
+		} else if (PLAIN_PASSWORD.toString().equals(value)) {
+			return PLAIN_PASSWORD;
+		} else {
+			return NONE;
+		}
 	}
 
 	@Override
