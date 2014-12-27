@@ -24,20 +24,21 @@ public class ActionPanel extends JPanel {
 	@Autowired
 	private LogPanel logPanel;
 
+	private final JButton startButton = new JButton("Start");
+	private final JButton stopButton = new JButton("Stop");
+
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new BorderLayout());
 
 		JPanel sendPanel = new JPanel(new FlowLayout());
 		{
-			JButton startButton = new JButton("Start");
-			JButton stopButton = new JButton("Stop");
-			startButton.addActionListener(this.startEvent);
-			sendPanel.add(startButton);
-			sendPanel.add(stopButton);
+			this.startButton.addActionListener(this.startEvent);
+			sendPanel.add(this.startButton);
+			sendPanel.add(this.stopButton);
 
 			// XXX 구현되면 제거
-			stopButton.setEnabled(false);
+			this.stopButton.setEnabled(false);
 		}
 		this.add(sendPanel, BorderLayout.NORTH);
 		this.add(this.logPanel, BorderLayout.CENTER);
@@ -48,7 +49,16 @@ public class ActionPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent ev) {
 			// TODO 쓰레드 처리
-			ActionPanel.this.dataPanel.getSendJob().execute();
+			try {
+				ActionPanel.this.startButton.setEnabled(false);
+				// XXX 구현되면 주석 제거
+				//				ActionPanel.this.stopButton.setEnabled(true);
+
+				ActionPanel.this.dataPanel.getSendJob().execute();
+			} finally {
+				ActionPanel.this.startButton.setEnabled(true);
+				ActionPanel.this.stopButton.setEnabled(false);
+			}
 		}
 	};
 }

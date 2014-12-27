@@ -29,6 +29,10 @@ public class SettingPanel extends JPanel {
 		this.add(this.configPanel, BorderLayout.NORTH);
 		this.add(this.serverPanel, BorderLayout.CENTER);
 
+
+	}
+
+	public void loadDefaultConfig() {
 		File configFile = this.getConfigFile();
 		if (configFile != null && configFile.isFile()) {
 			this.configPanel.loadConfig(configFile);

@@ -119,7 +119,7 @@ public class ConfigPanel extends JPanel {
 			this.appConfig.save(configFile, "UTF-8");
 			this.appConfig.setFile(configFile);
 			this.pathField.setText(this.appConfig.getFileName());
-			this.logPanel.info("save config - FILE:" + this.appConfig.getFileName());
+			this.logPanel.info("save config - FILE:" + configFile);
 		} catch (Throwable e) {
 			this.logPanel.errorAndShowDialog("config save fail ! - FILE:" + this.appConfig.getFileName(), e);
 		}

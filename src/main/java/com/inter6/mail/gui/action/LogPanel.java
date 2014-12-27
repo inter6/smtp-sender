@@ -34,7 +34,8 @@ public class LogPanel extends JPanel {
 
 		this.logArea.setRows(5);
 		this.logArea.setEditable(false);
-		this.add(new JScrollPane(this.logArea), BorderLayout.CENTER);
+		JScrollPane logScrollPane = new JScrollPane(this.logArea);
+		this.add(logScrollPane, BorderLayout.CENTER);
 
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
@@ -74,13 +75,12 @@ public class LogPanel extends JPanel {
 
 	public void error(String msg, Throwable e) {
 		this.log.error(msg, e);
-		this.append(msg);
+		this.append(msg + (e != null ? " ERR:" + e.getMessage() : ""));
 	}
 
 	public void errorAndShowDialog(String msg, Throwable e) {
-		String errMsg = msg + (e != null ? " ERR:" + e.getMessage() : "");
-		this.error(errMsg, e);
-		JOptionPane.showMessageDialog(this, errMsg);
+		this.error(msg, e);
+		JOptionPane.showMessageDialog(this, msg + (e != null ? " ERR:" + e.getMessage() : ""));
 	}
 
 	private void append(String msg) {

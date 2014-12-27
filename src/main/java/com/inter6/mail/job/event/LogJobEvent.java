@@ -23,7 +23,7 @@ public class LogJobEvent implements JobEvent {
 
 	@Override
 	public void onJobFail(Throwable e) {
-		this.logPanel.error("job fail", e);
+		this.logPanel.error("job fail ! -", e);
 	}
 
 	@Override

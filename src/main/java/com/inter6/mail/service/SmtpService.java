@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class SmtpService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public Set<String> send(String host, int port, String sender, Set<String> receivers, InputStream messageStream) {
+	public Set<String> send(String host, int port, String sender, Set<String> receivers, InputStream messageStream) throws IOException {
 		SMTPClient smtpClient = null;
 		try {
 			smtpClient = this.connect(host, port, sender);
@@ -33,8 +33,7 @@ public class SmtpService {
 			this.close(smtpClient);
 			return failReceivers;
 		} catch (Throwable e) {
-			this.log.error("send fail ! - RECV:" + receivers, e);
-			return receivers;
+			throw new IOException("send fail ! - RECV:" + receivers, e);
 		} finally {
 			if (smtpClient != null && smtpClient.isConnected()) {
 				try {

@@ -69,7 +69,7 @@ public abstract class AbstractSmtpSendJob implements Job {
 
 	/**
 	 * envelope.from : String
-	 * envelope.to : String
+	 * envelope.to : Set<String>
 	 * @return
 	 * @throws Throwable
 	 */

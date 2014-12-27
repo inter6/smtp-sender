@@ -47,6 +47,8 @@ public class MainFrame extends JFrame {
 		this.setMinimumSize(new Dimension(500, 600));
 		this.initLayout();
 		this.setVisible(true);
+
+		this.settingPanel.loadDefaultConfig();
 	}
 
 	private void initLayout() {

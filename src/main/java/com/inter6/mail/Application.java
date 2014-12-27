@@ -23,11 +23,11 @@ public class Application {
 
 			XTrustProvider.install();
 
-			MainFrame launcher = ModuleService.getBean(MainFrame.class);
-			launcher.execute();
+			MainFrame mainFrame = ModuleService.getBean(MainFrame.class);
+			mainFrame.execute();
 			do {
 				Thread.sleep(1000);
-			} while (launcher.isVisible());
+			} while (mainFrame.isVisible());
 		} catch (Throwable e) {
 			log.error("occured application kill !", e);
 		} finally {
