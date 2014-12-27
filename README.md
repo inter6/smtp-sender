@@ -14,3 +14,8 @@ v0.2.0
 - 디렉토리 내의 모든 EML 전송
 - 멀티 쓰레드 지원
 - 로깅 패널 개선
+
+이 후의 TODO
+- SSL 지원
+- PLAIN, LOGIN, DIGEST-MD5, CRAM-MD5 인증 지원
+- MIME 에디터 GUI 구현
