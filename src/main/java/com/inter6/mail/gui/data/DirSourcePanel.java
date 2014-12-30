@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
-import com.inter6.mail.job.send.DirSmtpSendJob;
+import com.inter6.mail.job.smtp.DirSmtpSendJob;
 import com.inter6.mail.module.ModuleService;
 
 @Component

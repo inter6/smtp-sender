@@ -1,4 +1,4 @@
-package com.inter6.mail.job.send;
+package com.inter6.mail.job.smtp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

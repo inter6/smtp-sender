@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.inter6.mail.gui.action.ActionPanel;
 import com.inter6.mail.gui.advanced.AdvancedPanel;
 import com.inter6.mail.gui.data.DataPanel;
+import com.inter6.mail.gui.menu.TopMenuBar;
 import com.inter6.mail.gui.setting.SettingPanel;
 
 @Component
@@ -21,6 +22,9 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = -6461973454673997240L;
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private TopMenuBar topMenuBar;
 
 	@Autowired
 	private SettingPanel settingPanel;
@@ -53,6 +57,7 @@ public class MainFrame extends JFrame {
 
 	private void initLayout() {
 		this.setLayout(new BorderLayout());
+		this.setJMenuBar(this.topMenuBar);
 		this.add(this.settingPanel, BorderLayout.NORTH);
 		this.add(this.dataPanel, BorderLayout.CENTER);
 		this.add(this.advancedPanel, BorderLayout.EAST);

@@ -27,7 +27,7 @@ import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
-import com.inter6.mail.job.send.EmlSmtpSendJob;
+import com.inter6.mail.job.smtp.EmlSmtpSendJob;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
 

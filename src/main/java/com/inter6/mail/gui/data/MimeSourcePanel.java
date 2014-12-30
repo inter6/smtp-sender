@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
-import com.inter6.mail.job.send.MimeSmtpSendJob;
+import com.inter6.mail.job.smtp.MimeSmtpSendJob;
 import com.inter6.mail.module.ModuleService;
 
 @Component

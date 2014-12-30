@@ -33,7 +33,7 @@ public class SmtpService {
 			this.close(smtpClient);
 			return failReceivers;
 		} catch (Throwable e) {
-			throw new IOException("send fail ! - RECV:" + receivers, e);
+			throw new IOException("send fail ! - " + e.getMessage() + " - RECV:" + receivers, e);
 		} finally {
 			if (smtpClient != null && smtpClient.isConnected()) {
 				try {

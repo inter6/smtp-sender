@@ -3,6 +3,8 @@ package com.inter6.mail.gui.action;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -10,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -24,9 +27,8 @@ public class LogPanel extends JPanel {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final JTextArea logArea = new JTextArea();
-	private final JCheckBox autoScrollCheckBox = new JCheckBox("Auto");
-
 	private final Object appendLock = new Object();
+	private boolean isAutoScroll = false;
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -35,6 +37,7 @@ public class LogPanel extends JPanel {
 		this.logArea.setRows(5);
 		this.logArea.setEditable(false);
 		JScrollPane logScrollPane = new JScrollPane(this.logArea);
+		logScrollPane.getVerticalScrollBar().addAdjustmentListener(this.autoScrollEvent);
 		this.add(logScrollPane, BorderLayout.CENTER);
 
 		JPanel actionPanel = new JPanel();
@@ -43,15 +46,35 @@ public class LogPanel extends JPanel {
 			JButton clearButton = new JButton("Clear");
 			clearButton.addActionListener(this.clearEvent);
 			actionPanel.add(clearButton);
-			actionPanel.add(this.autoScrollCheckBox);
 
-			this.autoScrollCheckBox.doClick();
+			JCheckBox autoScrollCheckBox = new JCheckBox("Auto");
+			autoScrollCheckBox.addActionListener(this.autoScrollCheckEvent);
+			actionPanel.add(autoScrollCheckBox);
 
-			// XXX 구현되면 제거
-			this.autoScrollCheckBox.setEnabled(false);
+			autoScrollCheckBox.doClick();
 		}
 		this.add(actionPanel, BorderLayout.EAST);
 	}
+
+	private final ActionListener autoScrollCheckEvent = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			LogPanel.this.isAutoScroll = !LogPanel.this.isAutoScroll;
+		}
+	};
+
+	private final AdjustmentListener autoScrollEvent = new AdjustmentListener() {
+
+		@Override
+		public void adjustmentValueChanged(AdjustmentEvent e) {
+			if (!LogPanel.this.isAutoScroll) {
+				return;
+			}
+			JScrollBar src = (JScrollBar) e.getSource();
+			src.setValue(src.getMaximum());
+		}
+	};
 
 	private final ActionListener clearEvent = new ActionListener() {
 

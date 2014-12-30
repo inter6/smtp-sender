@@ -6,13 +6,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.annotation.PostConstruct;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.border.EmptyBorder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.data.DataPanel;
+import com.inter6.mail.job.Job;
 
 @Component
 public class ActionPanel extends JPanel {
@@ -26,10 +31,11 @@ public class ActionPanel extends JPanel {
 
 	private final JButton startButton = new JButton("Start");
 	private final JButton stopButton = new JButton("Stop");
+	private final JProgressBar progressBar = new JProgressBar();
 
 	@PostConstruct
 	private void init() { // NOPMD
-		this.setLayout(new BorderLayout());
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		JPanel sendPanel = new JPanel(new FlowLayout());
 		{
@@ -40,8 +46,18 @@ public class ActionPanel extends JPanel {
 			// XXX 구현되면 제거
 			this.stopButton.setEnabled(false);
 		}
-		this.add(sendPanel, BorderLayout.NORTH);
-		this.add(this.logPanel, BorderLayout.CENTER);
+		this.add(sendPanel);
+
+		JPanel progressPanel = new JPanel(new BorderLayout());
+		{
+			progressPanel.add(new JLabel("--:--:--"), BorderLayout.WEST);
+			this.progressBar.setBorder(new EmptyBorder(0, 10, 0, 10));
+			progressPanel.add(this.progressBar, BorderLayout.CENTER);
+			progressPanel.add(new JLabel("---%"), BorderLayout.EAST);
+		}
+		this.add(progressPanel);
+
+		this.add(this.logPanel);
 	}
 
 	private final ActionListener startEvent = new ActionListener() {
@@ -49,12 +65,16 @@ public class ActionPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent ev) {
 			// TODO 쓰레드 처리
+			Job sendJob = ActionPanel.this.dataPanel.getSendJob();
+			String jobName = sendJob != null ? sendJob.getClass().getSimpleName() : "???";
 			try {
 				ActionPanel.this.startButton.setEnabled(false);
 				// XXX 구현되면 주석 제거
 				//				ActionPanel.this.stopButton.setEnabled(true);
 
-				ActionPanel.this.dataPanel.getSendJob().execute();
+				sendJob.execute();
+			} catch (Throwable e) {
+				ActionPanel.this.logPanel.error("job fail ! - JOB:" + jobName, e);
 			} finally {
 				ActionPanel.this.startButton.setEnabled(true);
 				ActionPanel.this.stopButton.setEnabled(false);

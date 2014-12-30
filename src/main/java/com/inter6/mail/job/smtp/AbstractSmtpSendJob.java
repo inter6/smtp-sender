@@ -1,4 +1,4 @@
-package com.inter6.mail.job.send;
+package com.inter6.mail.job.smtp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +11,7 @@ import com.inter6.mail.gui.advanced.AdvancedPanel;
 import com.inter6.mail.gui.data.EnvelopePanel;
 import com.inter6.mail.gui.setting.ServerPanel;
 import com.inter6.mail.job.Job;
-import com.inter6.mail.job.event.JobEvent;
-import com.inter6.mail.job.event.LogJobEvent;
-import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.model.JobStatistics;
 import com.inter6.mail.service.SmtpService;
 
 @Component
@@ -32,27 +30,24 @@ public abstract class AbstractSmtpSendJob implements Job {
 	@Autowired
 	protected SmtpService smtpService;
 
+	@Autowired
+	private JobStatistics jobStatistics;
+
 	private final Map<String, Object> data = new HashMap<String, Object>();
-	private JobEvent jobEvent = ModuleService.getBean(LogJobEvent.class);
 
 	public Map<String, Object> getData() {
 		return this.data;
 	}
 
-	public void setJobEvent(JobEvent jobEvent) {
-		this.jobEvent = jobEvent;
-	}
-
 	@Override
-	public void execute() {
-		this.jobEvent.onJobStart();
+	public void execute() throws Throwable {
 		try {
 			this.doSend();
-			this.jobEvent.onJobSuccess();
+			this.jobStatistics.addCount(this, "success");
 		} catch (Throwable e) {
-			this.jobEvent.onJobFail(e);
+			this.jobStatistics.addCount(this, "fail");
+			throw e;
 		}
-		this.jobEvent.onJobDone();
 	}
 
 	protected abstract void doSend() throws Throwable;
