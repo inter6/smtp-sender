@@ -28,11 +28,11 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private AppConfig appConfig;
 
-	private final JTextField hostFiled = new JTextField(20);
+	private final JTextField hostFiled = new JTextField(40);
 	private final JTextField portField = new JTextField(5);
 	private final JCheckBox sslCheckBox = new JCheckBox("SSL");
-	private final JTextField idField = new JTextField(10);
-	private final JTextField passwordField = new JTextField(10);
+	private final JTextField idField = new JTextField(20);
+	private final JTextField passwordField = new JTextField(20);
 	private final JComboBox authOptionBox = new JComboBox(AuthOption.allItems());
 
 	@PostConstruct

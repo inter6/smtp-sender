@@ -3,6 +3,7 @@
 	<groupId>com.inter6.mail</groupId>
 	<artifactId>smtp-sender</artifactId>
 	<version>0.1.0</version>
+	<packaging>jar</packaging>
 
 	<properties>
 		<java.version>1.6</java.version>

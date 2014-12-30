@@ -40,7 +40,7 @@ public class LogPanel extends JPanel {
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
 		{
-			JButton clearButton = new JButton("clear");
+			JButton clearButton = new JButton("Clear");
 			clearButton.addActionListener(this.clearEvent);
 			actionPanel.add(clearButton);
 			actionPanel.add(this.autoScrollCheckBox);

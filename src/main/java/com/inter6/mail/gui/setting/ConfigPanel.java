@@ -32,7 +32,7 @@ public class ConfigPanel extends JPanel {
 	@Autowired
 	private LogPanel logPanel;
 
-	private final JTextField pathField = new JTextField(20);
+	private final JTextField pathField = new JTextField(40);
 
 	@PostConstruct
 	private void init() { // NOPMD

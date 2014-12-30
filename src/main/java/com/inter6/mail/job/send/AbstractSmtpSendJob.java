@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.inter6.mail.gui.advanced.AdvancedPanel;
 import com.inter6.mail.gui.data.EnvelopePanel;
 import com.inter6.mail.gui.setting.ServerPanel;
 import com.inter6.mail.job.Job;
@@ -24,6 +25,9 @@ public abstract class AbstractSmtpSendJob implements Job {
 
 	@Autowired
 	private EnvelopePanel envelopePanel;
+
+	@Autowired
+	private AdvancedPanel advancedPanel;
 
 	@Autowired
 	protected SmtpService smtpService;
@@ -75,5 +79,9 @@ public abstract class AbstractSmtpSendJob implements Job {
 	 */
 	protected Map<String, Object> getEnvelopeData() throws Throwable {
 		return this.envelopePanel.getData();
+	}
+
+	protected Map<String, Object> getAdvancedData() throws Throwable {
+		return this.advancedPanel.getData();
 	}
 }

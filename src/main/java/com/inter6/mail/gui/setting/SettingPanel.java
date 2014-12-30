@@ -26,10 +26,9 @@ public class SettingPanel extends JPanel {
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new BorderLayout());
+
 		this.add(this.configPanel, BorderLayout.NORTH);
 		this.add(this.serverPanel, BorderLayout.CENTER);
-
-
 	}
 
 	public void loadDefaultConfig() {
