@@ -14,13 +14,12 @@ public enum EncodingOption {
 	}
 
 	public static EncodingOption parse(String value) {
-		if (B.toString().equals(value)) {
-			return B;
-		} else if (Q.toString().equals(value)) {
-			return Q;
-		} else {
-			return B;
+		for (EncodingOption encodingOption : allItems()) {
+			if (encodingOption.toString().equals(value)) {
+				return encodingOption;
+			}
 		}
+		return B;
 	}
 
 	@Override

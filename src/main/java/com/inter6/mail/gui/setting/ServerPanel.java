@@ -12,6 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 	private final JTextField portField = new JTextField(5);
 	private final JCheckBox sslCheckBox = new JCheckBox("SSL");
 	private final JTextField idField = new JTextField(20);
-	private final JTextField passwordField = new JTextField(20);
+	private final JPasswordField passwordField = new JPasswordField(20);
 	private final JComboBox authOptionBox = new JComboBox(AuthOption.allItems());
 
 	@PostConstruct
@@ -46,9 +47,6 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 			hostPanel.add(new JLabel("Port"));
 			hostPanel.add(this.portField);
 			hostPanel.add(this.sslCheckBox);
-
-			// XXX 구현되면 제거
-			this.sslCheckBox.setEnabled(false);
 		}
 		this.add(hostPanel, BorderLayout.NORTH);
 
@@ -62,9 +60,6 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 			this.authOptionBox.addActionListener(this.authChangeEvent);
 			this.authOptionBox.setSelectedIndex(0);
 			accountPanel.add(this.authOptionBox);
-
-			// XXX 구현되면 제거
-			this.authOptionBox.setEnabled(false);
 		}
 		this.add(accountPanel, BorderLayout.CENTER);
 	}

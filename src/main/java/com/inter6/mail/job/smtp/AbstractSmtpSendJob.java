@@ -12,7 +12,6 @@ import com.inter6.mail.gui.data.EnvelopePanel;
 import com.inter6.mail.gui.setting.ServerPanel;
 import com.inter6.mail.job.Job;
 import com.inter6.mail.model.JobStatistics;
-import com.inter6.mail.service.SmtpService;
 
 @Component
 @Scope("prototype")
@@ -26,9 +25,6 @@ public abstract class AbstractSmtpSendJob implements Job {
 
 	@Autowired
 	private AdvancedPanel advancedPanel;
-
-	@Autowired
-	protected SmtpService smtpService;
 
 	@Autowired
 	private JobStatistics jobStatistics;

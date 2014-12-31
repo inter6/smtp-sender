@@ -24,7 +24,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.model.AdvancedMimeMessage;
+import com.inter6.mail.model.AuthOption;
 import com.inter6.mail.model.EncodingOption;
+import com.inter6.mail.service.SmtpService;
 import com.inter6.mail.util.ObjectUtil;
 
 /**
@@ -39,6 +41,12 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 	protected void doSend() throws Throwable {
 		String host = (String) this.getServerData().get("server.host");
 		String port = (String) this.getServerData().get("server.port");
+		boolean isSsl = (Boolean) this.getServerData().get("server.ssl");
+
+		String id = (String) this.getServerData().get("user.id");
+		String password = (String) this.getServerData().get("user.password");
+		AuthOption authOption = (AuthOption) this.getServerData().get("server.authOption");
+
 		String sender = (String) this.getEnvelopeData().get("envelope.from");
 		@SuppressWarnings("unchecked")
 		Set<String> receivers = (Set<String>) this.getEnvelopeData().get("envelope.to");
@@ -47,7 +55,11 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		messageStream = this.getAdvancedMessageStream(messageStream, this.getAdvancedData());
 
 		try {
-			Set<String> failReceivers = this.smtpService.send(host, Integer.parseInt(port), sender, receivers, messageStream);
+			Set<String> failReceivers = SmtpService
+					.createInstance(host, Integer.parseInt(port), isSsl)
+					.setAuth(authOption.getMethod(), id, password)
+					.setEnvelope(sender, receivers)
+					.send(messageStream);
 			if (CollectionUtils.isNotEmpty(failReceivers)) {
 				throw new IOException("send parted success. exist fail receivers - RECV:" + failReceivers);
 			}
@@ -61,18 +73,13 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 			return messageStream;
 		}
 
+		// TODO mime을 건드리지 않는 조건일 경우 파싱하지 않게 개선해야 됨
 		AdvancedMimeMessage mimeMessage = new AdvancedMimeMessage(messageStream);
-
-		boolean isUpdate = false;
-		isUpdate = isUpdate || this.replaceSubject(advancedData, mimeMessage);
+		this.replaceSubject(advancedData, mimeMessage);
+		mimeMessage.saveChanges();
 
 		ByteArrayOutputStream copyStream = new ByteArrayOutputStream();
-		if (isUpdate) {
-			mimeMessage.saveChanges();
-			mimeMessage.writeTo(copyStream);
-		} else {
-			IOUtils.copy(messageStream, copyStream);
-		}
+		mimeMessage.writeTo(copyStream);
 		copyStream.flush();
 
 		this.saveToEml(advancedData, copyStream);

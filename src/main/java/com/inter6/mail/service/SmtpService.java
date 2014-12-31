@@ -9,79 +9,118 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.SocketException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
+import org.apache.commons.net.smtp.AuthenticatingSMTPClient.AUTH_METHOD;
 import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-@Component
 public class SmtpService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private String _host;
-	private int _port;
-	private String _sender;
-	private Set<String> _receivers;
+	private String host;
+	private int port;
+	private boolean isSsl;
+	private String encoding = "UTF-8";
+
+	private AUTH_METHOD authMethod;
+	private String username;
+	private String password;
+
+	private String sender;
+	private Set<String> receivers;
 
 	private SmtpService() {
 	}
 
-	private SmtpService(String host, int port, String sender, Set<String> receivers) {
-		this._host = host;
-		this._port = port;
-		this._sender = sender;
-		this._receivers = receivers;
+	public static SmtpService createInstance(String host, int port, boolean isSsl) {
+		SmtpService smtpService = new SmtpService();
+		smtpService.setHost(host, port, isSsl);
+		return smtpService;
 	}
 
-	public static Set<String> send(String host, int port, String sender, Set<String> receivers, InputStream messageStream) throws IOException {
-		SmtpService smtpService = new SmtpService(host, port, sender, receivers);
-		return smtpService.send(messageStream);
+	public SmtpService setHost(String host, int port, boolean isSsl) {
+		this.host = host;
+		this.port = port;
+		this.isSsl = isSsl;
+		return this;
 	}
 
-	private Set<String> send(InputStream messageStream) throws IOException {
-		SMTPClient smtpClient = null;
+	public SmtpService setEncoding(String encoding) {
+		this.encoding = encoding;
+		return this;
+	}
+
+	public SmtpService setAuth(AUTH_METHOD authMethod, String username, String password) {
+		this.authMethod = authMethod;
+		this.username = username;
+		this.password = password;
+		return this;
+	}
+
+	public SmtpService setEnvelope(String sender, Set<String> receivers) {
+		this.sender = sender;
+		this.receivers = receivers;
+		return this;
+	}
+
+	public Set<String> send(InputStream messageStream) throws IOException {
+		AuthenticatingSMTPClient smtpClient = null;
 		try {
-			smtpClient = this.connect(this._host, this._port, this._sender);
-			Set<String> failReceivers = this.processEnvelope(smtpClient, this._sender, this._receivers);
+			smtpClient = this.connect();
+			this.auth(smtpClient);
+
+			Set<String> failReceivers = this.processEnvelope(smtpClient);
+			if (this.receivers.size() == failReceivers.size()) {
+				throw new IOException("not allowed all rcpt to !");
+			}
+
 			this.writeData(smtpClient, messageStream);
-			this.close(smtpClient);
 			return failReceivers;
 		} catch (Throwable e) {
-			throw new IOException("send fail ! - " + e.getMessage() + " - RECV:" + this._receivers, e);
+			throw new IOException("send fail ! - " + e.getMessage() + " - RECV:" + this.receivers, e);
 		} finally {
-			if (smtpClient != null && smtpClient.isConnected()) {
-				try {
-					smtpClient.disconnect();
-				} catch (IOException e) {
-					// do nothing
-				}
-			}
+			this.close(smtpClient);
 		}
 	}
 
-	private SMTPClient connect(String host, int port, String sender) throws SocketException, IOException {
-		SMTPClient smtpClient = new SMTPClient("UTF-8");
+	private AuthenticatingSMTPClient connect() throws SocketException, IOException {
+		AuthenticatingSMTPClient smtpClient = new AuthenticatingSMTPClient("SSL", this.isSsl, this.encoding);
 		smtpClient.setConnectTimeout(10 * 1000);
-		smtpClient.connect(host, port);
+		smtpClient.connect(this.host, this.port);
 		this.debug(smtpClient);
 
-		smtpClient.helo(sender);
+		smtpClient.helo(this.sender);
 		this.debug(smtpClient);
 		return smtpClient;
 	}
 
-	private Set<String> processEnvelope(SMTPClient smtpClient, String sender, Set<String> receivers) throws IOException {
-		smtpClient.setSender(sender);
+	private void auth(AuthenticatingSMTPClient smtpClient) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+		if (this.authMethod == null) {
+			return;
+		}
+		boolean isSuccess = smtpClient.auth(this.authMethod, this.username, this.password);
+		this.debug(smtpClient);
+		if (!isSuccess) {
+			throw new IOException("auth fail ! - ID:" + this.username);
+		}
+	}
+
+	private Set<String> processEnvelope(SMTPClient smtpClient) throws IOException {
+		smtpClient.setSender(this.sender);
 		this.debug(smtpClient);
 
 		Set<String> failReceivers = new HashSet<String>();
-		for (String receiver : receivers) {
+		for (String receiver : this.receivers) {
 			if (!smtpClient.addRecipient(receiver)) {
 				failReceivers.add(receiver);
 			}
@@ -107,6 +146,10 @@ public class SmtpService {
 
 			smtpClient.completePendingCommand();
 			this.debug(smtpClient);
+
+			if (!SMTPReply.isPositiveCompletion(smtpClient.getReplyCode())) {
+				throw new IOException("server refused connection ! - REPLY:" + smtpClient.getReplyString());
+			}
 		} finally {
 			IOUtils.closeQuietly(smtpWriter);
 		}
@@ -147,12 +190,21 @@ public class SmtpService {
 		this.debug(line + "\n");
 	}
 
-	private void close(SMTPClient smtpClient) throws IOException {
-		if (!SMTPReply.isPositiveCompletion(smtpClient.getReplyCode())) {
-			throw new IOException("server refused connection ! - REPLY:" + smtpClient.getReplyString());
+	private void close(SMTPClient smtpClient) {
+		if (smtpClient == null || !smtpClient.isConnected()) {
+			return;
 		}
-		smtpClient.quit();
-		this.debug(smtpClient);
+		try {
+			smtpClient.quit();
+			this.debug(smtpClient);
+		} catch (IOException e) {
+			// do nothing
+		}
+		try {
+			smtpClient.disconnect();
+		} catch (IOException e) {
+			// do nothing
+		}
 	}
 
 	private void debug(Object object) {
