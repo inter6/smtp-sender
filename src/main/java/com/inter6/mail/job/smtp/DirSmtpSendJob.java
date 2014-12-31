@@ -19,8 +19,8 @@ public class DirSmtpSendJob extends AbstractSmtpSendJob {
 	@Override
 	protected void doSend() throws Throwable {
 		@SuppressWarnings("unchecked")
-		List<File> dirs = (List<File>) this.getData().get("dirs");
-		boolean recursive = (Boolean) this.getData().get("recursive");
+		List<File> dirs = (List<File>) this.getData().get("source.dir.dirs");
+		boolean recursive = (Boolean) this.getData().get("source.dir.recursive");
 
 		for (File dir : dirs) {
 			Collection<File> files = FileUtils.listFiles(dir, new String[] { "eml" }, recursive);

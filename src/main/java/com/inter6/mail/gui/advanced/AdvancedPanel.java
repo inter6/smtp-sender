@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.model.AuthOption;
+import com.inter6.mail.model.EncodingOption;
 import com.inter6.mail.module.AppConfig;
 
 @Component
@@ -34,6 +37,7 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 	private final JCheckBox subjectUseCheckBox = new JCheckBox();
 	private final JTextField subjectField = new JTextField(20);
 	private final JTextField subjectCharsetField = new JTextField("UTF-8", 10);
+	private final JComboBox subjectEncodingOptionBox = new JComboBox(EncodingOption.allItems());
 
 	private final JCheckBox saveUseCheckBox = new JCheckBox();
 	private final JTextField savePathField = new JTextField(20);
@@ -53,6 +57,9 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 				subjectPanel.add(new JLabel("Replace Subject"));
 				subjectPanel.add(this.subjectField);
 				subjectPanel.add(this.subjectCharsetField);
+
+				this.subjectEncodingOptionBox.setSelectedIndex(0);
+				subjectPanel.add(this.subjectEncodingOptionBox);
 			}
 			wrapPanel.add(subjectPanel);
 
@@ -72,7 +79,7 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 		}
 
 		JScrollPane wrapScrollPane = new JScrollPane(wrapPanel);
-		wrapScrollPane.setPreferredSize(new Dimension(500, 0));
+		wrapScrollPane.setPreferredSize(new Dimension(400, 0));
 		this.add(wrapScrollPane, BorderLayout.CENTER);
 	}
 
@@ -93,6 +100,7 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 		data.put("subject.replace", this.subjectUseCheckBox.isSelected());
 		data.put("subject.replace.text", this.subjectField.getText());
 		data.put("subject.replace.charset", this.subjectCharsetField.getText());
+		data.put("subject.replace.encoding", this.subjectEncodingOptionBox.getSelectedItem());
 		data.put("save.eml", this.saveUseCheckBox.isSelected());
 		data.put("save.eml.dir", this.savePathField.getText());
 		return data;
@@ -103,6 +111,7 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 		this.subjectUseCheckBox.setSelected(this.appConfig.getBoolean("subject.replace", false));
 		this.subjectField.setText(this.appConfig.getString("subject.replace.text"));
 		this.subjectCharsetField.setText(this.appConfig.getString("subject.replace.charset"));
+		this.subjectEncodingOptionBox.setSelectedIndex(AuthOption.parse(this.appConfig.getString("subject.replace.encoding")).ordinal());
 		this.saveUseCheckBox.setSelected(this.appConfig.getBoolean("save.eml", false));
 		this.savePathField.setText(this.appConfig.getString("save.eml.dir"));
 	}
@@ -112,6 +121,7 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 		this.appConfig.setProperty("subject.replace", this.subjectUseCheckBox.isSelected());
 		this.appConfig.setProperty("subject.replace.text", this.subjectField.getText());
 		this.appConfig.setProperty("subject.replace.charset", this.subjectCharsetField.getText());
+		this.appConfig.setProperty("subject.replace.encoding", this.subjectEncodingOptionBox.getSelectedItem().toString());
 		this.appConfig.setProperty("save.eml", this.saveUseCheckBox.isSelected());
 		this.appConfig.setProperty("save.eml.dir", this.savePathField.getText());
 	}

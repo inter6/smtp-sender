@@ -24,16 +24,36 @@ import org.springframework.stereotype.Component;
 public class SmtpService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public Set<String> send(String host, int port, String sender, Set<String> receivers, InputStream messageStream) throws IOException {
+	private String _host;
+	private int _port;
+	private String _sender;
+	private Set<String> _receivers;
+
+	private SmtpService() {
+	}
+
+	private SmtpService(String host, int port, String sender, Set<String> receivers) {
+		this._host = host;
+		this._port = port;
+		this._sender = sender;
+		this._receivers = receivers;
+	}
+
+	public static Set<String> send(String host, int port, String sender, Set<String> receivers, InputStream messageStream) throws IOException {
+		SmtpService smtpService = new SmtpService(host, port, sender, receivers);
+		return smtpService.send(messageStream);
+	}
+
+	private Set<String> send(InputStream messageStream) throws IOException {
 		SMTPClient smtpClient = null;
 		try {
-			smtpClient = this.connect(host, port, sender);
-			Set<String> failReceivers = this.processEnvelope(smtpClient, sender, receivers);
+			smtpClient = this.connect(this._host, this._port, this._sender);
+			Set<String> failReceivers = this.processEnvelope(smtpClient, this._sender, this._receivers);
 			this.writeData(smtpClient, messageStream);
 			this.close(smtpClient);
 			return failReceivers;
 		} catch (Throwable e) {
-			throw new IOException("send fail ! - " + e.getMessage() + " - RECV:" + receivers, e);
+			throw new IOException("send fail ! - " + e.getMessage() + " - RECV:" + this._receivers, e);
 		} finally {
 			if (smtpClient != null && smtpClient.isConnected()) {
 				try {

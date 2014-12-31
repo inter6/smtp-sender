@@ -1,4 +1,4 @@
-package com.inter6.mail.service;
+package com.inter6.mail.model;
 
 
 public enum AuthOption {

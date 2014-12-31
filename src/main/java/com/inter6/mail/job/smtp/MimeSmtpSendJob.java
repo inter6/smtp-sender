@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.model.AdvancedMimeMessage;
+import com.inter6.mail.model.EncodingOption;
 import com.inter6.mail.util.ObjectUtil;
 
 /**
@@ -84,7 +85,8 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		}
 		String subject = ObjectUtil.defaultString(advancedData.get("subject.replace.text"), "");
 		String charset = ObjectUtil.defaultString(advancedData.get("subject.replace.charset"), "UTF-8");
-		String encodeSubject = MimeUtility.encodeWord(subject, charset, "B");
+		EncodingOption encoding = (EncodingOption) advancedData.get("subject.replace.encoding");
+		String encodeSubject = MimeUtility.encodeWord(subject, charset, encoding.toString());
 		mimeMessage.setSubject(encodeSubject);
 		return true;
 	}

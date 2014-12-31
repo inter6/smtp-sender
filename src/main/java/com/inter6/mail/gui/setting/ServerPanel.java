@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.model.AuthOption;
 import com.inter6.mail.module.AppConfig;
-import com.inter6.mail.service.AuthOption;
 
 @Component
 public class ServerPanel extends JPanel implements ConfigObserver {
