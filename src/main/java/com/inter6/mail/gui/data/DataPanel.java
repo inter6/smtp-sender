@@ -29,6 +29,9 @@ public class DataPanel extends JPanel implements ConfigObserver {
 	private EnvelopePanel envelopePanel;
 
 	@Autowired
+	private EditSourcePanel editSourcePanel;
+
+	@Autowired
 	private MimeSourcePanel mimeSourcePanel;
 
 	@Autowired
@@ -37,6 +40,7 @@ public class DataPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private DirSourcePanel dirSourcePanel;
 
+	private final JRadioButton editSourceButton = new JRadioButton("Editor");
 	private final JRadioButton mimeSourceButton = new JRadioButton("MIME");
 	private final JRadioButton emlSourceButton = new JRadioButton("EML");
 	private final JRadioButton dirSourceButton = new JRadioButton("EMLs on Dir");
@@ -53,14 +57,17 @@ public class DataPanel extends JPanel implements ConfigObserver {
 		{
 			JPanel sourceSelectPanel = new JPanel(new FlowLayout());
 			{
+				this.editSourceButton.addActionListener(this.sourceSelectChangeEvent);
 				this.mimeSourceButton.addActionListener(this.sourceSelectChangeEvent);
 				this.emlSourceButton.addActionListener(this.sourceSelectChangeEvent);
 				this.dirSourceButton.addActionListener(this.sourceSelectChangeEvent);
+				sourceSelectPanel.add(this.editSourceButton);
 				sourceSelectPanel.add(this.mimeSourceButton);
 				sourceSelectPanel.add(this.emlSourceButton);
 				sourceSelectPanel.add(this.dirSourceButton);
 
 				ButtonGroup sourceSelectGroup = new ButtonGroup();
+				sourceSelectGroup.add(this.editSourceButton);
 				sourceSelectGroup.add(this.mimeSourceButton);
 				sourceSelectGroup.add(this.emlSourceButton);
 				sourceSelectGroup.add(this.dirSourceButton);
@@ -78,7 +85,9 @@ public class DataPanel extends JPanel implements ConfigObserver {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object sourceButton = e.getSource();
-			if (sourceButton == DataPanel.this.mimeSourceButton) {
+			if (sourceButton == DataPanel.this.editSourceButton) {
+				DataPanel.this.setSourcePanel(DataPanel.this.editSourcePanel);
+			} else if (sourceButton == DataPanel.this.mimeSourceButton) {
 				DataPanel.this.setSourcePanel(DataPanel.this.mimeSourcePanel);
 			} else if (sourceButton == DataPanel.this.emlSourceButton) {
 				DataPanel.this.setSourcePanel(DataPanel.this.emlSourcePanel);
@@ -102,7 +111,9 @@ public class DataPanel extends JPanel implements ConfigObserver {
 	@Override
 	public void loadConfig() {
 		String sourcePanel = this.appConfig.getString("source.type");
-		if ("mime".equals(sourcePanel)) {
+		if ("edit".equals(sourcePanel)) {
+			this.editSourceButton.doClick();
+		} else if ("mime".equals(sourcePanel)) {
 			this.mimeSourceButton.doClick();
 		} else if ("eml".equals(sourcePanel)) {
 			this.emlSourceButton.doClick();
@@ -113,7 +124,9 @@ public class DataPanel extends JPanel implements ConfigObserver {
 
 	@Override
 	public void updateConfig() {
-		if (this.mimeSourceButton.isSelected()) {
+		if (this.editSourceButton.isSelected()) {
+			this.appConfig.setProperty("source.type", "edit");
+		} else if (this.mimeSourceButton.isSelected()) {
 			this.appConfig.setProperty("source.type", "mime");
 		} else if (this.emlSourceButton.isSelected()) {
 			this.appConfig.setProperty("source.type", "eml");

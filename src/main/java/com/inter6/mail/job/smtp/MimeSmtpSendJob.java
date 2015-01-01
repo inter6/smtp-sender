@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
 
 import com.inter6.mail.model.AdvancedMimeMessage;
 import com.inter6.mail.model.AuthOption;
-import com.inter6.mail.model.EncodingOption;
 import com.inter6.mail.service.SmtpService;
 import com.inter6.mail.util.ObjectUtil;
 
@@ -87,22 +86,22 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 	}
 
 	private boolean replaceSubject(Map<String, Object> advancedData, AdvancedMimeMessage mimeMessage) throws UnsupportedEncodingException, MessagingException {
-		if (!ObjectUtil.defaultBoolean(advancedData.get("subject.replace"), false)) {
+		if (!ObjectUtil.defaultBoolean(advancedData.get("advanced.replace.subject"), false)) {
 			return false;
 		}
-		String subject = ObjectUtil.defaultString(advancedData.get("subject.replace.text"), "");
-		String charset = ObjectUtil.defaultString(advancedData.get("subject.replace.charset"), "UTF-8");
-		EncodingOption encoding = (EncodingOption) advancedData.get("subject.replace.encoding");
-		String encodeSubject = MimeUtility.encodeWord(subject, charset, encoding.toString());
+		String subject = ObjectUtil.defaultString(advancedData.get("advanced.replace.subject.text"), "");
+		String charset = ObjectUtil.defaultString(advancedData.get("advanced.replace.subject.charset"), "UTF-8");
+		String encoding = ObjectUtil.defaultString("advanced.replace.subject.encoding", "B");
+		String encodeSubject = MimeUtility.encodeWord(subject, charset, encoding);
 		mimeMessage.setSubject(encodeSubject);
 		return true;
 	}
 
 	private boolean saveToEml(Map<String, Object> advancedData, ByteArrayOutputStream copyStream) throws FileNotFoundException, IOException {
-		if (!ObjectUtil.defaultBoolean(advancedData.get("save.eml"), false)) {
+		if (!ObjectUtil.defaultBoolean(advancedData.get("advanced.save.eml"), false)) {
 			return false;
 		}
-		String saveDirPath = ObjectUtil.defaultString(advancedData.get("save.eml.dir"), "");
+		String saveDirPath = ObjectUtil.defaultString(advancedData.get("advanced.save.eml.dir"), "");
 		if (StringUtils.isBlank(saveDirPath)) {
 			return false;
 		}

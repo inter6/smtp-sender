@@ -12,7 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,8 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.model.AuthOption;
-import com.inter6.mail.model.EncodingOption;
+import com.inter6.mail.gui.component.SubjectPanel;
 import com.inter6.mail.module.AppConfig;
 
 @Component
@@ -34,10 +32,7 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private AppConfig appConfig;
 
-	private final JCheckBox subjectUseCheckBox = new JCheckBox();
-	private final JTextField subjectField = new JTextField(20);
-	private final JTextField subjectCharsetField = new JTextField("UTF-8", 10);
-	private final JComboBox subjectEncodingOptionBox = new JComboBox(EncodingOption.allItems());
+	private final SubjectPanel subjectPanel = new SubjectPanel("Replace Subject", true);
 
 	private final JCheckBox saveUseCheckBox = new JCheckBox();
 	private final JTextField savePathField = new JTextField(20);
@@ -51,17 +46,7 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 		JPanel wrapPanel = new JPanel();
 		wrapPanel.setLayout(new BoxLayout(wrapPanel, BoxLayout.Y_AXIS));
 		{
-			JPanel subjectPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			{
-				subjectPanel.add(this.subjectUseCheckBox);
-				subjectPanel.add(new JLabel("Replace Subject"));
-				subjectPanel.add(this.subjectField);
-				subjectPanel.add(this.subjectCharsetField);
-
-				this.subjectEncodingOptionBox.setSelectedIndex(0);
-				subjectPanel.add(this.subjectEncodingOptionBox);
-			}
-			wrapPanel.add(subjectPanel);
+			wrapPanel.add(this.subjectPanel);
 
 			JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			{
@@ -95,34 +80,37 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 		}
 	};
 
-	public Map<String, Object> getData() throws Throwable {
+	public Map<String, Object> getData() {
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("subject.replace", this.subjectUseCheckBox.isSelected());
-		data.put("subject.replace.text", this.subjectField.getText());
-		data.put("subject.replace.charset", this.subjectCharsetField.getText());
-		data.put("subject.replace.encoding", this.subjectEncodingOptionBox.getSelectedItem());
-		data.put("save.eml", this.saveUseCheckBox.isSelected());
-		data.put("save.eml.dir", this.savePathField.getText());
+		data.put("advanced.replace.subject", this.subjectPanel.getData().get("use"));
+		data.put("advanced.replace.subject.text", this.subjectPanel.getData().get("text"));
+		data.put("advanced.replace.subject.charset", this.subjectPanel.getData().get("charset"));
+		data.put("advanced.replace.subject.encoding", this.subjectPanel.getData().get("encoding"));
+		data.put("advanced.save.eml", this.saveUseCheckBox.isSelected());
+		data.put("advanced.save.eml.dir", this.savePathField.getText());
 		return data;
 	}
 
 	@Override
 	public void loadConfig() {
-		this.subjectUseCheckBox.setSelected(this.appConfig.getBoolean("subject.replace", false));
-		this.subjectField.setText(this.appConfig.getString("subject.replace.text"));
-		this.subjectCharsetField.setText(this.appConfig.getString("subject.replace.charset"));
-		this.subjectEncodingOptionBox.setSelectedIndex(AuthOption.parse(this.appConfig.getString("subject.replace.encoding")).ordinal());
-		this.saveUseCheckBox.setSelected(this.appConfig.getBoolean("save.eml", false));
-		this.savePathField.setText(this.appConfig.getString("save.eml.dir"));
+		Map<String, Object> subjectData = new HashMap<String, Object>();
+		subjectData.put("use", this.appConfig.getBoolean("advanced.replace.subject", false));
+		subjectData.put("text", this.appConfig.getString("advanced.replace.subject.text", ""));
+		subjectData.put("charset", this.appConfig.getString("advanced.replace.subject.charset", "UTF-8"));
+		subjectData.put("encoding", this.appConfig.getString("advanced.replace.subject.encoding", "B"));
+		this.subjectPanel.setData(subjectData);
+
+		this.saveUseCheckBox.setSelected(this.appConfig.getBoolean("advanced.save.eml", false));
+		this.savePathField.setText(this.appConfig.getString("advanced.save.eml.dir"));
 	}
 
 	@Override
 	public void updateConfig() {
-		this.appConfig.setProperty("subject.replace", this.subjectUseCheckBox.isSelected());
-		this.appConfig.setProperty("subject.replace.text", this.subjectField.getText());
-		this.appConfig.setProperty("subject.replace.charset", this.subjectCharsetField.getText());
-		this.appConfig.setProperty("subject.replace.encoding", this.subjectEncodingOptionBox.getSelectedItem().toString());
-		this.appConfig.setProperty("save.eml", this.saveUseCheckBox.isSelected());
-		this.appConfig.setProperty("save.eml.dir", this.savePathField.getText());
+		this.appConfig.setProperty("advanced.replace.subject", this.subjectPanel.getData().get("use"));
+		this.appConfig.setProperty("advanced.replace.subject.text", this.subjectPanel.getData().get("text"));
+		this.appConfig.setProperty("advanced.replace.subject.charset", this.subjectPanel.getData().get("charset"));
+		this.appConfig.setProperty("advanced.replace.subject.encoding", this.subjectPanel.getData().get("encoding"));
+		this.appConfig.setProperty("advanced.save.eml", this.saveUseCheckBox.isSelected());
+		this.appConfig.setProperty("advanced.save.eml.dir", this.savePathField.getText());
 	}
 }
