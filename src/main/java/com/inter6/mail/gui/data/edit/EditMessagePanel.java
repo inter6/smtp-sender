@@ -1,10 +1,13 @@
 package com.inter6.mail.gui.data.edit;
 
+import java.awt.BorderLayout;
+
 import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.component.MultiPartPanel;
 
 @Component
 public class EditMessagePanel extends JPanel {
@@ -12,6 +15,8 @@ public class EditMessagePanel extends JPanel {
 
 	@PostConstruct
 	private void init() { // NOPMD
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setLayout(new BorderLayout());
+
+		this.add(new MultiPartPanel("mixed", 0), BorderLayout.CENTER);
 	}
 }
