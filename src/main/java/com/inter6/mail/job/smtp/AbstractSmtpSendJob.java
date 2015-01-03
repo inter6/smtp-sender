@@ -1,8 +1,5 @@
 package com.inter6.mail.job.smtp;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -12,6 +9,9 @@ import com.inter6.mail.gui.data.EnvelopePanel;
 import com.inter6.mail.gui.setting.ServerPanel;
 import com.inter6.mail.job.Job;
 import com.inter6.mail.model.JobStatistics;
+import com.inter6.mail.model.advanced.AdvancedData;
+import com.inter6.mail.model.data.EnvelopeData;
+import com.inter6.mail.model.setting.ServerData;
 
 @Component
 @Scope("prototype")
@@ -29,12 +29,6 @@ public abstract class AbstractSmtpSendJob implements Job {
 	@Autowired
 	private JobStatistics jobStatistics;
 
-	private final Map<String, Object> data = new HashMap<String, Object>();
-
-	public Map<String, Object> getData() {
-		return this.data;
-	}
-
 	@Override
 	public void execute() throws Throwable {
 		try {
@@ -48,31 +42,15 @@ public abstract class AbstractSmtpSendJob implements Job {
 
 	protected abstract void doSend() throws Throwable;
 
-	/**
-	 * server.host : String
-	 * server.port : String
-	 * server.ssl : boolean
-	 * user.id : String
-	 * user.password : String
-	 * server.authOption : AuthOption
-	 * @return
-	 * @throws Throwable
-	 */
-	protected Map<String, Object> getServerData() throws Throwable {
-		return this.serverPanel.getData();
+	protected ServerData getServerData() {
+		return this.serverPanel.getServerData();
 	}
 
-	/**
-	 * envelope.from : String
-	 * envelope.to : Set<String>
-	 * @return
-	 * @throws Throwable
-	 */
-	protected Map<String, Object> getEnvelopeData() throws Throwable {
-		return this.envelopePanel.getData();
+	protected EnvelopeData getEnvelopeData() {
+		return this.envelopePanel.getEnvelopeData();
 	}
 
-	protected Map<String, Object> getAdvancedData() throws Throwable {
-		return this.advancedPanel.getData();
+	protected AdvancedData getAdvancedData() {
+		return this.advancedPanel.getAdvancedData();
 	}
 }

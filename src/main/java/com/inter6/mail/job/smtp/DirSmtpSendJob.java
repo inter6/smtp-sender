@@ -2,11 +2,14 @@ package com.inter6.mail.job.smtp;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.List;
+
+import lombok.Setter;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 
+import com.inter6.mail.model.data.DirSourceData;
+import com.inter6.mail.model.data.EmlSourceData;
 import com.inter6.mail.module.ModuleService;
 
 /**
@@ -16,19 +19,20 @@ import com.inter6.mail.module.ModuleService;
  */
 public class DirSmtpSendJob extends AbstractSmtpSendJob {
 
+	@Setter
+	private DirSourceData dirSourceData; // NOPMD
+
 	@Override
 	protected void doSend() throws Throwable {
-		@SuppressWarnings("unchecked")
-		List<File> dirs = (List<File>) this.getData().get("source.dir.dirs");
-		boolean recursive = (Boolean) this.getData().get("source.dir.recursive");
-
-		for (File dir : dirs) {
-			Collection<File> files = FileUtils.listFiles(dir, new String[] { "eml" }, recursive);
+		for (File dir : this.dirSourceData.getDirs()) {
+			Collection<File> files = FileUtils.listFiles(dir, new String[] { "eml" }, this.dirSourceData.isRecursive());
 			if (CollectionUtils.isEmpty(files)) {
 				continue;
 			}
+
 			EmlSmtpSendJob emlSmtpSendJob = ModuleService.getBean(EmlSmtpSendJob.class);
-			emlSmtpSendJob.getData().put("files", files);
+			emlSmtpSendJob.setEmlSourceData(new EmlSourceData(files));
+			emlSmtpSendJob.execute();
 		}
 	}
 }

@@ -2,11 +2,13 @@ package com.inter6.mail.job.smtp;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.List;
+
+import lombok.Setter;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.inter6.mail.model.data.EmlSourceData;
 import com.inter6.mail.module.ModuleService;
 
 /**
@@ -17,13 +19,14 @@ import com.inter6.mail.module.ModuleService;
 @Scope("prototype")
 public class EmlSmtpSendJob extends AbstractSmtpSendJob {
 
+	@Setter
+	private EmlSourceData emlSourceData; // NOPMD
+
 	@Override
 	protected void doSend() throws Throwable {
-		@SuppressWarnings("unchecked")
-		List<File> files = (List<File>) this.getData().get("files");
-		for (File file : files) {
+		for (File file : this.emlSourceData.getFiles()) {
 			MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
-			mimeSmtpSendJob.getData().put("messageStream", new FileInputStream(file));
+			mimeSmtpSendJob.setMessageStream(new FileInputStream(file));
 			mimeSmtpSendJob.execute();
 		}
 	}

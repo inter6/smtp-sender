@@ -1,14 +1,14 @@
 package com.inter6.mail.gui.component;
 
 import java.awt.FlowLayout;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.inter6.mail.model.component.SubjectData;
 
 public class SubjectPanel extends JPanel {
 	private static final long serialVersionUID = -4355410559162938889L;
@@ -31,19 +31,19 @@ public class SubjectPanel extends JPanel {
 		this.add(this.subjectEncodingOptionBox);
 	}
 
-	public Map<String, Object> getData() {
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("use", this.useCheckBox.isSelected());
-		data.put("text", this.subjectField.getText());
-		data.put("charset", this.subjectCharsetField.getText());
-		data.put("encoding", this.subjectEncodingOptionBox.getSelectedItem());
-		return data;
+	public SubjectData getSubjectData() {
+		SubjectData subjectData = new SubjectData();
+		subjectData.setUse(this.useCheckBox.isSelected());
+		subjectData.setText(this.subjectField.getText());
+		subjectData.setCharset(this.subjectCharsetField.getText());
+		subjectData.setEncoding((String) this.subjectEncodingOptionBox.getSelectedItem());
+		return subjectData;
 	}
 
-	public void setData(Map<String, Object> data) {
-		this.useCheckBox.setSelected((Boolean) data.get("use"));
-		this.subjectField.setText((String) data.get("text"));
-		this.subjectCharsetField.setText((String) data.get("charset"));
-		this.subjectEncodingOptionBox.setSelectedItem(data.get("encoding"));
+	public void setSubjectData(SubjectData subjectData) {
+		this.useCheckBox.setSelected(subjectData.isUse());
+		this.subjectField.setText(subjectData.getText());
+		this.subjectCharsetField.setText(subjectData.getCharset());
+		this.subjectEncodingOptionBox.setSelectedItem(subjectData.getEncoding());
 	}
 }

@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JCheckBox;
@@ -18,8 +16,10 @@ import javax.swing.JTextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.model.AuthOption;
+import com.inter6.mail.model.setting.ServerData;
 import com.inter6.mail.module.AppConfig;
 
 @Component
@@ -30,7 +30,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 	private AppConfig appConfig;
 
 	private final JTextField hostFiled = new JTextField(40);
-	private final JTextField portField = new JTextField(5);
+	private final JTextField portField = new JTextField("25", 5);
 	private final JCheckBox sslCheckBox = new JCheckBox("SSL");
 	private final JTextField idField = new JTextField(20);
 	private final JPasswordField passwordField = new JPasswordField(20);
@@ -64,17 +64,6 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 		this.add(accountPanel, BorderLayout.CENTER);
 	}
 
-	public Map<String, Object> getData() throws Throwable {
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("server.host", this.hostFiled.getText());
-		data.put("server.port", this.portField.getText());
-		data.put("server.ssl", this.sslCheckBox.isSelected());
-		data.put("user.id", this.idField.getText());
-		data.put("user.password", this.passwordField.getText());
-		data.put("server.authOption", this.authOptionBox.getSelectedItem());
-		return data;
-	}
-
 	private final ActionListener authChangeEvent = new ActionListener() {
 
 		@Override
@@ -95,23 +84,33 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 		this.passwordField.setEditable(isEnable);
 	}
 
+	public ServerData getServerData() {
+		ServerData serverData = new ServerData();
+		serverData.setHost(this.hostFiled.getText());
+		serverData.setPort(this.portField.getText());
+		serverData.setSsl(this.sslCheckBox.isSelected());
+		serverData.setId(this.idField.getText());
+		serverData.setPassword(this.passwordField.getText());
+		serverData.setAuthOption((AuthOption) this.authOptionBox.getSelectedItem());
+		return serverData;
+	}
+
 	@Override
 	public void loadConfig() {
-		this.hostFiled.setText(this.appConfig.getString("server.host"));
-		this.portField.setText(this.appConfig.getString("server.port"));
-		this.sslCheckBox.setSelected(this.appConfig.getBoolean("server.ssl", false));
-		this.idField.setText(this.appConfig.getString("user.id"));
-		this.passwordField.setText(this.appConfig.getString("user.password"));
-		this.authOptionBox.setSelectedIndex(AuthOption.parse(this.appConfig.getString("server.authOption")).ordinal());
+		ServerData serverData = new Gson().fromJson(this.appConfig.getUnsplitString("server.data"), ServerData.class);
+		if (serverData == null) {
+			return;
+		}
+		this.hostFiled.setText(serverData.getHost());
+		this.portField.setText(Integer.toString(serverData.getPort()));
+		this.sslCheckBox.setSelected(serverData.isSsl());
+		this.idField.setText(serverData.getId());
+		this.passwordField.setText(serverData.getPassword());
+		this.authOptionBox.setSelectedIndex(serverData.getAuthOption().ordinal());
 	}
 
 	@Override
 	public void updateConfig() {
-		this.appConfig.setProperty("server.host", this.hostFiled.getText());
-		this.appConfig.setProperty("server.port", this.portField.getText());
-		this.appConfig.setProperty("server.ssl", Boolean.toString(this.sslCheckBox.isSelected()));
-		this.appConfig.setProperty("user.id", this.idField.getText());
-		this.appConfig.setProperty("user.password", this.passwordField.getText());
-		this.appConfig.setProperty("server.authOption", this.authOptionBox.getSelectedItem().toString());
+		this.appConfig.setProperty("server.data", new Gson().toJson(this.getServerData()));
 	}
 }

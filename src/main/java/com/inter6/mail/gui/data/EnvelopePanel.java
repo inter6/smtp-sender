@@ -1,10 +1,6 @@
 package com.inter6.mail.gui.data;
 
 import java.awt.FlowLayout;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -14,13 +10,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.model.data.EnvelopeData;
 import com.inter6.mail.module.AppConfig;
+import com.inter6.mail.util.StringUtil;
 
 @Component
 public class EnvelopePanel extends JPanel implements ConfigObserver {
@@ -49,36 +47,25 @@ public class EnvelopePanel extends JPanel implements ConfigObserver {
 		this.add(toPanel);
 	}
 
-	public Map<String, Object> getData() throws Throwable {
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("envelope.from", this.fromFiled.getText());
-		data.put("envelope.to", this.splitToSet(this.toArea.getText(), "\n"));
-		return data;
-	}
-
-	private Set<String> splitToSet(String str, String separator) {
-		Set<String> set = new HashSet<String>();
-		if (StringUtils.isBlank(str)) {
-			return set;
-		}
-		String[] tokens = str.split(separator);
-		if (ArrayUtils.isNotEmpty(tokens)) {
-			for (String token : tokens) {
-				set.add(token);
-			}
-		}
-		return set;
+	public EnvelopeData getEnvelopeData() {
+		EnvelopeData envelopeData = new EnvelopeData();
+		envelopeData.setMailFrom(this.fromFiled.getText());
+		envelopeData.setRcptTos(StringUtil.splitToSet(this.toArea.getText(), "\n"));
+		return envelopeData;
 	}
 
 	@Override
 	public void loadConfig() {
-		this.fromFiled.setText(this.appConfig.getString("envelope.from"));
-		this.toArea.setText(this.appConfig.getUnsplitString("envelope.to"));
+		EnvelopeData envelopeData = new Gson().fromJson(this.appConfig.getUnsplitString("envelope.data"), EnvelopeData.class);
+		if (envelopeData == null) {
+			return;
+		}
+		this.fromFiled.setText(envelopeData.getMailFrom());
+		this.toArea.setText(StringUtils.join(envelopeData.getRcptTos(), "\n"));
 	}
 
 	@Override
 	public void updateConfig() {
-		this.appConfig.setProperty("envelope.from", this.fromFiled.getText());
-		this.appConfig.setProperty("envelope.to", this.toArea.getText());
+		this.appConfig.setProperty("envelope.data", new Gson().toJson(this.getEnvelopeData()));
 	}
 }

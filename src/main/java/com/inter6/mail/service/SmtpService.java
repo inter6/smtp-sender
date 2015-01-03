@@ -36,8 +36,8 @@ public class SmtpService {
 	private String username;
 	private String password;
 
-	private String sender;
-	private Set<String> receivers;
+	private String mailFrom;
+	private Set<String> rcptTos;
 
 	private SmtpService() {
 	}
@@ -67,9 +67,9 @@ public class SmtpService {
 		return this;
 	}
 
-	public SmtpService setEnvelope(String sender, Set<String> receivers) {
-		this.sender = sender;
-		this.receivers = receivers;
+	public SmtpService setEnvelope(String mailFrom, Set<String> rcptTos) {
+		this.mailFrom = mailFrom;
+		this.rcptTos = rcptTos;
 		return this;
 	}
 
@@ -80,14 +80,14 @@ public class SmtpService {
 			this.auth(smtpClient);
 
 			Set<String> failReceivers = this.processEnvelope(smtpClient);
-			if (this.receivers.size() == failReceivers.size()) {
+			if (this.rcptTos.size() == failReceivers.size()) {
 				throw new IOException("not allowed all rcpt to !");
 			}
 
 			this.writeData(smtpClient, messageStream);
 			return failReceivers;
 		} catch (Throwable e) {
-			throw new IOException("send fail ! - " + e.getMessage() + " - RECV:" + this.receivers, e);
+			throw new IOException("send fail ! - " + e.getMessage() + " - RECV:" + this.rcptTos, e);
 		} finally {
 			this.close(smtpClient);
 		}
@@ -99,7 +99,7 @@ public class SmtpService {
 		smtpClient.connect(this.host, this.port);
 		this.debug(smtpClient);
 
-		smtpClient.helo(this.sender);
+		smtpClient.helo(this.mailFrom);
 		this.debug(smtpClient);
 		return smtpClient;
 	}
@@ -116,11 +116,11 @@ public class SmtpService {
 	}
 
 	private Set<String> processEnvelope(SMTPClient smtpClient) throws IOException {
-		smtpClient.setSender(this.sender);
+		smtpClient.setSender(this.mailFrom);
 		this.debug(smtpClient);
 
 		Set<String> failReceivers = new HashSet<String>();
-		for (String receiver : this.receivers) {
+		for (String receiver : this.rcptTos) {
 			if (!smtpClient.addRecipient(receiver)) {
 				failReceivers.add(receiver);
 			}

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,16 +18,16 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.DirSmtpSendJob;
+import com.inter6.mail.model.data.DirSourceData;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
 
@@ -37,10 +38,7 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	@Autowired
 	private AppConfig appConfig;
 
-	@Autowired
-	private LogPanel logPanel;
-
-	private final JCheckBox recursiveButton = new JCheckBox("Recursive");
+	private final JCheckBox recursiveCheckButton = new JCheckBox("Recursive");
 	private final DefaultListModel dirListModel = new DefaultListModel();
 	private final JList dirList = new JList(this.dirListModel);
 	private File lastSelectDir;
@@ -61,7 +59,7 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			actionPanel.add(addButton);
 			actionPanel.add(removeButton);
 
-			actionPanel.add(this.recursiveButton);
+			actionPanel.add(this.recursiveCheckButton);
 		}
 		this.add(actionPanel, BorderLayout.EAST);
 	}
@@ -95,44 +93,41 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	@Override
 	public Job buildSendJob() {
 		DirSmtpSendJob dirSmtpSendJob = ModuleService.getBean(DirSmtpSendJob.class);
-		List<File> files = new ArrayList<File>();
-		for (int i = 0; i < this.dirListModel.size(); i++) {
-			files.add((File) this.dirListModel.get(i));
-		}
-		dirSmtpSendJob.getData().put("source.dir.dirs", files);
-		dirSmtpSendJob.getData().put("source.dir.recursive", this.recursiveButton.isSelected());
+		dirSmtpSendJob.setDirSourceData(this.getDirSourceData());
 		return dirSmtpSendJob;
+	}
+
+	private DirSourceData getDirSourceData() {
+		DirSourceData dirSourceData = new DirSourceData();
+		List<File> dirs = new ArrayList<File>();
+		for (int i = 0; i < this.dirListModel.size(); i++) {
+			dirs.add((File) this.dirListModel.get(i));
+		}
+		dirSourceData.setDirs(dirs);
+		dirSourceData.setRecursive(this.recursiveCheckButton.isSelected());
+		return dirSourceData;
 	}
 
 	@Override
 	public void loadConfig() {
 		this.dirListModel.removeAllElements();
-		String dirPaths[] = this.appConfig.getStringArray("source.dir.dirs");
-		if (ArrayUtils.isNotEmpty(dirPaths)) {
-			for (String dirPath : dirPaths) {
-				if (StringUtils.isBlank(dirPath)) {
-					continue;
-				}
-				File dir = new File(dirPath);
-				if (!dir.exists() || !dir.isDirectory()) {
-					this.logPanel.info("not found dir ! - DIR:" + dir);
-					continue;
-				}
+		DirSourceData dirSourceData = new Gson().fromJson(this.appConfig.getUnsplitString("dir.source.data"), DirSourceData.class);
+		if (dirSourceData == null) {
+			return;
+		}
+
+		Collection<File> dirs = dirSourceData.getDirs();
+		if (CollectionUtils.isNotEmpty(dirs)) {
+			for (File dir : dirs) {
 				this.dirListModel.addElement(dir);
 				this.lastSelectDir = dir;
 			}
 		}
-		this.recursiveButton.setSelected(this.appConfig.getBoolean("source.dir.recursive", false));
+		this.recursiveCheckButton.setSelected(dirSourceData.isRecursive());
 	}
 
 	@Override
 	public void updateConfig() {
-		StringBuilder dirs = new StringBuilder();
-		for (int i = 0; i < this.dirListModel.size(); i++) {
-			File dir = (File) this.dirListModel.get(i);
-			dirs.append(dir.getAbsolutePath()).append(",");
-		}
-		this.appConfig.setProperty("source.dir.dirs", dirs.toString());
-		this.appConfig.setProperty("source.dir.recursive", Boolean.toString(this.recursiveButton.isSelected()));
+		this.appConfig.setProperty("dir.source.data", new Gson().toJson(this.getDirSourceData()));
 	}
 }

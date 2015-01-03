@@ -9,14 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
 
+import lombok.Setter;
+
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +25,9 @@ import org.springframework.stereotype.Component;
 
 import com.inter6.mail.model.AdvancedMimeMessage;
 import com.inter6.mail.model.AuthOption;
+import com.inter6.mail.model.advanced.AdvancedData;
+import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.service.SmtpService;
-import com.inter6.mail.util.ObjectUtil;
 
 /**
  * messageStream : InputStream
@@ -36,45 +37,42 @@ import com.inter6.mail.util.ObjectUtil;
 @Scope("prototype")
 public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 
+	@Setter
+	private InputStream messageStream; // NOPMD
+
 	@Override
 	protected void doSend() throws Throwable {
-		String host = (String) this.getServerData().get("server.host");
-		String port = (String) this.getServerData().get("server.port");
-		boolean isSsl = (Boolean) this.getServerData().get("server.ssl");
+		String host = this.getServerData().getHost();
+		int port = this.getServerData().getPort();
+		boolean isSsl = this.getServerData().isSsl();
 
-		String id = (String) this.getServerData().get("user.id");
-		String password = (String) this.getServerData().get("user.password");
-		AuthOption authOption = (AuthOption) this.getServerData().get("server.authOption");
+		String id = this.getServerData().getId();
+		String password = this.getServerData().getPassword();
+		AuthOption authOption = this.getServerData().getAuthOption();
 
-		String sender = (String) this.getEnvelopeData().get("envelope.from");
-		@SuppressWarnings("unchecked")
-		Set<String> receivers = (Set<String>) this.getEnvelopeData().get("envelope.to");
-		InputStream messageStream = (InputStream) this.getData().get("messageStream");
+		String mailFrom = this.getEnvelopeData().getMailFrom();
+		Set<String> rcptTos = this.getEnvelopeData().getRcptTos();
 
-		messageStream = this.getAdvancedMessageStream(messageStream, this.getAdvancedData());
+		this.messageStream = this.getAdvancedMessageStream(this.messageStream, this.getAdvancedData());
 
 		try {
 			Set<String> failReceivers = SmtpService
-					.createInstance(host, Integer.parseInt(port), isSsl)
+					.createInstance(host, port, isSsl)
 					.setAuth(authOption.getMethod(), id, password)
-					.setEnvelope(sender, receivers)
-					.send(messageStream);
+					.setEnvelope(mailFrom, rcptTos)
+					.send(this.messageStream);
 			if (CollectionUtils.isNotEmpty(failReceivers)) {
 				throw new IOException("send parted success. exist fail receivers - RECV:" + failReceivers);
 			}
 		} finally {
-			IOUtils.closeQuietly(messageStream);
+			IOUtils.closeQuietly(this.messageStream);
 		}
 	}
 
-	private InputStream getAdvancedMessageStream(InputStream messageStream, Map<String, Object> advancedData) throws MessagingException, IOException {
-		if (MapUtils.isEmpty(advancedData)) {
-			return messageStream;
-		}
-
+	private InputStream getAdvancedMessageStream(InputStream messageStream, AdvancedData advancedData) throws MessagingException, IOException {
 		// TODO mime을 건드리지 않는 조건일 경우 파싱하지 않게 개선해야 됨
 		AdvancedMimeMessage mimeMessage = new AdvancedMimeMessage(messageStream);
-		this.replaceSubject(advancedData, mimeMessage);
+		this.replaceSubject(advancedData.getReplaceSubjectData(), mimeMessage);
 		mimeMessage.saveChanges();
 
 		ByteArrayOutputStream copyStream = new ByteArrayOutputStream();
@@ -85,23 +83,23 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		return new ByteArrayInputStream(copyStream.toByteArray());
 	}
 
-	private boolean replaceSubject(Map<String, Object> advancedData, AdvancedMimeMessage mimeMessage) throws UnsupportedEncodingException, MessagingException {
-		if (!ObjectUtil.defaultBoolean(advancedData.get("advanced.replace.subject"), false)) {
+	private boolean replaceSubject(SubjectData replaceSubjectData, AdvancedMimeMessage mimeMessage) throws UnsupportedEncodingException, MessagingException {
+		if (!replaceSubjectData.isUse()) {
 			return false;
 		}
-		String subject = ObjectUtil.defaultString(advancedData.get("advanced.replace.subject.text"), "");
-		String charset = ObjectUtil.defaultString(advancedData.get("advanced.replace.subject.charset"), "UTF-8");
-		String encoding = ObjectUtil.defaultString("advanced.replace.subject.encoding", "B");
+		String subject = StringUtils.trimToEmpty(replaceSubjectData.getText());
+		String charset = StringUtils.defaultString(replaceSubjectData.getCharset(), "UTF-8");
+		String encoding = StringUtils.defaultString(replaceSubjectData.getEncoding(), "B");
 		String encodeSubject = MimeUtility.encodeWord(subject, charset, encoding);
 		mimeMessage.setSubject(encodeSubject);
 		return true;
 	}
 
-	private boolean saveToEml(Map<String, Object> advancedData, ByteArrayOutputStream copyStream) throws FileNotFoundException, IOException {
-		if (!ObjectUtil.defaultBoolean(advancedData.get("advanced.save.eml"), false)) {
+	private boolean saveToEml(AdvancedData advancedData, ByteArrayOutputStream copyStream) throws FileNotFoundException, IOException {
+		if (!advancedData.isSaveEml()) {
 			return false;
 		}
-		String saveDirPath = ObjectUtil.defaultString(advancedData.get("advanced.save.eml.dir"), "");
+		String saveDirPath = advancedData.getSaveEmlDir();
 		if (StringUtils.isBlank(saveDirPath)) {
 			return false;
 		}

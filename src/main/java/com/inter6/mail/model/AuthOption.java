@@ -18,15 +18,6 @@ public enum AuthOption {
 		return new AuthOption[] { NONE, PLAIN, LOGIN, CRAM_MD5, XOAUTH };
 	}
 
-	public static AuthOption parse(String value) {
-		for (AuthOption authOption : allItems()) {
-			if (authOption.toString().equals(value)) {
-				return authOption;
-			}
-		}
-		return NONE;
-	}
-
 	@Override
 	public String toString() {
 		return this.text;

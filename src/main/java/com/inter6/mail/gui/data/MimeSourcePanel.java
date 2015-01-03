@@ -31,7 +31,7 @@ public class MimeSourcePanel extends JPanel implements SendJobBuilder {
 	@Override
 	public Job buildSendJob() {
 		MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
-		mimeSmtpSendJob.getData().put("messageStream", new ByteArrayInputStream(this.mimeArea.getText().getBytes()));
+		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.mimeArea.getText().getBytes()));
 		return mimeSmtpSendJob;
 	}
 }

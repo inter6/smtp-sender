@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -18,16 +19,16 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.EmlSmtpSendJob;
+import com.inter6.mail.model.data.EmlSourceData;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
 
@@ -37,9 +38,6 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	@Autowired
 	private AppConfig appConfig;
-
-	@Autowired
-	private LogPanel logPanel;
 
 	private final DefaultListModel emlListModel = new DefaultListModel();
 	private final JList emlList = new JList(this.emlListModel);
@@ -65,17 +63,6 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			actionPanel.add(dedupAndSortButton);
 		}
 		this.add(actionPanel, BorderLayout.EAST);
-	}
-
-	@Override
-	public Job buildSendJob() {
-		EmlSmtpSendJob emlSmtpSendJob = ModuleService.getBean(EmlSmtpSendJob.class);
-		List<File> files = new ArrayList<File>();
-		for (int i = 0; i < this.emlListModel.size(); i++) {
-			files.add((File) this.emlListModel.get(i));
-		}
-		emlSmtpSendJob.getData().put("files", files);
-		return emlSmtpSendJob;
 	}
 
 	private final ActionListener addEvent = new ActionListener() {
@@ -123,32 +110,41 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	};
 
 	@Override
+	public Job buildSendJob() {
+		EmlSmtpSendJob emlSmtpSendJob = ModuleService.getBean(EmlSmtpSendJob.class);
+		emlSmtpSendJob.setEmlSourceData(this.getEmlSourceData());
+		return emlSmtpSendJob;
+	}
+
+	private EmlSourceData getEmlSourceData() {
+		EmlSourceData emlSourceData = new EmlSourceData();
+		List<File> files = new ArrayList<File>();
+		for (int i = 0; i < this.emlListModel.size(); i++) {
+			files.add((File) this.emlListModel.get(i));
+		}
+		emlSourceData.setFiles(files);
+		return emlSourceData;
+	}
+
+	@Override
 	public void loadConfig() {
 		this.emlListModel.removeAllElements();
-		String files[] = this.appConfig.getStringArray("source.eml.files");
-		if (ArrayUtils.isNotEmpty(files)) {
-			for (String file : files) {
-				if (StringUtils.isBlank(file)) {
-					continue;
-				}
-				File eml = new File(file);
-				if (!eml.exists() || !eml.isFile()) {
-					this.logPanel.info("not found eml ! - FILE:" + eml);
-					continue;
-				}
-				this.emlListModel.addElement(eml);
-				this.lastSelectFile = eml;
+		EmlSourceData emlSourceData = new Gson().fromJson(this.appConfig.getUnsplitString("eml.source.data"), EmlSourceData.class);
+		if (emlSourceData == null) {
+			return;
+		}
+
+		Collection<File> files = emlSourceData.getFiles();
+		if (CollectionUtils.isNotEmpty(files)) {
+			for (File file : files) {
+				this.emlListModel.addElement(file);
+				this.lastSelectFile = file;
 			}
 		}
 	}
 
 	@Override
 	public void updateConfig() {
-		StringBuilder emls = new StringBuilder();
-		for (int i = 0; i < this.emlListModel.size(); i++) {
-			File eml = (File) this.emlListModel.get(i);
-			emls.append(eml.getAbsolutePath()).append(",");
-		}
-		this.appConfig.setProperty("source.eml.files", emls.toString());
+		this.appConfig.setProperty("eml.source.data", new Gson().toJson(this.getEmlSourceData()));
 	}
 }

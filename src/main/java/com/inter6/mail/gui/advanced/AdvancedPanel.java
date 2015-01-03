@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -21,8 +19,11 @@ import javax.swing.JTextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.component.SubjectPanel;
+import com.inter6.mail.model.advanced.AdvancedData;
+import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.module.AppConfig;
 
 @Component
@@ -32,7 +33,7 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private AppConfig appConfig;
 
-	private final SubjectPanel subjectPanel = new SubjectPanel("Replace Subject", true);
+	private final SubjectPanel subjectPanel = new SubjectPanel("Replace Subject", false);
 
 	private final JCheckBox saveUseCheckBox = new JCheckBox();
 	private final JTextField savePathField = new JTextField(20);
@@ -80,37 +81,30 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 		}
 	};
 
-	public Map<String, Object> getData() {
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("advanced.replace.subject", this.subjectPanel.getData().get("use"));
-		data.put("advanced.replace.subject.text", this.subjectPanel.getData().get("text"));
-		data.put("advanced.replace.subject.charset", this.subjectPanel.getData().get("charset"));
-		data.put("advanced.replace.subject.encoding", this.subjectPanel.getData().get("encoding"));
-		data.put("advanced.save.eml", this.saveUseCheckBox.isSelected());
-		data.put("advanced.save.eml.dir", this.savePathField.getText());
-		return data;
+	public AdvancedData getAdvancedData() {
+		AdvancedData advancedData = new AdvancedData();
+		advancedData.setReplaceSubjectData(this.subjectPanel.getSubjectData());
+		advancedData.setSaveEml(this.saveUseCheckBox.isSelected());
+		advancedData.setSaveEmlDir(this.savePathField.getText());
+		return advancedData;
 	}
 
 	@Override
 	public void loadConfig() {
-		Map<String, Object> subjectData = new HashMap<String, Object>();
-		subjectData.put("use", this.appConfig.getBoolean("advanced.replace.subject", false));
-		subjectData.put("text", this.appConfig.getString("advanced.replace.subject.text", ""));
-		subjectData.put("charset", this.appConfig.getString("advanced.replace.subject.charset", "UTF-8"));
-		subjectData.put("encoding", this.appConfig.getString("advanced.replace.subject.encoding", "B"));
-		this.subjectPanel.setData(subjectData);
-
-		this.saveUseCheckBox.setSelected(this.appConfig.getBoolean("advanced.save.eml", false));
-		this.savePathField.setText(this.appConfig.getString("advanced.save.eml.dir"));
+		AdvancedData advancedData = new Gson().fromJson(this.appConfig.getUnsplitString("advanced.data"), AdvancedData.class);
+		if (advancedData == null) {
+			return;
+		}
+		SubjectData replaceSubjectData = advancedData.getReplaceSubjectData();
+		if (replaceSubjectData != null) {
+			this.subjectPanel.setSubjectData(replaceSubjectData);
+		}
+		this.saveUseCheckBox.setSelected(advancedData.isSaveEml());
+		this.savePathField.setText(advancedData.getSaveEmlDir());
 	}
 
 	@Override
 	public void updateConfig() {
-		this.appConfig.setProperty("advanced.replace.subject", this.subjectPanel.getData().get("use"));
-		this.appConfig.setProperty("advanced.replace.subject.text", this.subjectPanel.getData().get("text"));
-		this.appConfig.setProperty("advanced.replace.subject.charset", this.subjectPanel.getData().get("charset"));
-		this.appConfig.setProperty("advanced.replace.subject.encoding", this.subjectPanel.getData().get("encoding"));
-		this.appConfig.setProperty("advanced.save.eml", this.saveUseCheckBox.isSelected());
-		this.appConfig.setProperty("advanced.save.eml.dir", this.savePathField.getText());
+		this.appConfig.setProperty("advanced.data", new Gson().toJson(this.getAdvancedData()));
 	}
 }

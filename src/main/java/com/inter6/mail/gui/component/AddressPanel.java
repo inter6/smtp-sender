@@ -1,13 +1,13 @@
 package com.inter6.mail.gui.component;
 
 import java.awt.FlowLayout;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.inter6.mail.model.component.AddressData;
 
 public class AddressPanel extends JPanel {
 	private static final long serialVersionUID = -2074315658132902201L;
@@ -34,14 +34,23 @@ public class AddressPanel extends JPanel {
 		this.add(this.personalEncodingOptionBox);
 	}
 
-	public Map<String, Object> getData() throws Throwable {
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("use", this.useCheckBox.isSelected());
-		data.put("type", this.typeOptionBox.getSelectedItem());
-		data.put("personal.text", this.personalField.getText());
-		data.put("personal.charset", this.personalCharsetField.getText());
-		data.put("personal.encoding", this.personalEncodingOptionBox.getSelectedItem());
-		data.put("address.text", this.addressField.getText());
-		return data;
+	public AddressData getAddressData() {
+		AddressData addressData = new AddressData();
+		addressData.setUse(this.useCheckBox.isSelected());
+		addressData.setType((String) this.typeOptionBox.getSelectedItem());
+		addressData.setPersonal(this.personalField.getText());
+		addressData.setPersonalCharset(this.personalCharsetField.getText());
+		addressData.setPersonalEncoding((String) this.personalEncodingOptionBox.getSelectedItem());
+		addressData.setAddress(this.addressField.getText());
+		return addressData;
+	}
+
+	public void setAddressData(AddressData addressData) {
+		this.useCheckBox.setSelected(addressData.isUse());
+		this.typeOptionBox.setSelectedItem(addressData.getType());
+		this.personalField.setText(addressData.getPersonal());
+		this.personalCharsetField.setText(addressData.getPersonalCharset());
+		this.personalEncodingOptionBox.setSelectedItem(addressData.getPersonalEncoding());
+		this.addressField.setText(addressData.getAddress());
 	}
 }
