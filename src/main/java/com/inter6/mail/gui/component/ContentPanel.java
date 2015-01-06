@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -33,23 +34,35 @@ public abstract class ContentPanel extends JPanel {
 
 	private final List<ChildWrapPanel> childPanels = new ArrayList<ContentPanel.ChildWrapPanel>();
 
+	protected final JPanel wrapPanel = new JPanel();
+	protected final JPanel childContainerPanel = new JPanel();
 	private final JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	private final JComboBox childTypeSelectBox = new JComboBox();
 	private final JButton addChildButton = new JButton("Add Child");
 
-	public ContentPanel(String subType, Integer nested) {
+	public static ContentPanel createPanel(ContentType contentType, int nested) {
+		try {
+			Class<? extends ContentPanel> panelClass = contentType.getPanelClass();
+			ContentPanel contentPanel = panelClass.getDeclaredConstructor(String.class, Integer.class).newInstance(contentType.getSubType(), new Integer(nested));
+			contentPanel.initLayout();
+			return contentPanel;
+		} catch (Exception e) {
+			log.error("create content panel fail ! - TYPE:" + contentType, e);
+			return null;
+		}
+	}
+
+	protected ContentPanel(String subType, Integer nested) {
 		super();
 		this.subType = subType;
 		this.nested = nested;
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBorder(new CompoundBorder(new EmptyBorder(10, nested * 20, 10, 10), new LineBorder(Color.RED)));
+		this.add(this.wrapPanel);
 
-		JPanel wrapPanel = new JPanel();
-		{
-			this.initLayout(wrapPanel);
-		}
-		this.add(wrapPanel);
+		this.childContainerPanel.setLayout(new BoxLayout(this.childContainerPanel, BoxLayout.Y_AXIS));
+		this.add(this.childContainerPanel);
 
 		// JPanel actionPanel
 		{
@@ -71,21 +84,6 @@ public abstract class ContentPanel extends JPanel {
 		}
 	}
 
-	private void addChildPanel() throws Exception {
-		ContentType childType = (ContentType) this.childTypeSelectBox.getSelectedItem();
-		ChildWrapPanel childContentPanel = new ChildWrapPanel(childType.createPanel(this.nested + 1));
-
-		this.childPanels.add(childContentPanel);
-		this.add(childContentPanel, this.getComponentCount() - 1);
-		this.setActionComponents();
-	}
-
-	private void removeChildPanel(ChildWrapPanel childPanel) {
-		this.remove(childPanel);
-		this.childPanels.remove(childPanel);
-		this.setActionComponents();
-	}
-
 	private final ActionListener addChildEvent = new ActionListener() {
 
 		@Override
@@ -98,7 +96,16 @@ public abstract class ContentPanel extends JPanel {
 		}
 	};
 
-	protected abstract void initLayout(JPanel wrapPanel);
+	private void addChildPanel() throws Exception {
+		ContentType childType = (ContentType) this.childTypeSelectBox.getSelectedItem();
+		ChildWrapPanel childWrapPanel = new ChildWrapPanel(createPanel(childType, this.nested + 1));
+
+		this.childPanels.add(childWrapPanel);
+		this.childContainerPanel.add(childWrapPanel);
+		this.setActionComponents();
+	}
+
+	protected abstract void initLayout();
 
 	protected abstract Vector<ContentType> getAvailableChildTypes(List<ChildWrapPanel> addedChildPanels);
 
@@ -117,6 +124,8 @@ public abstract class ContentPanel extends JPanel {
 				JButton upButton = new JButton("Up");
 				JButton downButton = new JButton("Down");
 				JButton removeButton = new JButton("Remove");
+				upButton.addActionListener(this.upEvent);
+				downButton.addActionListener(this.downEvent);
 				removeButton.addActionListener(this.removeEvent);
 				actionPanel.add(upButton);
 				actionPanel.add(downButton);
@@ -126,6 +135,22 @@ public abstract class ContentPanel extends JPanel {
 			this.add(childPanel, BorderLayout.CENTER);
 		}
 
+		private final ActionListener upEvent = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ContentPanel.this.upChildPanel(ChildWrapPanel.this);
+			};
+		};
+
+		private final ActionListener downEvent = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ContentPanel.this.downChildPanel(ChildWrapPanel.this);
+			};
+		};
+
 		private final ActionListener removeEvent = new ActionListener() {
 
 			@Override
@@ -133,5 +158,33 @@ public abstract class ContentPanel extends JPanel {
 				ContentPanel.this.removeChildPanel(ChildWrapPanel.this);
 			}
 		};
+	}
+
+	protected void upChildPanel(ChildWrapPanel childWrapPanel) {
+		int index = this.childPanels.indexOf(childWrapPanel);
+		if (index == 0) {
+			return;
+		}
+		Collections.swap(this.childPanels, index - 1, index);
+		this.childContainerPanel.remove(index);
+		this.childContainerPanel.add(childWrapPanel, index - 1);
+		this.updateUI();
+	}
+
+	protected void downChildPanel(ChildWrapPanel childWrapPanel) {
+		int index = this.childPanels.indexOf(childWrapPanel);
+		if (index >= this.childPanels.size() - 1) {
+			return;
+		}
+		Collections.swap(this.childPanels, index, index + 1);
+		this.childContainerPanel.remove(index);
+		this.childContainerPanel.add(childWrapPanel, index + 1);
+		this.updateUI();
+	}
+
+	private void removeChildPanel(ChildWrapPanel childPanel) {
+		this.childPanels.remove(childPanel);
+		this.childContainerPanel.remove(childPanel);
+		this.setActionComponents();
 	}
 }

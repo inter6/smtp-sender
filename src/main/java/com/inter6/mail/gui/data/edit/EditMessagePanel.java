@@ -7,7 +7,8 @@ import javax.swing.JPanel;
 
 import org.springframework.stereotype.Component;
 
-import com.inter6.mail.gui.component.MultiPartPanel;
+import com.inter6.mail.gui.component.ContentPanel;
+import com.inter6.mail.model.ContentType;
 
 @Component
 public class EditMessagePanel extends JPanel {
@@ -17,6 +18,6 @@ public class EditMessagePanel extends JPanel {
 	private void init() { // NOPMD
 		this.setLayout(new BorderLayout());
 
-		this.add(new MultiPartPanel("mixed", 0), BorderLayout.CENTER);
+		this.add(ContentPanel.createPanel(ContentType.MULTIPART_MIXED, 0), BorderLayout.CENTER);
 	}
 }

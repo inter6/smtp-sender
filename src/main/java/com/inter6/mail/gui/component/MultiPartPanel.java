@@ -5,30 +5,30 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import com.inter6.mail.model.ContentType;
 
 public class MultiPartPanel extends ContentPanel {
 	private static final long serialVersionUID = -4555796509776825034L;
 
-	public MultiPartPanel(String subType, Integer nested) {
+	protected MultiPartPanel(String subType, Integer nested) {
 		super(subType, nested);
 	}
 
 	@Override
-	protected void initLayout(JPanel wrapPanel) {
-		// TODO Auto-generated method stub
-		wrapPanel.setLayout(new BorderLayout());
-		wrapPanel.add(new JLabel("Content-Type: multipart/mixed"), BorderLayout.NORTH);
+	protected void initLayout() {
+		this.wrapPanel.setLayout(new BorderLayout());
+		this.wrapPanel.add(new JLabel("Content-Type: multipart/" + this.subType), BorderLayout.NORTH);
 	}
 
 	@Override
 	protected Vector<ContentType> getAvailableChildTypes(List<ChildWrapPanel> addedChildPanels) {
-		// TODO Auto-generated method stub
 		Vector<ContentType> childTypes = new Vector<ContentType>();
 		childTypes.add(ContentType.MULTIPART_MIXED);
+		childTypes.add(ContentType.MULTIPART_ALTERNATIVE);
 		childTypes.add(ContentType.TEXT_PLAIN);
+		childTypes.add(ContentType.TEXT_HTML);
+		childTypes.add(ContentType.ATTACHMENT);
 		return childTypes;
 	}
 }
