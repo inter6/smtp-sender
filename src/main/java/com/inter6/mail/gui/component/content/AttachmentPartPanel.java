@@ -1,4 +1,4 @@
-package com.inter6.mail.gui.component;
+package com.inter6.mail.gui.component.content;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.inter6.mail.model.ContentType;
 
-public class AttachmentPartPanel extends ContentPanel {
+public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
 
 	// <extension, subType>
@@ -36,8 +36,8 @@ public class AttachmentPartPanel extends ContentPanel {
 	private final JTextField pathField = new JTextField(30);
 	private File lastSelectFile;
 
-	protected AttachmentPartPanel(String subType, Integer nested) {
-		super(subType, nested);
+	protected AttachmentPartPanel(ContentType contentType, Integer nested) {
+		super(contentType, nested);
 	}
 
 	@Override
@@ -85,7 +85,8 @@ public class AttachmentPartPanel extends ContentPanel {
 	}
 
 	@Override
-	protected Vector<ContentType> getAvailableChildTypes(List<ChildWrapPanel> addedChildPanels) {
+	protected Vector<ContentType> getAvailableChildTypes(List<ContentPartPanel> addedChildPanels) {
+		// attach part can not hava childs.
 		return null;
 	}
 }
