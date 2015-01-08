@@ -65,9 +65,10 @@ public class ActionPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent ev) {
 			// TODO 쓰레드 처리
-			Job sendJob = ActionPanel.this.dataPanel.getSendJob();
-			String jobName = sendJob.getClass().getSimpleName();
+			String jobName = "unknown";
 			try {
+				Job sendJob = ActionPanel.this.dataPanel.getSendJob();
+				jobName = sendJob.getClass().getSimpleName();
 				ActionPanel.this.startButton.setEnabled(false);
 				// XXX 구현되면 주석 제거
 				//				ActionPanel.this.stopButton.setEnabled(true);

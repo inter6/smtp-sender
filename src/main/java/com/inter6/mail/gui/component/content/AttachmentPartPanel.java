@@ -5,35 +5,23 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.inter6.mail.model.ContentType;
 
 public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
 
-	// <extension, subType>
-	private static final Map<String, String> imageTypeMap = new HashMap<String, String>();
-	static {
-		imageTypeMap.put("jpg", "jpeg");
-		imageTypeMap.put("jpeg", "jpeg");
-	}
-
-	private String contentType = "application/octet-stream";
-	private final JLabel typeLabel = new JLabel("Content-Type: " + this.contentType);
+	private final JLabel typeLabel = new JLabel("Content-Type: application/octet-stream");
 	private final JTextField pathField = new JTextField(30);
 	private File lastSelectFile;
 
@@ -68,27 +56,28 @@ public class AttachmentPartPanel extends ContentPartPanel {
 				File file = fileChooser.getSelectedFile();
 				if (file.isFile()) {
 					AttachmentPartPanel.this.pathField.setText(file.getAbsolutePath());
-					AttachmentPartPanel.this.setContentType(file);
+					AttachmentPartPanel.this.setContentType();
 					AttachmentPartPanel.this.lastSelectFile = file;
 				}
 			}
 		}
 	};
 
-	private void setContentType(File file) {
-		String extension = StringUtils.lowerCase(FilenameUtils.getExtension(file.getName()));
-		if (imageTypeMap.keySet().contains(extension)) {
-			this.contentType = "image/" + imageTypeMap.get(extension);
-		} else {
-			this.contentType = "application/octet-stream";
+	private void setContentType() {
+		try {
+			MimeMultipart part = (MimeMultipart) this.buildContentPart();
+			this.typeLabel.setText("Content-Type: " + part.getContentType());
+		} catch (Throwable e) {
+			// TODO 로그
 		}
-		this.typeLabel.setText("Content-Type: " + this.contentType);
 	}
 
 	@Override
 	public Object buildContentPart() throws Throwable {
 		MimeBodyPart part = new MimeBodyPart();
-		part.attachFile(this.pathField.getText());
+		File file = new File(this.pathField.getText());
+		part.attachFile(file);
+		// TODO 파일 이름에 대한 인코딩
 		return part;
 	}
 

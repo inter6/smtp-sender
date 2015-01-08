@@ -91,7 +91,7 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	};
 
 	@Override
-	public Job buildSendJob() {
+	public Job buildSendJob() throws Throwable {
 		DirSmtpSendJob dirSmtpSendJob = ModuleService.getBean(DirSmtpSendJob.class);
 		dirSmtpSendJob.setDirSourceData(this.getDirSourceData());
 		return dirSmtpSendJob;

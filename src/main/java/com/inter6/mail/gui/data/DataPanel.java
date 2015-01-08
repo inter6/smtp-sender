@@ -104,7 +104,7 @@ public class DataPanel extends JPanel implements ConfigObserver {
 		this.sourceInputPanel.updateUI();
 	}
 
-	public Job getSendJob() {
+	public Job getSendJob() throws Throwable {
 		return this.selectedJobBuilder.buildSendJob();
 	}
 

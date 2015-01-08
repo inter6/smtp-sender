@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -31,8 +32,10 @@ import com.inter6.mail.gui.data.edit.EditAddressPanel;
 import com.inter6.mail.gui.data.edit.EditMessagePanel;
 import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.smtp.MimeSmtpSendJob;
 import com.inter6.mail.model.component.AddressData;
 import com.inter6.mail.model.component.SubjectData;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 public class EditSourcePanel extends JPanel implements SendJobBuilder {
@@ -119,8 +122,9 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder {
 	}
 
 	@Override
-	public Job buildSendJob() {
-		// TODO Auto-generated method stub
-		return null;
+	public Job buildSendJob() throws Throwable {
+		MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
+		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.buildMessage()));
+		return mimeSmtpSendJob;
 	}
 }

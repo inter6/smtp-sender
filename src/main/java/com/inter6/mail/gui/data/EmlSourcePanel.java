@@ -110,7 +110,7 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	};
 
 	@Override
-	public Job buildSendJob() {
+	public Job buildSendJob() throws Throwable {
 		EmlSmtpSendJob emlSmtpSendJob = ModuleService.getBean(EmlSmtpSendJob.class);
 		emlSmtpSendJob.setEmlSourceData(this.getEmlSourceData());
 		return emlSmtpSendJob;
