@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.util.List;
 import java.util.Vector;
 
+import javax.mail.internet.MimeBodyPart;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
@@ -11,6 +12,8 @@ import com.inter6.mail.model.ContentType;
 
 public class TextPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = -5641431122402910873L;
+
+	private final JTextArea textArea = new JTextArea(5, 30);
 
 	protected TextPartPanel(ContentType contentType, Integer nested) {
 		super(contentType, nested);
@@ -20,7 +23,14 @@ public class TextPartPanel extends ContentPartPanel {
 	protected void initLayout() {
 		this.wrapPanel.setLayout(new BorderLayout());
 		this.wrapPanel.add(new JLabel("Content-Type: " + this.contentType), BorderLayout.NORTH);
-		this.wrapPanel.add(new JTextArea(5, 30), BorderLayout.CENTER);
+		this.wrapPanel.add(this.textArea, BorderLayout.CENTER);
+	}
+
+	@Override
+	public Object buildContentPart() throws Throwable {
+		MimeBodyPart part = new MimeBodyPart();
+		part.setText(this.textArea.getText(), "UTF-8", this.contentType.getSubType());
+		return part;
 	}
 
 	@Override

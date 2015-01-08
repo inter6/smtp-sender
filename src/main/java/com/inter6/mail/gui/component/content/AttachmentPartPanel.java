@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.mail.internet.MimeBodyPart;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -82,6 +83,13 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			this.contentType = "application/octet-stream";
 		}
 		this.typeLabel.setText("Content-Type: " + this.contentType);
+	}
+
+	@Override
+	public Object buildContentPart() throws Throwable {
+		MimeBodyPart part = new MimeBodyPart();
+		part.attachFile(this.pathField.getText());
+		return part;
 	}
 
 	@Override

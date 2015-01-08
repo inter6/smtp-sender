@@ -19,14 +19,22 @@ public class EditMessagePanel extends JPanel {
 	@Autowired
 	private LogPanel logPanel;
 
+	private ContentPartPanel rootPartPanel;
+
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new BorderLayout());
 
+		// TODO 최상위 파트를 바꿀 수 있는 기능
 		try {
-			this.add(ContentPartPanel.createPanelByRoot(ContentType.MULTIPART_MIXED), BorderLayout.CENTER);
+			this.rootPartPanel = ContentPartPanel.createPanelByRoot(ContentType.MULTIPART_MIXED);
+			this.add(this.rootPartPanel, BorderLayout.CENTER);
 		} catch (Exception e) {
 			this.logPanel.error("create content panel fail ! - TYPE:" + ContentType.MULTIPART_MIXED, e);
 		}
+	}
+
+	public Object buildContentPart() throws Throwable {
+		return this.rootPartPanel.buildContentPart();
 	}
 }

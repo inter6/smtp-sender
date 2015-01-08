@@ -12,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeUtility;
 
 import lombok.Setter;
 
@@ -87,11 +86,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		if (!replaceSubjectData.isUse()) {
 			return false;
 		}
-		String subject = StringUtils.trimToEmpty(replaceSubjectData.getText());
-		String charset = StringUtils.defaultString(replaceSubjectData.getCharset(), "UTF-8");
-		String encoding = StringUtils.defaultString(replaceSubjectData.getEncoding(), "B");
-		String encodeSubject = MimeUtility.encodeWord(subject, charset, encoding);
-		mimeMessage.setSubject(encodeSubject);
+		mimeMessage.setSubject(replaceSubjectData.encodeSubject());
 		return true;
 	}
 

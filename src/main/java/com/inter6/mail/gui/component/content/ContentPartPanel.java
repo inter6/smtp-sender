@@ -82,7 +82,7 @@ public abstract class ContentPartPanel extends JPanel {
 		}
 	}
 
-	private List<ContentPartPanel> getUnwrapChildPanels() {
+	protected List<ContentPartPanel> getUnwrapChildPanels() {
 		List<ContentPartPanel> childPanels = new ArrayList<ContentPartPanel>();
 		for (ChildWrapPanel childWrapPanel : this.childWrapPanels) {
 			childPanels.add(childWrapPanel.contentPanel);
@@ -111,6 +111,8 @@ public abstract class ContentPartPanel extends JPanel {
 	}
 
 	protected abstract void initLayout();
+
+	public abstract Object buildContentPart() throws Throwable;
 
 	protected abstract Vector<ContentType> getAvailableChildTypes(List<ContentPartPanel> addedChildPanels);
 

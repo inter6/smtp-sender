@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -29,7 +30,9 @@ public class AddressPanel extends JPanel {
 		this.add(this.typeOptionBox);
 
 		this.add(this.personalField);
+		this.add(new JLabel("<"));
 		this.add(this.addressField);
+		this.add(new JLabel(">"));
 		this.add(this.personalCharsetField);
 		this.add(this.personalEncodingOptionBox);
 	}

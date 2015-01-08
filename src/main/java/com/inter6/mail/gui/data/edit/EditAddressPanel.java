@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.component.AddressPanel;
+import com.inter6.mail.model.component.AddressData;
 
 @Component
 @Scope("prototype")
@@ -83,4 +84,12 @@ public class EditAddressPanel extends JPanel {
 			EditAddressPanel.this.updateUI();
 		}
 	};
+
+	public List<AddressData> getAddressDatas() {
+		List<AddressData> addressDatas = new ArrayList<AddressData>();
+		for (AddressPanel addressPanel : this.addressPanels) {
+			addressDatas.add(addressPanel.getAddressData());
+		}
+		return addressDatas;
+	}
 }
