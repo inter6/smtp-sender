@@ -29,11 +29,13 @@ import org.springframework.stereotype.Component;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.SubjectPanel;
 import com.inter6.mail.gui.data.edit.EditAddressPanel;
+import com.inter6.mail.gui.data.edit.EditHeaderPanel;
 import com.inter6.mail.gui.data.edit.EditMessagePanel;
 import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.MimeSmtpSendJob;
 import com.inter6.mail.model.component.AddressData;
+import com.inter6.mail.model.component.HeaderData;
 import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.module.ModuleService;
 
@@ -45,6 +47,9 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder {
 
 	@Autowired
 	private EditAddressPanel editAddressPanel;
+
+	@Autowired
+	private EditHeaderPanel editHeaderPanel;
 
 	@Autowired
 	private EditMessagePanel editMessagePanel;
@@ -61,6 +66,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder {
 		{
 			wrapPanel.add(this.subjectPanel);
 			wrapPanel.add(this.editAddressPanel);
+			wrapPanel.add(this.editHeaderPanel);
 			wrapPanel.add(this.editMessagePanel);
 		}
 		this.add(new JScrollPane(wrapPanel), BorderLayout.CENTER);
@@ -118,6 +124,14 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder {
 			} else {
 				mimeMessage.addRecipient(type, internetAddress);
 			}
+		}
+
+		List<HeaderData> headerDatas = this.editHeaderPanel.getHeaderDatas();
+		for (HeaderData headerData : headerDatas) {
+			if (!headerData.isUse()) {
+				continue;
+			}
+			mimeMessage.addHeader(headerData.getKey(), headerData.getValue());
 		}
 	}
 
