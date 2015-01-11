@@ -43,7 +43,7 @@ import com.inter6.mail.module.ModuleService;
 public class EditSourcePanel extends JPanel implements SendJobBuilder {
 	private static final long serialVersionUID = -4373325495997044386L;
 
-	private final SubjectPanel subjectPanel = new SubjectPanel("Subject", true);
+	private final SubjectPanel subjectPanel = new SubjectPanel("Subject", 30, true);
 
 	@Autowired
 	private EditAddressPanel editAddressPanel;

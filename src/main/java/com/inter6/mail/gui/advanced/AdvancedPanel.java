@@ -33,38 +33,48 @@ public class AdvancedPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private AppConfig appConfig;
 
-	private final SubjectPanel subjectPanel = new SubjectPanel("Replace Subject", false);
+	private final SubjectPanel subjectPanel = new SubjectPanel("Replace Subject", 20, false);
 
 	private final JCheckBox saveUseCheckBox = new JCheckBox();
 	private final JTextField savePathField = new JTextField(20);
 
 	@PostConstruct
 	private void init() { // NOPMD
-		this.setLayout(new BorderLayout());
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		this.add(new JLabel("Advanced Setting"), BorderLayout.NORTH);
-
-		JPanel wrapPanel = new JPanel();
-		wrapPanel.setLayout(new BoxLayout(wrapPanel, BoxLayout.Y_AXIS));
+		JPanel rootWrapPanel = new JPanel();
+		rootWrapPanel.setLayout(new BoxLayout(rootWrapPanel, BoxLayout.Y_AXIS));
 		{
-			wrapPanel.add(this.subjectPanel);
-
-			JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			JPanel preWrapPanel = new JPanel();
+			preWrapPanel.setLayout(new BoxLayout(preWrapPanel, BoxLayout.Y_AXIS));
 			{
-				savePanel.add(this.saveUseCheckBox);
-				savePanel.add(new JLabel("Save EML"));
-
-				this.savePathField.setEditable(false);
-				savePanel.add(this.savePathField);
-
-				JButton setSaveDirButton = new JButton("Directory");
-				setSaveDirButton.addActionListener(this.setSaveDirEvent);
-				savePanel.add(setSaveDirButton);
+				preWrapPanel.add(new JLabel("Pre Send Setting"));
+				preWrapPanel.add(this.subjectPanel);
 			}
-			wrapPanel.add(savePanel);
+			rootWrapPanel.add(preWrapPanel);
+
+			JPanel postWrapPanel = new JPanel();
+			postWrapPanel.setLayout(new BoxLayout(postWrapPanel, BoxLayout.Y_AXIS));
+			{
+				postWrapPanel.add(new JLabel("Post Send Setting"));
+				JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+				{
+					savePanel.add(this.saveUseCheckBox);
+					savePanel.add(new JLabel("Save EML"));
+
+					this.savePathField.setEditable(false);
+					savePanel.add(this.savePathField);
+
+					JButton setSaveDirButton = new JButton("Directory");
+					setSaveDirButton.addActionListener(this.setSaveDirEvent);
+					savePanel.add(setSaveDirButton);
+				}
+				postWrapPanel.add(savePanel);
+			}
+			rootWrapPanel.add(postWrapPanel);
 		}
 
-		JScrollPane wrapScrollPane = new JScrollPane(wrapPanel);
+		JScrollPane wrapScrollPane = new JScrollPane(rootWrapPanel);
 		wrapScrollPane.setPreferredSize(new Dimension(400, 0));
 		this.add(wrapScrollPane, BorderLayout.CENTER);
 	}

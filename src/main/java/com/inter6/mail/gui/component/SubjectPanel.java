@@ -14,16 +14,17 @@ public class SubjectPanel extends JPanel {
 	private static final long serialVersionUID = -4355410559162938889L;
 
 	private final JCheckBox useCheckBox = new JCheckBox();
-	private final JTextField subjectField = new JTextField(30);
-	private final JTextField subjectCharsetField = new JTextField("UTF-8", 10);
+	private final JTextField subjectField = new JTextField(20);
+	private final JTextField subjectCharsetField = new JTextField("UTF-8", 6);
 	private final JComboBox subjectEncodingOptionBox = new JComboBox(new String[] { "B", "Q" });
 
-	public SubjectPanel(String label, boolean isUse) {
+	public SubjectPanel(String label, int columns, boolean isUse) {
 		super(new FlowLayout(FlowLayout.LEFT));
 
 		this.useCheckBox.setSelected(isUse);
 		this.add(this.useCheckBox);
 		this.add(new JLabel(label));
+		this.subjectField.setColumns(columns);
 		this.add(this.subjectField);
 		this.add(this.subjectCharsetField);
 

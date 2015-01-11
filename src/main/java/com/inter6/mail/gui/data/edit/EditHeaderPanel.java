@@ -1,6 +1,7 @@
 package com.inter6.mail.gui.data.edit;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -69,9 +71,9 @@ public class EditHeaderPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JButton source = (JButton) e.getSource();
-			EditHeaderPanel.this.headerPanels.remove(source.getParent());
-			EditHeaderPanel.this.remove(source.getParent());
+			Container wrapPanel = ((JButton) e.getSource()).getParent();
+			EditHeaderPanel.this.headerPanels.remove(wrapPanel.getComponent(0));
+			EditHeaderPanel.this.remove(wrapPanel);
 			EditHeaderPanel.this.updateUI();
 		}
 	};
@@ -79,7 +81,11 @@ public class EditHeaderPanel extends JPanel {
 	public List<HeaderData> getHeaderDatas() {
 		List<HeaderData> headerDatas = new ArrayList<HeaderData>();
 		for (HeaderPanel headerPanel : this.headerPanels) {
-			headerDatas.add(headerPanel.getHeaderData());
+			HeaderData headerData = headerPanel.getHeaderData();
+			if (StringUtils.isBlank(headerData.getKey())) {
+				continue;
+			}
+			headerDatas.add(headerData);
 		}
 		return headerDatas;
 	}

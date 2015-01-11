@@ -1,6 +1,7 @@
 package com.inter6.mail.gui.data.edit;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -78,9 +80,9 @@ public class EditAddressPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JButton source = (JButton) e.getSource();
-			EditAddressPanel.this.addressPanels.remove(source.getParent());
-			EditAddressPanel.this.remove(source.getParent());
+			Container wrapPanel = ((JButton) e.getSource()).getParent();
+			EditAddressPanel.this.addressPanels.remove(wrapPanel.getComponent(0));
+			EditAddressPanel.this.remove(wrapPanel);
 			EditAddressPanel.this.updateUI();
 		}
 	};
@@ -88,7 +90,11 @@ public class EditAddressPanel extends JPanel {
 	public List<AddressData> getAddressDatas() {
 		List<AddressData> addressDatas = new ArrayList<AddressData>();
 		for (AddressPanel addressPanel : this.addressPanels) {
-			addressDatas.add(addressPanel.getAddressData());
+			AddressData addressData = addressPanel.getAddressData();
+			if (StringUtils.isBlank(addressData.getAddress())) {
+				continue;
+			}
+			addressDatas.add(addressData);
 		}
 		return addressDatas;
 	}

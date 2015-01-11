@@ -15,10 +15,10 @@ public class AddressPanel extends JPanel {
 
 	private final JCheckBox useCheckBox = new JCheckBox();
 	private final JComboBox typeOptionBox = new JComboBox(new String[] { "From", "To", "Cc", "Bcc" });
-	private final JTextField personalField = new JTextField(15);
-	private final JTextField personalCharsetField = new JTextField("UTF-8", 10);
+	private final JTextField personalField = new JTextField(10);
+	private final JTextField personalCharsetField = new JTextField("UTF-8", 6);
 	private final JComboBox personalEncodingOptionBox = new JComboBox(new String[] { "B", "Q" });
-	private final JTextField addressField = new JTextField(20);
+	private final JTextField addressField = new JTextField(15);
 
 	public AddressPanel(String type, boolean isUse) {
 		super(new FlowLayout(FlowLayout.LEFT));

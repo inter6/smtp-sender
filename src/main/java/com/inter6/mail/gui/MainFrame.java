@@ -48,7 +48,7 @@ public class MainFrame extends JFrame {
 
 		this.setTitle("smtp-sender by inter6.com");
 		this.setSize(1200, 800);
-		this.setMinimumSize(new Dimension(1200, 800));
+		this.setMinimumSize(new Dimension(600, 400));
 		this.initLayout();
 		this.setVisible(true);
 
