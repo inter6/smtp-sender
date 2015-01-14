@@ -9,14 +9,16 @@ SMTP로 메일을 전송하는 Java GUI 프로그램.
 
 v1.0.0 (ToDo)
 - Support TLS
-- Support Multi-thread
-- Improve Logging panel
 - Add Pre/Post send settings
+- Add Tools: Base64, RFC2074 encoder/decoder
 - Add Tools: DNS Query, Ping
 
-v0.2.0 (In Progress)
+v0.3.0 (In Progress)
+- Support Multi-thread
+- Improve Logging panel
+
+v0.2.0 (Last Release)
 - Add MIME editor
-- Add Tools: Base64, RFC2074 encoder/decoder
 
 v0.1.2
 - Support SSL
