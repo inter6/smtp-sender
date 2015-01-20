@@ -10,6 +10,7 @@ import com.inter6.mail.gui.component.content.TextPartPanel;
 public enum ContentType {
 	MULTIPART_MIXED("multipart", "mixed", MultiPartPanel.class),
 	MULTIPART_ALTERNATIVE("multipart", "alternative", MultiPartPanel.class),
+	MULTIPART_RELATED("multipart", "related", MultiPartPanel.class),
 	TEXT_PLAIN("text", "plain", TextPartPanel.class),
 	TEXT_HTML("text", "html", TextPartPanel.class),
 	ATTACHMENT("attachment", null, AttachmentPartPanel.class);

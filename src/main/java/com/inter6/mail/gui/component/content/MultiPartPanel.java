@@ -56,6 +56,7 @@ public class MultiPartPanel extends ContentPartPanel {
 		Vector<ContentType> childTypes = new Vector<ContentType>();
 		childTypes.add(ContentType.MULTIPART_MIXED);
 		childTypes.add(ContentType.MULTIPART_ALTERNATIVE);
+		childTypes.add(ContentType.MULTIPART_RELATED);
 		childTypes.add(ContentType.TEXT_PLAIN);
 		childTypes.add(ContentType.TEXT_HTML);
 		childTypes.add(ContentType.ATTACHMENT);
