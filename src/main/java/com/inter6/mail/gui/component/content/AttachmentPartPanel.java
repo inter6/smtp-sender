@@ -118,7 +118,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 
 		String contentId = this.contentIdField.getText();
 		if (StringUtils.isNotBlank(contentId)) {
-			part.setContentID(contentId);
+			part.setContentID("<" + contentId + ">");
 		}
 		return part;
 	}
