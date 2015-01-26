@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -114,7 +115,9 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		MimeBodyPart part = new MimeBodyPart();
 		File file = new File(this.pathField.getText());
 		part.attachFile(file);
+
 		// TODO 파일 이름에 대한 인코딩
+		part.setFileName(MimeUtility.encodeWord(file.getName(), "UTF-8", "B"));
 
 		String contentId = this.contentIdField.getText();
 		if (StringUtils.isNotBlank(contentId)) {
