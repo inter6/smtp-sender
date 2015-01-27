@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 import com.inter6.mail.model.AdvancedMimeMessage;
 import com.inter6.mail.model.AuthOption;
-import com.inter6.mail.model.advanced.AdvancedData;
+import com.inter6.mail.model.advanced.PostSendSettingData;
 import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.service.SmtpService;
 
@@ -52,7 +52,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		String mailFrom = this.getEnvelopeData().getMailFrom();
 		Set<String> rcptTos = this.getEnvelopeData().getRcptTos();
 
-		this.messageStream = this.getAdvancedMessageStream(this.messageStream, this.getAdvancedData());
+		this.messageStream = this.getAdvancedMessageStream(this.messageStream);
 
 		try {
 			Set<String> failReceivers = SmtpService
@@ -68,17 +68,17 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		}
 	}
 
-	private InputStream getAdvancedMessageStream(InputStream messageStream, AdvancedData advancedData) throws MessagingException, IOException {
+	private InputStream getAdvancedMessageStream(InputStream messageStream) throws MessagingException, IOException {
 		// TODO mime을 건드리지 않는 조건일 경우 파싱하지 않게 개선해야 됨
 		AdvancedMimeMessage mimeMessage = new AdvancedMimeMessage(messageStream);
-		this.replaceSubject(advancedData.getReplaceSubjectData(), mimeMessage);
+		this.replaceSubject(this.getPreSendSettingData().getReplaceSubjectData(), mimeMessage);
 		mimeMessage.saveChanges();
 
 		ByteArrayOutputStream copyStream = new ByteArrayOutputStream();
 		mimeMessage.writeTo(copyStream);
 		copyStream.flush();
 
-		this.saveToEml(advancedData, copyStream);
+		this.saveToEml(copyStream);
 		return new ByteArrayInputStream(copyStream.toByteArray());
 	}
 
@@ -90,11 +90,12 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		return true;
 	}
 
-	private boolean saveToEml(AdvancedData advancedData, ByteArrayOutputStream copyStream) throws FileNotFoundException, IOException {
-		if (!advancedData.isSaveEml()) {
+	private boolean saveToEml(ByteArrayOutputStream copyStream) throws FileNotFoundException, IOException {
+		PostSendSettingData postSendSettingData = this.getPostSendSettingData();
+		if (!postSendSettingData.isSaveEml()) {
 			return false;
 		}
-		String saveDirPath = advancedData.getSaveEmlDir();
+		String saveDirPath = postSendSettingData.getSaveEmlDir();
 		if (StringUtils.isBlank(saveDirPath)) {
 			return false;
 		}

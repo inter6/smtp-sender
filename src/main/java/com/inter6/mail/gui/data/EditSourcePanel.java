@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.SubjectPanel;
+import com.inter6.mail.gui.component.TextViewDialog;
 import com.inter6.mail.gui.data.edit.EditAddressPanel;
 import com.inter6.mail.gui.data.edit.EditHeaderPanel;
 import com.inter6.mail.gui.data.edit.EditMessagePanel;
@@ -86,8 +87,8 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder {
 		public void actionPerformed(ActionEvent event) {
 			try {
 				byte[] message = EditSourcePanel.this.buildMessage();
-				// TODO 원문보기 팝업창
-				EditSourcePanel.this.logPanel.infoAndShowDialog(new String(message));
+				TextViewDialog.createDialog(new String(message))
+						.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
 			} catch (Throwable e) {
 				EditSourcePanel.this.logPanel.error("build mime fail ! - ", e);
 			}

@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.inter6.mail.gui.advanced.AdvancedPanel;
+import com.inter6.mail.gui.advanced.PostSendSettingPanel;
+import com.inter6.mail.gui.advanced.PreSendSettingPanel;
 import com.inter6.mail.gui.data.EnvelopePanel;
 import com.inter6.mail.gui.setting.ServerPanel;
 import com.inter6.mail.job.Job;
 import com.inter6.mail.model.JobStatistics;
-import com.inter6.mail.model.advanced.AdvancedData;
+import com.inter6.mail.model.advanced.PostSendSettingData;
+import com.inter6.mail.model.advanced.PreSendSettingData;
 import com.inter6.mail.model.data.EnvelopeData;
 import com.inter6.mail.model.setting.ServerData;
 
@@ -24,7 +26,10 @@ public abstract class AbstractSmtpSendJob implements Job {
 	private EnvelopePanel envelopePanel;
 
 	@Autowired
-	private AdvancedPanel advancedPanel;
+	private PreSendSettingPanel preSendSettingPanel;
+
+	@Autowired
+	private PostSendSettingPanel postSendSettingPanel;
 
 	@Autowired
 	private JobStatistics jobStatistics;
@@ -50,7 +55,11 @@ public abstract class AbstractSmtpSendJob implements Job {
 		return this.envelopePanel.getEnvelopeData();
 	}
 
-	protected AdvancedData getAdvancedData() {
-		return this.advancedPanel.getAdvancedData();
+	protected PreSendSettingData getPreSendSettingData() {
+		return this.preSendSettingPanel.getPreSendSettingData();
+	}
+
+	protected PostSendSettingData getPostSendSettingData() {
+		return this.postSendSettingPanel.getPostSendSettingData();
 	}
 }

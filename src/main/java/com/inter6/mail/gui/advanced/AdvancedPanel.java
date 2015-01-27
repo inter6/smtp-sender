@@ -2,119 +2,37 @@ package com.inter6.mail.gui.advanced;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.component.SubjectPanel;
-import com.inter6.mail.model.advanced.AdvancedData;
-import com.inter6.mail.model.component.SubjectData;
-import com.inter6.mail.module.AppConfig;
-
 @Component
-public class AdvancedPanel extends JPanel implements ConfigObserver {
+public class AdvancedPanel extends JPanel {
 	private static final long serialVersionUID = 44439027876264289L;
 
 	@Autowired
-	private AppConfig appConfig;
+	private PreSendSettingPanel preSendSettingPanel;
 
-	private final SubjectPanel subjectPanel = new SubjectPanel("Replace Subject", 20, false);
-
-	private final JCheckBox saveUseCheckBox = new JCheckBox();
-	private final JTextField savePathField = new JTextField(20);
+	@Autowired
+	private PostSendSettingPanel postSendSettingPanel;
 
 	@PostConstruct
 	private void init() { // NOPMD
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setLayout(new BorderLayout());
 
-		JPanel rootWrapPanel = new JPanel();
-		rootWrapPanel.setLayout(new BoxLayout(rootWrapPanel, BoxLayout.Y_AXIS));
+		JPanel wrapPanel = new JPanel();
+		wrapPanel.setLayout(new BoxLayout(wrapPanel, BoxLayout.Y_AXIS));
 		{
-			JPanel preWrapPanel = new JPanel();
-			preWrapPanel.setLayout(new BoxLayout(preWrapPanel, BoxLayout.Y_AXIS));
-			{
-				preWrapPanel.add(new JLabel("Pre Send Setting"));
-				preWrapPanel.add(this.subjectPanel);
-			}
-			rootWrapPanel.add(preWrapPanel);
-
-			JPanel postWrapPanel = new JPanel();
-			postWrapPanel.setLayout(new BoxLayout(postWrapPanel, BoxLayout.Y_AXIS));
-			{
-				postWrapPanel.add(new JLabel("Post Send Setting"));
-				JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-				{
-					savePanel.add(this.saveUseCheckBox);
-					savePanel.add(new JLabel("Save EML"));
-
-					this.savePathField.setEditable(false);
-					savePanel.add(this.savePathField);
-
-					JButton setSaveDirButton = new JButton("Directory");
-					setSaveDirButton.addActionListener(this.setSaveDirEvent);
-					savePanel.add(setSaveDirButton);
-				}
-				postWrapPanel.add(savePanel);
-			}
-			rootWrapPanel.add(postWrapPanel);
+			wrapPanel.add(this.preSendSettingPanel);
+			wrapPanel.add(this.postSendSettingPanel);
 		}
-
-		JScrollPane wrapScrollPane = new JScrollPane(rootWrapPanel);
+		JScrollPane wrapScrollPane = new JScrollPane(wrapPanel);
 		wrapScrollPane.setPreferredSize(new Dimension(400, 0));
 		this.add(wrapScrollPane, BorderLayout.CENTER);
-	}
-
-	private final ActionListener setSaveDirEvent = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			if (fileChooser.showOpenDialog(AdvancedPanel.this) == JFileChooser.APPROVE_OPTION) {
-				AdvancedPanel.this.savePathField.setText(fileChooser.getSelectedFile().getAbsolutePath());
-			}
-		}
-	};
-
-	public AdvancedData getAdvancedData() {
-		AdvancedData advancedData = new AdvancedData();
-		advancedData.setReplaceSubjectData(this.subjectPanel.getSubjectData());
-		advancedData.setSaveEml(this.saveUseCheckBox.isSelected());
-		advancedData.setSaveEmlDir(this.savePathField.getText());
-		return advancedData;
-	}
-
-	@Override
-	public void loadConfig() {
-		AdvancedData advancedData = new Gson().fromJson(this.appConfig.getUnsplitString("advanced.data"), AdvancedData.class);
-		if (advancedData == null) {
-			return;
-		}
-		SubjectData replaceSubjectData = advancedData.getReplaceSubjectData();
-		if (replaceSubjectData != null) {
-			this.subjectPanel.setSubjectData(replaceSubjectData);
-		}
-		this.saveUseCheckBox.setSelected(advancedData.isSaveEml());
-		this.savePathField.setText(advancedData.getSaveEmlDir());
-	}
-
-	@Override
-	public void updateConfig() {
-		this.appConfig.setProperty("advanced.data", new Gson().toJson(this.getAdvancedData()));
 	}
 }

@@ -74,6 +74,7 @@ public class ActionPanel extends JPanel {
 				//				ActionPanel.this.stopButton.setEnabled(true);
 
 				sendJob.execute();
+				ActionPanel.this.logPanel.info("job success - JOB:" + jobName);
 			} catch (Throwable e) {
 				ActionPanel.this.logPanel.error("job fail ! - JOB:" + jobName, e);
 			} finally {
