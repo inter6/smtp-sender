@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,18 +21,15 @@ import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.inter6.mail.model.ContentType;
 
 public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
 	private final JLabel typeLabel = new JLabel("application/octet-stream");
 	private final JTextField contentIdField = new JTextField(25);
+	private final JComboBox dispositionOptionBox = new JComboBox(new String[] { "attachment", "inline" });
 	private final JTextField filenameField = new JTextField(20);
 	private final JTextField filenameCharsetField = new JTextField("UTF-8", 6);
 	private final JComboBox filenameEncodingOptionBox = new JComboBox(new String[] { "B", "Q" });
@@ -60,14 +56,16 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			}
 			headerPanel.add(contentTypePanel);
 
-			JPanel filenamePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			JPanel dispositionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			{
-				filenamePanel.add(new JLabel("Content-Disposition: attachment; filename="));
-				filenamePanel.add(this.filenameField);
-				filenamePanel.add(this.filenameCharsetField);
-				filenamePanel.add(this.filenameEncodingOptionBox);
+				dispositionPanel.add(new JLabel("Content-Disposition: "));
+				dispositionPanel.add(this.dispositionOptionBox);
+				dispositionPanel.add(new JLabel("; filename="));
+				dispositionPanel.add(this.filenameField);
+				dispositionPanel.add(this.filenameCharsetField);
+				dispositionPanel.add(this.filenameEncodingOptionBox);
 			}
-			headerPanel.add(filenamePanel);
+			headerPanel.add(dispositionPanel);
 
 			JPanel transferPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			{
@@ -127,21 +125,15 @@ public class AttachmentPartPanel extends ContentPartPanel {
 				if (file.isFile()) {
 					AttachmentPartPanel.this.filenameField.setText(file.getName());
 					AttachmentPartPanel.this.pathField.setText(file.getAbsolutePath());
-					AttachmentPartPanel.this.setContentType();
+					AttachmentPartPanel.this.typeLabel.setText(AttachmentPartPanel.this.getContentType(file));
 					AttachmentPartPanel.this.lastSelectFile = file;
 				}
 			}
 		}
 	};
 
-	private void setContentType() {
-		try {
-			MimeMultipart part = (MimeMultipart) this.buildContentPart();
-			this.typeLabel.setText(part.getContentType());
-		} catch (Throwable e) {
-			this.typeLabel.setText("application/octet-stream");
-			this.log.error("attachment part build fail !", e);
-		}
+	private String getContentType(File file) { // NOPMD TODO
+		return "application/octet-stream";
 	}
 
 	@Override
@@ -150,10 +142,12 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		File file = new File(this.pathField.getText());
 		part.attachFile(file);
 
-		part.setFileName(MimeUtility.encodeWord(StringUtils.defaultString(this.filenameField.getText(), file.getName()),
+		String encodedFilename = MimeUtility.encodeWord(StringUtils.defaultString(this.filenameField.getText(), file.getName()),
 				StringUtils.defaultString(this.filenameCharsetField.getText(), "UTF-8"),
-				(String) this.filenameEncodingOptionBox.getSelectedItem()));
+				(String) this.filenameEncodingOptionBox.getSelectedItem());
 
+		part.setHeader("Content-Type", this.getContentType(file) + "; name=" + encodedFilename);
+		part.setHeader("Content-Disposition", this.dispositionOptionBox.getSelectedItem() + "; filename=" + encodedFilename);
 		part.setHeader("Content-Transfer-Encoding", (String) this.transferOptionBox.getSelectedItem());
 
 		String contentId = this.contentIdField.getText();
