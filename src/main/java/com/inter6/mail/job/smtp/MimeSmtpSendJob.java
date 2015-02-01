@@ -43,7 +43,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 	protected void doSend() throws Throwable {
 		String host = this.getServerData().getHost();
 		int port = this.getServerData().getPort();
-		boolean isSsl = this.getServerData().isSsl();
+		String connectType = this.getServerData().getConnectType();
 
 		String id = this.getServerData().getId();
 		String password = this.getServerData().getPassword();
@@ -56,7 +56,8 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 
 		try {
 			Set<String> failReceivers = SmtpService
-					.createInstance(host, port, isSsl)
+					// TODO TLS 연결 추가
+					.createInstance(host, port, connectType)
 					.setAuth(authOption.getMethod(), id, password)
 					.setEnvelope(mailFrom, rcptTos)
 					.send(this.messageStream);

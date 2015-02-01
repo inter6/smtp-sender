@@ -10,7 +10,7 @@ import com.inter6.mail.model.AuthOption;
 public class ServerData {
 	private String host; // NOPMD
 	private int port; // NOPMD
-	private boolean isSsl; // NOPMD
+	private String connectType; // NOPMD
 	private String id; // NOPMD
 	private String password; // NOPMD
 	private AuthOption authOption; // NOPMD

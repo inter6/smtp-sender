@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.annotation.PostConstruct;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,7 +30,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 
 	private final JTextField hostFiled = new JTextField(40);
 	private final JTextField portField = new JTextField("25", 5);
-	private final JCheckBox sslCheckBox = new JCheckBox("SSL");
+	private final JComboBox connectTypeOptionBox = new JComboBox(new String[] { "NONE", "SSL", "TLS" });
 	private final JTextField idField = new JTextField(20);
 	private final JPasswordField passwordField = new JPasswordField(20);
 	private final JComboBox authOptionBox = new JComboBox(AuthOption.allItems());
@@ -46,7 +45,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 			hostPanel.add(this.hostFiled);
 			hostPanel.add(new JLabel("Port"));
 			hostPanel.add(this.portField);
-			hostPanel.add(this.sslCheckBox);
+			hostPanel.add(this.connectTypeOptionBox);
 		}
 		this.add(hostPanel, BorderLayout.NORTH);
 
@@ -88,7 +87,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 		ServerData serverData = new ServerData();
 		serverData.setHost(this.hostFiled.getText());
 		serverData.setPort(this.portField.getText());
-		serverData.setSsl(this.sslCheckBox.isSelected());
+		serverData.setConnectType((String) this.connectTypeOptionBox.getSelectedItem());
 		serverData.setId(this.idField.getText());
 		serverData.setPassword(this.passwordField.getText());
 		serverData.setAuthOption((AuthOption) this.authOptionBox.getSelectedItem());
@@ -103,7 +102,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 		}
 		this.hostFiled.setText(serverData.getHost());
 		this.portField.setText(Integer.toString(serverData.getPort()));
-		this.sslCheckBox.setSelected(serverData.isSsl());
+		this.connectTypeOptionBox.setSelectedItem(serverData.getConnectType());
 		this.idField.setText(serverData.getId());
 		this.passwordField.setText(serverData.getPassword());
 		this.authOptionBox.setSelectedIndex(serverData.getAuthOption().ordinal());

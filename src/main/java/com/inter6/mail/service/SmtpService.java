@@ -29,7 +29,7 @@ public class SmtpService {
 
 	private String host;
 	private int port;
-	private boolean isSsl;
+	private String connectType;
 	private String encoding = "UTF-8";
 
 	private AUTH_METHOD authMethod;
@@ -42,16 +42,16 @@ public class SmtpService {
 	private SmtpService() {
 	}
 
-	public static SmtpService createInstance(String host, int port, boolean isSsl) {
+	public static SmtpService createInstance(String host, int port, String connectType) {
 		SmtpService smtpService = new SmtpService();
-		smtpService.setHost(host, port, isSsl);
+		smtpService.setHost(host, port, connectType);
 		return smtpService;
 	}
 
-	public SmtpService setHost(String host, int port, boolean isSsl) {
+	public SmtpService setHost(String host, int port, String connectType) {
 		this.host = host;
 		this.port = port;
-		this.isSsl = isSsl;
+		this.connectType = connectType;
 		return this;
 	}
 
@@ -94,13 +94,27 @@ public class SmtpService {
 	}
 
 	private AuthenticatingSMTPClient connect() throws SocketException, IOException {
-		AuthenticatingSMTPClient smtpClient = new AuthenticatingSMTPClient("SSL", this.isSsl, this.encoding);
+		AuthenticatingSMTPClient smtpClient;
+		if ("ssl".equalsIgnoreCase(this.connectType)) {
+			smtpClient = new AuthenticatingSMTPClient("SSL", true, this.encoding);
+		} else if ("tls".equalsIgnoreCase(this.connectType)) {
+			smtpClient = new AuthenticatingSMTPClient("TLS", false, this.encoding);
+		} else {
+			smtpClient = new AuthenticatingSMTPClient("SSL", false, this.encoding);
+		}
+
 		smtpClient.setConnectTimeout(10 * 1000);
 		smtpClient.connect(this.host, this.port);
 		this.debug(smtpClient);
 
 		smtpClient.helo(this.mailFrom);
 		this.debug(smtpClient);
+
+		if ("tls".equalsIgnoreCase(this.connectType)) {
+			smtpClient.execTLS();
+			this.debug(smtpClient);
+		}
+
 		return smtpClient;
 	}
 
