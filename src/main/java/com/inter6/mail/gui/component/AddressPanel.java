@@ -20,6 +20,10 @@ public class AddressPanel extends JPanel {
 	private final JComboBox personalEncodingOptionBox = new JComboBox(new String[] { "B", "Q" });
 	private final JTextField addressField = new JTextField(15);
 
+	public AddressPanel() {
+		this("to", false);
+	}
+
 	public AddressPanel(String type, boolean isUse) {
 		super(new FlowLayout(FlowLayout.LEFT));
 

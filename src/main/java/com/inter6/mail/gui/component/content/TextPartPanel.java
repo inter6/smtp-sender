@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.content.PartData;
+import com.inter6.mail.model.component.content.TextPartData;
 
 public class TextPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = -5641431122402910873L;
@@ -31,6 +33,14 @@ public class TextPartPanel extends ContentPartPanel {
 		MimeBodyPart part = new MimeBodyPart();
 		part.setText(this.textArea.getText(), "UTF-8", this.contentType.getSubType());
 		return part;
+	}
+
+	@Override
+	public PartData getPartData() {
+		TextPartData textPartData = new TextPartData();
+		textPartData.setContentType(this.contentType);
+		textPartData.setText(this.textArea.getText());
+		return textPartData;
 	}
 
 	@Override

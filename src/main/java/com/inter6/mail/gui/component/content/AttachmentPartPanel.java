@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+import javax.activation.FileTypeMap;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
 import javax.swing.BoxLayout;
@@ -23,11 +24,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.content.AttachmentPartData;
+import com.inter6.mail.model.component.content.PartData;
 
 public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
 
-	private final JLabel typeLabel = new JLabel("application/octet-stream");
+	private final JTextField typeField = new JTextField("application/octet-stream", 20);
 	private final JTextField contentIdField = new JTextField(25);
 	private final JComboBox dispositionOptionBox = new JComboBox(new String[] { "attachment", "inline" });
 	private final JTextField filenameField = new JTextField(20);
@@ -51,7 +54,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			JPanel contentTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			{
 				contentTypePanel.add(new JLabel("Content-Type: "));
-				contentTypePanel.add(this.typeLabel);
+				contentTypePanel.add(this.typeField);
 				contentTypePanel.add(new JLabel("; name={Content-Disposition.filename}"));
 			}
 			headerPanel.add(contentTypePanel);
@@ -125,15 +128,15 @@ public class AttachmentPartPanel extends ContentPartPanel {
 				if (file.isFile()) {
 					AttachmentPartPanel.this.filenameField.setText(file.getName());
 					AttachmentPartPanel.this.pathField.setText(file.getAbsolutePath());
-					AttachmentPartPanel.this.typeLabel.setText(AttachmentPartPanel.this.getContentType(file));
+					AttachmentPartPanel.this.typeField.setText(AttachmentPartPanel.this.getContentType(file));
 					AttachmentPartPanel.this.lastSelectFile = file;
 				}
 			}
 		}
 	};
 
-	private String getContentType(File file) { // NOPMD TODO
-		return "application/octet-stream";
+	private String getContentType(File file) {
+		return FileTypeMap.getDefaultFileTypeMap().getContentType(file);
 	}
 
 	@Override
@@ -155,6 +158,20 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			part.setContentID("<" + contentId + ">");
 		}
 		return part;
+	}
+
+	@Override
+	public PartData getPartData() {
+		AttachmentPartData attachmentPartData = new AttachmentPartData();
+		attachmentPartData.setContentTypeStr(this.typeField.getText());
+		attachmentPartData.setContentId(this.contentIdField.getText());
+		attachmentPartData.setContentDisposition((String) this.dispositionOptionBox.getSelectedItem());
+		attachmentPartData.setContentTransferEncoding((String) this.transferOptionBox.getSelectedItem());
+		attachmentPartData.setFilePath(this.pathField.getText());
+		attachmentPartData.setFilename(this.filenameField.getText());
+		attachmentPartData.setFilenameCharset(this.filenameCharsetField.getText());
+		attachmentPartData.setFilenameEncoding((String) this.filenameEncodingOptionBox.getSelectedItem());
+		return attachmentPartData;
 	}
 
 	@Override

@@ -14,12 +14,14 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.component.HeaderPanel;
 import com.inter6.mail.model.component.HeaderData;
+import com.inter6.mail.model.data.edit.EditHeaderData;
 
 @Component
 @Scope("prototype")
@@ -33,7 +35,7 @@ public class EditHeaderPanel extends JPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBorder(new LineBorder(Color.GREEN));
 
-		this.add(this.createHeaderPanels());
+		this.add(this.createHeaderPanel());
 
 		JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		{
@@ -44,10 +46,19 @@ public class EditHeaderPanel extends JPanel {
 		this.add(actionPanel);
 	}
 
-	private JPanel createHeaderPanels() {
+	private JPanel createHeaderPanel() {
+		return this.createHeaderWrapPanel(new HeaderPanel(true));
+	}
+
+	private JPanel createHeaderPanel(HeaderData headerData) {
+		HeaderPanel headerPanel = new HeaderPanel(false);
+		headerPanel.setHeaderData(headerData);
+		return this.createHeaderWrapPanel(headerPanel);
+	}
+
+	private JPanel createHeaderWrapPanel(HeaderPanel headerPanel) {
 		JPanel wrapPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		{
-			HeaderPanel headerPanel = new HeaderPanel(true);
 			this.headerPanels.add(headerPanel);
 			wrapPanel.add(headerPanel);
 
@@ -62,7 +73,7 @@ public class EditHeaderPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			EditHeaderPanel.this.add(EditHeaderPanel.this.createHeaderPanels(), EditHeaderPanel.this.getComponentCount() - 1);
+			EditHeaderPanel.this.add(EditHeaderPanel.this.createHeaderPanel(), EditHeaderPanel.this.getComponentCount() - 1);
 			EditHeaderPanel.this.updateUI();
 		}
 	};
@@ -88,5 +99,28 @@ public class EditHeaderPanel extends JPanel {
 			headerDatas.add(headerData);
 		}
 		return headerDatas;
+	}
+
+	public EditHeaderData getEditHeaderData() {
+		EditHeaderData editHeaderData = new EditHeaderData();
+		editHeaderData.setHeaderDatas(this.getHeaderDatas());
+		return editHeaderData;
+	}
+
+	public void setEditHeaderData(EditHeaderData editHeaderData) {
+		for (HeaderPanel headerPanel : this.headerPanels) {
+			this.remove(headerPanel.getParent());
+		}
+		this.headerPanels.clear();
+
+		if (editHeaderData == null || CollectionUtils.isEmpty(editHeaderData.getHeaderDatas())) {
+			this.add(this.createHeaderPanel(), this.getComponentCount() - 1);
+		} else {
+			for (HeaderData headerData : editHeaderData.getHeaderDatas()) {
+				this.add(this.createHeaderPanel(headerData), this.getComponentCount() - 1);
+			}
+		}
+		this.updateUI();
+
 	}
 }

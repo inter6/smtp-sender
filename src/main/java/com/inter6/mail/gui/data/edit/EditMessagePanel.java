@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.content.ContentPartPanel;
 import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.data.edit.EditMessageData;
 
 @Component
 public class EditMessagePanel extends JPanel {
@@ -36,5 +37,18 @@ public class EditMessagePanel extends JPanel {
 
 	public Object buildContentPart() throws Throwable {
 		return this.rootPartPanel.buildContentPart();
+	}
+
+	public EditMessageData getEditMessageData() {
+		EditMessageData editMessageData = new EditMessageData();
+		editMessageData.setRootPartData(this.rootPartPanel.getPartData());
+		return editMessageData;
+	}
+
+	public void setEditMessageData(EditMessageData editMessageData) {
+		if (editMessageData == null) {
+			return;
+		}
+		this.rootPartPanel.setPartData(editMessageData.getRootPartData());
 	}
 }

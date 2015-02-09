@@ -23,6 +23,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.content.PartData;
 import com.inter6.mail.module.ModuleService;
 
 public abstract class ContentPartPanel extends JPanel {
@@ -115,6 +116,12 @@ public abstract class ContentPartPanel extends JPanel {
 	public abstract Object buildContentPart() throws Throwable;
 
 	protected abstract Vector<ContentType> getAvailableChildTypes(List<ContentPartPanel> addedChildPanels);
+
+	public abstract PartData getPartData();
+
+	public void setPartData(PartData partData) {
+		// TODO 파트 config 로딩
+	}
 
 	protected class ChildWrapPanel extends JPanel {
 		private static final long serialVersionUID = -3478585608809305772L;

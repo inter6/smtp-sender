@@ -56,7 +56,6 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 
 		try {
 			Set<String> failReceivers = SmtpService
-					// TODO TLS 연결 추가
 					.createInstance(host, port, connectType)
 					.setAuth(authOption.getMethod(), id, password)
 					.setEnvelope(mailFrom, rcptTos)

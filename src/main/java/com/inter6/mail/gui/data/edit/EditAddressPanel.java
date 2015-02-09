@@ -15,12 +15,14 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.component.AddressPanel;
 import com.inter6.mail.model.component.AddressData;
+import com.inter6.mail.model.data.edit.EditAddressData;
 
 @Component
 @Scope("prototype")
@@ -52,9 +54,18 @@ public class EditAddressPanel extends JPanel {
 	}
 
 	private JPanel createAddressPanel(String type) {
+		return this.createAddressWrapPanel(new AddressPanel(type, true));
+	}
+
+	private JPanel createAddressPanel(AddressData addressData) {
+		AddressPanel addressPanel = new AddressPanel();
+		addressPanel.setAddressData(addressData);
+		return this.createAddressWrapPanel(addressPanel);
+	}
+
+	private JPanel createAddressWrapPanel(AddressPanel addressPanel) {
 		JPanel wrapPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		{
-			AddressPanel addressPanel = new AddressPanel(type, true);
 			this.addressPanels.add(addressPanel);
 			wrapPanel.add(addressPanel);
 
@@ -97,5 +108,28 @@ public class EditAddressPanel extends JPanel {
 			addressDatas.add(addressData);
 		}
 		return addressDatas;
+	}
+
+	public EditAddressData getEditAddressData() {
+		EditAddressData editAddressData = new EditAddressData();
+		editAddressData.setAddressDatas(this.getAddressDatas());
+		return editAddressData;
+	}
+
+	public void setEditAddressData(EditAddressData editAddressData) {
+		for (AddressPanel addressPanel : this.addressPanels) {
+			this.remove(addressPanel.getParent());
+		}
+		this.addressPanels.clear();
+
+		if (editAddressData == null || CollectionUtils.isEmpty(editAddressData.getAddressDatas())) {
+			this.add(this.createAddressPanel("From"), this.getComponentCount() - 1);
+			this.add(this.createAddressPanel("To"), this.getComponentCount() - 1);
+		} else {
+			for (AddressData addressData : editAddressData.getAddressDatas()) {
+				this.add(this.createAddressPanel(addressData), this.getComponentCount() - 1);
+			}
+		}
+		this.updateUI();
 	}
 }

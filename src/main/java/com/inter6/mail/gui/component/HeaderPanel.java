@@ -35,4 +35,11 @@ public class HeaderPanel extends JPanel {
 		headerData.setValue(this.valueArea.getText());
 		return headerData;
 	}
+
+	public void setHeaderData(HeaderData headerData) {
+		this.useCheckBox.setSelected(headerData.isUse());
+		this.keyField.setText(headerData.getKey());
+		// TODO 헤더의 라인피드 처리
+		this.valueArea.setText(headerData.getValue());
+	}
 }

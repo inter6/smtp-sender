@@ -1,6 +1,7 @@
 package com.inter6.mail.gui.component.content;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -14,6 +15,8 @@ import javax.swing.JLabel;
 import org.apache.commons.collections4.CollectionUtils;
 
 import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.content.MultiPartData;
+import com.inter6.mail.model.component.content.PartData;
 
 public class MultiPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = -4555796509776825034L;
@@ -49,6 +52,18 @@ public class MultiPartPanel extends ContentPartPanel {
 			}
 		}
 		return mp;
+	}
+
+	@Override
+	public PartData getPartData() {
+		MultiPartData multiPartData = new MultiPartData();
+		multiPartData.setContentType(this.contentType);
+		List<PartData> childPartDatas = new ArrayList<PartData>();
+		for (ContentPartPanel childPanel : this.getUnwrapChildPanels()) {
+			childPartDatas.add(childPanel.getPartData());
+		}
+		multiPartData.setChildPartDatas(childPartDatas);
+		return multiPartData;
 	}
 
 	@Override

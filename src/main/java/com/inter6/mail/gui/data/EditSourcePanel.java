@@ -26,6 +26,9 @@ import javax.swing.JScrollPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.SubjectPanel;
 import com.inter6.mail.gui.component.TextViewDialog;
@@ -38,13 +41,20 @@ import com.inter6.mail.job.smtp.MimeSmtpSendJob;
 import com.inter6.mail.model.component.AddressData;
 import com.inter6.mail.model.component.HeaderData;
 import com.inter6.mail.model.component.SubjectData;
+import com.inter6.mail.model.component.content.PartData;
+import com.inter6.mail.model.component.content.PartDataJsonDeserializer;
+import com.inter6.mail.model.data.EditSourceData;
+import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
 
 @Component
-public class EditSourcePanel extends JPanel implements SendJobBuilder {
+public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
 	private static final long serialVersionUID = -4373325495997044386L;
 
 	private final SubjectPanel subjectPanel = new SubjectPanel("Subject", 30, true);
+
+	@Autowired
+	private AppConfig appConfig;
 
 	@Autowired
 	private EditAddressPanel editAddressPanel;
@@ -141,5 +151,33 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder {
 		MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
 		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.buildMessage()));
 		return mimeSmtpSendJob;
+	}
+
+	private EditSourceData getEditSourceData() {
+		EditSourceData editSourceData = new EditSourceData();
+		editSourceData.setSubjectData(this.subjectPanel.getSubjectData());
+		editSourceData.setEditAddressData(this.editAddressPanel.getEditAddressData());
+		editSourceData.setEditHeaderData(this.editHeaderPanel.getEditHeaderData());
+		editSourceData.setEditMessageData(this.editMessagePanel.getEditMessageData());
+		return editSourceData;
+	}
+
+	@Override
+	public void loadConfig() {
+		Gson gson = new GsonBuilder().registerTypeAdapter(PartData.class, new PartDataJsonDeserializer()).create();
+		EditSourceData editSourceData = gson.fromJson(this.appConfig.getUnsplitString("edit.source.data"), EditSourceData.class);
+		if (editSourceData == null) {
+			return;
+		}
+
+		this.subjectPanel.setSubjectData(editSourceData.getSubjectData());
+		this.editAddressPanel.setEditAddressData(editSourceData.getEditAddressData());
+		this.editHeaderPanel.setEditHeaderData(editSourceData.getEditHeaderData());
+		this.editMessagePanel.setEditMessageData(editSourceData.getEditMessageData());
+	}
+
+	@Override
+	public void updateConfig() {
+		this.appConfig.setProperty("edit.source.data", new Gson().toJson(this.getEditSourceData()));
 	}
 }
