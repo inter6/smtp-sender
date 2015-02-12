@@ -1,12 +1,17 @@
 package com.inter6.mail.gui.component.content;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.List;
 import java.util.Vector;
 
 import javax.mail.internet.MimeBodyPart;
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.component.content.PartData;
@@ -15,6 +20,8 @@ import com.inter6.mail.model.component.content.TextPartData;
 public class TextPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = -5641431122402910873L;
 
+	private final JTextField charsetField = new JTextField("UTF-8", 6);
+	private final JComboBox transferOptionBox = new JComboBox(new String[] { "quoted-printable", "8bit", "7bit", "base64", "binary" });
 	private final JTextArea textArea = new JTextArea(5, 30);
 
 	protected TextPartPanel(ContentType contentType, Integer nested) {
@@ -24,14 +31,35 @@ public class TextPartPanel extends ContentPartPanel {
 	@Override
 	protected void initLayout() {
 		this.wrapPanel.setLayout(new BorderLayout());
-		this.wrapPanel.add(new JLabel("Content-Type: " + this.contentType), BorderLayout.NORTH);
+
+		JPanel headerPanel = new JPanel();
+		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+		{
+			JPanel contentTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			{
+				contentTypePanel.add(new JLabel("Content-Type: " + this.contentType));
+				contentTypePanel.add(new JLabel("; charset="));
+				contentTypePanel.add(this.charsetField);
+			}
+			headerPanel.add(contentTypePanel);
+
+			JPanel transferPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			{
+				transferPanel.add(new JLabel("Content-Transfer-Encoding: "));
+				transferPanel.add(this.transferOptionBox);
+			}
+			headerPanel.add(transferPanel);
+		}
+		this.wrapPanel.add(headerPanel, BorderLayout.NORTH);
+
 		this.wrapPanel.add(this.textArea, BorderLayout.CENTER);
 	}
 
 	@Override
 	public Object buildContentPart() throws Throwable {
 		MimeBodyPart part = new MimeBodyPart();
-		part.setText(this.textArea.getText(), "UTF-8", this.contentType.getSubType());
+		part.setText(this.textArea.getText(), this.charsetField.getText(), this.contentType.getSubType());
+		part.setHeader("Content-Transfer-Encoding", (String) this.transferOptionBox.getSelectedItem());
 		return part;
 	}
 
@@ -39,6 +67,8 @@ public class TextPartPanel extends ContentPartPanel {
 	public PartData getPartData() {
 		TextPartData textPartData = new TextPartData();
 		textPartData.setContentType(this.contentType);
+		textPartData.setTextCharset(this.charsetField.getText());
+		textPartData.setContentTransferEncoding((String) this.transferOptionBox.getSelectedItem());
 		textPartData.setText(this.textArea.getText());
 		return textPartData;
 	}
