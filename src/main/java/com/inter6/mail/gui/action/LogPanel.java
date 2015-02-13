@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -16,6 +17,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -111,7 +113,7 @@ public class LogPanel extends JPanel {
 			if (this.logArea.getLineCount() > 10000) {
 				this.logArea.setText("clear log");
 			}
-			this.logArea.append(msg + "\n");
+			this.logArea.append("[" + DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss") + "] " + msg + "\n");
 		}
 	}
 }
