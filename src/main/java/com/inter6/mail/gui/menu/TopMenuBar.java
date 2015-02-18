@@ -49,21 +49,8 @@ public class TopMenuBar extends JMenuBar {
 		}
 		this.add(toolMenu);
 
-		// TODO 플러그인 메뉴 구현
-		JMenu daouMenu = new JMenu("Daou Tech Only");
-		{
-			JMenuItem todoItem = new JMenuItem("TODO 추가 jar 로딩 기능 구현");
-			todoItem.setEnabled(false);
-			daouMenu.add(todoItem);
-		}
-		this.add(daouMenu);
-
 		JMenu helpMenu = new JMenu("Help");
 		{
-			JMenuItem todoItem = new JMenuItem("TODO 알아서 잘...");
-			todoItem.setEnabled(false);
-			helpMenu.add(todoItem);
-
 			JMenuItem aboutItem = new JMenuItem("About smtp-sender");
 			aboutItem.addActionListener(this.aboutEvent);
 			helpMenu.add(aboutItem);
@@ -79,7 +66,7 @@ public class TopMenuBar extends JMenuBar {
 			try {
 				msgStream = ModuleService.getContext().getResource("message/about.msg").getInputStream();
 				TextViewDialog.createDialog(IOUtils.toString(msgStream))
-						.setModal().setTitle("About smtp-sender").setSize(400, 600).show();
+				.setModal().setTitle("About smtp-sender").setSize(400, 600).show();
 			} catch (IOException e) {
 				TopMenuBar.this.logPanel.error("read about message fail !", e);
 			} finally {
