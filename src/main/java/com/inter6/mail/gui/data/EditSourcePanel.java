@@ -43,6 +43,7 @@ import com.inter6.mail.model.component.HeaderData;
 import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.model.component.content.PartData;
 import com.inter6.mail.model.component.content.PartDataJsonDeserializer;
+import com.inter6.mail.model.component.content.PartDataJsonSerializer;
 import com.inter6.mail.model.data.EditSourceData;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
@@ -98,7 +99,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 			try {
 				byte[] message = EditSourcePanel.this.buildMessage();
 				TextViewDialog.createDialog(new String(message))
-						.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
+				.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
 			} catch (Throwable e) {
 				EditSourcePanel.this.logPanel.error("build mime fail ! - ", e);
 			}
@@ -178,6 +179,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 
 	@Override
 	public void updateConfig() {
-		this.appConfig.setProperty("edit.source.data", new Gson().toJson(this.getEditSourceData()));
+		Gson gson = new GsonBuilder().registerTypeAdapter(PartData.class, new PartDataJsonSerializer()).create();
+		this.appConfig.setProperty("edit.source.data", gson.toJson(this.getEditSourceData()));
 	}
 }

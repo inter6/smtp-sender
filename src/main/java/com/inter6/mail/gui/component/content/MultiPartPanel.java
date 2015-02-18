@@ -1,7 +1,6 @@
 package com.inter6.mail.gui.component.content;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -55,15 +54,14 @@ public class MultiPartPanel extends ContentPartPanel {
 	}
 
 	@Override
-	public PartData getPartData() {
+	protected PartData getPartDataFromComponents() {
 		MultiPartData multiPartData = new MultiPartData();
-		multiPartData.setContentType(this.contentType);
-		List<PartData> childPartDatas = new ArrayList<PartData>();
-		for (ContentPartPanel childPanel : this.getUnwrapChildPanels()) {
-			childPartDatas.add(childPanel.getPartData());
-		}
-		multiPartData.setChildPartDatas(childPartDatas);
 		return multiPartData;
+	}
+
+	@Override
+	protected void setComponentsFromPartData(PartData partData) {
+		// multipart has not data
 	}
 
 	@Override

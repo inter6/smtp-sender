@@ -161,7 +161,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 	}
 
 	@Override
-	public PartData getPartData() {
+	protected PartData getPartDataFromComponents() {
 		AttachmentPartData attachmentPartData = new AttachmentPartData();
 		attachmentPartData.setContentTypeStr(this.typeField.getText());
 		attachmentPartData.setContentId(this.contentIdField.getText());
@@ -172,6 +172,22 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		attachmentPartData.setFilenameCharset(this.filenameCharsetField.getText());
 		attachmentPartData.setFilenameEncoding((String) this.filenameEncodingOptionBox.getSelectedItem());
 		return attachmentPartData;
+	}
+
+	@Override
+	protected void setComponentsFromPartData(PartData partData) {
+		if (!(partData instanceof AttachmentPartData)) {
+			throw new IllegalStateException("is not attachment part data ! - DATA:" + partData);
+		}
+		AttachmentPartData attachmentPartData = (AttachmentPartData) partData;
+		this.typeField.setText(attachmentPartData.getContentTypeStr());
+		this.contentIdField.setText(attachmentPartData.getContentId());
+		this.dispositionOptionBox.setSelectedItem(attachmentPartData.getContentDisposition());
+		this.transferOptionBox.setSelectedItem(attachmentPartData.getContentTransferEncoding());
+		this.pathField.setText(attachmentPartData.getFilePath());
+		this.filenameField.setText(attachmentPartData.getFilename());
+		this.filenameCharsetField.setText(attachmentPartData.getFilenameCharset());
+		this.filenameEncodingOptionBox.setSelectedItem(attachmentPartData.getFilenameEncoding());
 	}
 
 	@Override

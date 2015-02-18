@@ -49,6 +49,7 @@ public class EditMessagePanel extends JPanel {
 		if (editMessageData == null) {
 			return;
 		}
+		// TODO 최상위 파트를 바꿀 수 있는 기능
 		this.rootPartPanel.setPartData(editMessageData.getRootPartData());
 	}
 }

@@ -64,13 +64,23 @@ public class TextPartPanel extends ContentPartPanel {
 	}
 
 	@Override
-	public PartData getPartData() {
+	protected PartData getPartDataFromComponents() {
 		TextPartData textPartData = new TextPartData();
-		textPartData.setContentType(this.contentType);
 		textPartData.setTextCharset(this.charsetField.getText());
 		textPartData.setContentTransferEncoding((String) this.transferOptionBox.getSelectedItem());
 		textPartData.setText(this.textArea.getText());
 		return textPartData;
+	}
+
+	@Override
+	protected void setComponentsFromPartData(PartData partData) {
+		if (!(partData instanceof TextPartData)) {
+			throw new IllegalStateException("is not text part data ! - DATA:" + partData);
+		}
+		TextPartData textPartData = (TextPartData) partData;
+		this.charsetField.setText(textPartData.getTextCharset());
+		this.transferOptionBox.setSelectedItem(textPartData.getContentTransferEncoding());
+		this.textArea.setText(textPartData.getText());
 	}
 
 	@Override

@@ -95,19 +95,21 @@ public abstract class ContentPartPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			ContentPartPanel.this.addChildPanel();
+			ContentPartPanel.this.addChildPanel((ContentType) ContentPartPanel.this.childTypeSelectBox.getSelectedItem());
 		}
 	};
 
-	private void addChildPanel() {
-		ContentType childType = (ContentType) this.childTypeSelectBox.getSelectedItem();
+	private ContentPartPanel addChildPanel(ContentType childType) {
 		try {
-			ChildWrapPanel childWrapPanel = new ChildWrapPanel(createPanel(childType, this.nested + 1));
+			ContentPartPanel childPanel = createPanel(childType, this.nested + 1);
+			ChildWrapPanel childWrapPanel = new ChildWrapPanel(childPanel);
 			this.childWrapPanels.add(childWrapPanel);
 			this.childContainerPanel.add(childWrapPanel);
 			this.setActionComponents();
+			return childPanel;
 		} catch (Exception e) {
 			ModuleService.getBean(LogPanel.class).error("create content panel fail ! - TYPE:" + childType, e);
+			return null;
 		}
 	}
 
@@ -117,11 +119,34 @@ public abstract class ContentPartPanel extends JPanel {
 
 	protected abstract Vector<ContentType> getAvailableChildTypes(List<ContentPartPanel> addedChildPanels);
 
-	public abstract PartData getPartData();
+	public PartData getPartData() {
+		PartData partData = this.getPartDataFromComponents();
+		partData.setContentType(this.contentType);
+		List<PartData> childPartDatas = new ArrayList<PartData>();
+		for (ContentPartPanel childPanel : this.getUnwrapChildPanels()) {
+			childPartDatas.add(childPanel.getPartData());
+		}
+		partData.setChildPartDatas(childPartDatas);
+		return partData;
+	}
+
+	protected abstract PartData getPartDataFromComponents();
 
 	public void setPartData(PartData partData) {
-		// TODO 파트 config 로딩
+		for (ChildWrapPanel childWrapPanel : new ArrayList<ChildWrapPanel>(this.childWrapPanels)) {
+			this.removeChildPanel(childWrapPanel);
+		}
+		if (partData == null) {
+			return;
+		}
+		if (CollectionUtils.isNotEmpty(partData.getChildPartDatas())) {
+			for (PartData childPartData : partData.getChildPartDatas()) {
+				this.addChildPanel(childPartData.getContentType()).setComponentsFromPartData(childPartData);
+			}
+		}
 	}
+
+	protected abstract void setComponentsFromPartData(PartData partData);
 
 	protected class ChildWrapPanel extends JPanel {
 		private static final long serialVersionUID = -3478585608809305772L;
