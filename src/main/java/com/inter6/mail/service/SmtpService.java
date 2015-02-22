@@ -107,7 +107,7 @@ public class SmtpService {
 		smtpClient.connect(this.host, this.port);
 		this.debug(smtpClient);
 
-		smtpClient.helo(this.mailFrom);
+		smtpClient.helo(this.host);
 		this.debug(smtpClient);
 
 		if ("tls".equalsIgnoreCase(this.connectType)) {
