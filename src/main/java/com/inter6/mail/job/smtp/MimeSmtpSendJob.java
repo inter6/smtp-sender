@@ -41,48 +41,63 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 
 	@Override
 	protected void doSend() throws Throwable {
-		String host = this.getServerData().getHost();
-		int port = this.getServerData().getPort();
-		String connectType = this.getServerData().getConnectType();
-
-		String id = this.getServerData().getId();
-		String password = this.getServerData().getPassword();
-		AuthOption authOption = this.getServerData().getAuthOption();
-
-		String mailFrom = this.getEnvelopeData().getMailFrom();
-		Set<String> rcptTos = this.getEnvelopeData().getRcptTos();
-
-		this.messageStream = this.getAdvancedMessageStream(this.messageStream);
-
 		try {
-			Set<String> failReceivers = SmtpService
-					.createInstance(host, port, connectType)
-					.setAuth(authOption.getMethod(), id, password)
-					.setEnvelope(mailFrom, rcptTos)
-					.send(this.messageStream);
-			if (CollectionUtils.isNotEmpty(failReceivers)) {
-				throw new IOException("send parted success. exist fail receivers - RECV:" + failReceivers);
+			String host = this.getServerData().getHost();
+			int port = this.getServerData().getPort();
+			String connectType = this.getServerData().getConnectType();
+
+			String id = this.getServerData().getId();
+			String password = this.getServerData().getPassword();
+			AuthOption authOption = this.getServerData().getAuthOption();
+
+			String mailFrom = this.getEnvelopeData().getMailFrom();
+			Set<String> rcptTos = this.getEnvelopeData().getRcptTos();
+
+			InputStream convertStream = null;
+			try {
+				convertStream = this.convertMessageStream(this.messageStream);
+				Set<String> failReceivers = SmtpService
+						.createInstance(host, port, connectType)
+						.setAuth(authOption.getMethod(), id, password)
+						.setEnvelope(mailFrom, rcptTos)
+						.send(convertStream);
+				if (CollectionUtils.isNotEmpty(failReceivers)) {
+					throw new IOException("send parted success. exist fail receivers - RECV:" + failReceivers);
+				}
+			} finally {
+				IOUtils.closeQuietly(convertStream);
 			}
 		} finally {
 			IOUtils.closeQuietly(this.messageStream);
 		}
 	}
 
-	private InputStream getAdvancedMessageStream(InputStream messageStream) throws MessagingException, IOException {
-		// TODO mime을 건드리지 않는 조건일 경우 파싱하지 않게 개선해야 됨
-		AdvancedMimeMessage mimeMessage = new AdvancedMimeMessage(messageStream);
-		this.replaceSubject(this.getPreSendSettingData().getReplaceSubjectData(), mimeMessage);
-		mimeMessage.saveChanges();
-
+	private InputStream convertMessageStream(InputStream messageStream) throws MessagingException, IOException {
 		ByteArrayOutputStream copyStream = new ByteArrayOutputStream();
-		mimeMessage.writeTo(copyStream);
-		copyStream.flush();
+		if (this.isParseMimeCondition()) {
+			AdvancedMimeMessage mimeMessage = new AdvancedMimeMessage(messageStream);
+			this.replaceSubject(mimeMessage);
+			mimeMessage.saveChanges();
+			mimeMessage.writeTo(copyStream);
+			copyStream.flush();
+		} else {
+			IOUtils.copy(messageStream, copyStream);
+		}
 
 		this.saveToEml(copyStream);
 		return new ByteArrayInputStream(copyStream.toByteArray());
 	}
 
-	private boolean replaceSubject(SubjectData replaceSubjectData, AdvancedMimeMessage mimeMessage) throws UnsupportedEncodingException, MessagingException {
+	private boolean isParseMimeCondition() {
+		SubjectData replaceSubjectData = this.getPreSendSettingData().getReplaceSubjectData();
+		if (replaceSubjectData.isUse()) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean replaceSubject(AdvancedMimeMessage mimeMessage) throws UnsupportedEncodingException, MessagingException {
+		SubjectData replaceSubjectData = this.getPreSendSettingData().getReplaceSubjectData();
 		if (!replaceSubjectData.isUse()) {
 			return false;
 		}
