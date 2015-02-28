@@ -35,8 +35,8 @@ import com.inter6.mail.gui.component.TextViewDialog;
 import com.inter6.mail.gui.data.edit.EditAddressPanel;
 import com.inter6.mail.gui.data.edit.EditHeaderPanel;
 import com.inter6.mail.gui.data.edit.EditMessagePanel;
-import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.MimeSmtpSendJob;
 import com.inter6.mail.model.component.AddressData;
 import com.inter6.mail.model.component.HeaderData;
@@ -99,7 +99,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 			try {
 				byte[] message = EditSourcePanel.this.buildMessage();
 				TextViewDialog.createDialog(new String(message))
-				.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
+						.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
 			} catch (Throwable e) {
 				EditSourcePanel.this.logPanel.error("build mime fail ! - ", e);
 			}
@@ -148,7 +148,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 	}
 
 	@Override
-	public Job buildSendJob() throws Throwable {
+	public AbstractSmtpSendJob buildSendJob() throws Throwable {
 		MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
 		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.buildMessage()));
 		return mimeSmtpSendJob;

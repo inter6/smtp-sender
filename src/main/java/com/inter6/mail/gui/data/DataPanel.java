@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.module.AppConfig;
 
 @Component
@@ -104,7 +104,7 @@ public class DataPanel extends JPanel implements ConfigObserver {
 		this.sourceInputPanel.updateUI();
 	}
 
-	public Job getSendJob() throws Throwable {
+	public AbstractSmtpSendJob getSendJob() throws Throwable {
 		return this.selectedJobBuilder.buildSendJob();
 	}
 

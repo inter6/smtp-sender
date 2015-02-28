@@ -25,8 +25,8 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.EmlSmtpSendJob;
 import com.inter6.mail.model.data.EmlSourceData;
 import com.inter6.mail.module.AppConfig;
@@ -41,7 +41,8 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	private final DefaultListModel emlListModel = new DefaultListModel();
 	private final JList emlList = new JList(this.emlListModel);
-	private File lastSelectFile;
+
+	//	private File lastSelectDir;
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -69,13 +70,14 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JFileChooser fileChooser = new JFileChooser(EmlSourcePanel.this.lastSelectFile);
+			// FIXME 마지막으로 선택한 디렉토리 지정
+			JFileChooser fileChooser = new JFileChooser(/*EmlSourcePanel.this.lastSelectDir*/);
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			if (fileChooser.showOpenDialog(EmlSourcePanel.this) == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
 				if (file.isFile()) {
 					EmlSourcePanel.this.emlListModel.addElement(file);
-					EmlSourcePanel.this.lastSelectFile = file;
+					//					EmlSourcePanel.this.lastSelectDir = file.getParentFile();
 				}
 			}
 		}
@@ -110,7 +112,7 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	};
 
 	@Override
-	public Job buildSendJob() throws Throwable {
+	public AbstractSmtpSendJob buildSendJob() throws Throwable {
 		EmlSmtpSendJob emlSmtpSendJob = ModuleService.getBean(EmlSmtpSendJob.class);
 		emlSmtpSendJob.setEmlSourceData(this.getEmlSourceData());
 		return emlSmtpSendJob;
@@ -138,7 +140,9 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 		if (CollectionUtils.isNotEmpty(files)) {
 			for (File file : files) {
 				this.emlListModel.addElement(file);
-				this.lastSelectFile = file;
+				/*if (file.exists()) {
+					this.lastSelectDir = file.getParentFile();
+				}*/
 			}
 		}
 	}

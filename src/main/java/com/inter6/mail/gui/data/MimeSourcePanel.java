@@ -10,8 +10,8 @@ import javax.swing.JTextArea;
 
 import org.springframework.stereotype.Component;
 
-import com.inter6.mail.job.Job;
 import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.MimeSmtpSendJob;
 import com.inter6.mail.module.ModuleService;
 
@@ -29,7 +29,7 @@ public class MimeSourcePanel extends JPanel implements SendJobBuilder {
 	}
 
 	@Override
-	public Job buildSendJob() throws Throwable {
+	public AbstractSmtpSendJob buildSendJob() throws Throwable {
 		MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
 		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.mimeArea.getText().getBytes()));
 		return mimeSmtpSendJob;

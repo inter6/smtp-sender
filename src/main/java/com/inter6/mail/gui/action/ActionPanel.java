@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.data.DataPanel;
-import com.inter6.mail.job.Job;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 
 @Component
 public class ActionPanel extends JPanel {
@@ -33,6 +33,8 @@ public class ActionPanel extends JPanel {
 	private final JButton stopButton = new JButton("Stop");
 	private final JProgressBar progressBar = new JProgressBar();
 
+	private AbstractSmtpSendJob currentJob;
+
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -42,8 +44,6 @@ public class ActionPanel extends JPanel {
 			this.startButton.addActionListener(this.startEvent);
 			sendPanel.add(this.startButton);
 			sendPanel.add(this.stopButton);
-
-			// XXX 구현되면 제거
 			this.stopButton.setEnabled(false);
 		}
 		this.add(sendPanel);
@@ -64,17 +64,14 @@ public class ActionPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent ev) {
-			// TODO 쓰레드 처리
 			String jobName = "unknown";
 			try {
-				Job sendJob = ActionPanel.this.dataPanel.getSendJob();
-				jobName = sendJob.getClass().getSimpleName();
+				ActionPanel.this.currentJob = ActionPanel.this.dataPanel.getSendJob();
+				jobName = ActionPanel.this.currentJob.getClass().getSimpleName();
 				ActionPanel.this.startButton.setEnabled(false);
-				// XXX 구현되면 주석 제거
-				//				ActionPanel.this.stopButton.setEnabled(true);
-
-				sendJob.execute();
-				ActionPanel.this.logPanel.info("job success - JOB:" + jobName);
+				ActionPanel.this.stopButton.setEnabled(true);
+				ActionPanel.this.currentJob.execute();
+				ActionPanel.this.logPanel.info("job done - JOB:" + jobName);
 			} catch (Throwable e) {
 				ActionPanel.this.logPanel.error("job fail ! - JOB:" + jobName, e);
 			} finally {
