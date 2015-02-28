@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.inter6.mail</groupId>
 	<artifactId>smtp-sender</artifactId>
-	<version>0.2.2</version>
+	<version>0.3.0-dev</version>
 	<packaging>jar</packaging>
 
 	<properties>

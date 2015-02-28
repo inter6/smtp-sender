@@ -1,9 +1,12 @@
-smtp-sender v0.2.2 (stable - 15/02/18)
+smtp-sender v0.3.0-dev (unstable - 15/03/01)
 
 Developer: inter6 <inter6@inter6.com>
 Repository: https://github.com/inter6/smtp-sender
 
-Releases History
+Release History
+
+v0.3.0-dev
+- Support Multi-thread
 
 v0.2.2
 - Support TLS
