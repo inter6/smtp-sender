@@ -197,11 +197,9 @@ public class Workers {
 		public Thread newThread(Runnable runnable) {
 			Thread thread = new Thread(this.threadGroup, runnable, this.namePrefix + this.threadNumber.getAndIncrement(), 0);
 			this.log.info(thread.getName() + " created !");
-			// TODO deamon 확인
 			if (!thread.isDaemon()) {
 				thread.setDaemon(true);
 			}
-			// TODO 우선순위 설정 구현 여부를 판단해서 필요하면 기능 추가
 			return thread;
 		}
 	}

@@ -1,16 +1,10 @@
 package com.inter6.mail.model;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.collections4.map.MultiKeyMap;
-import org.springframework.stereotype.Component;
-
-import com.inter6.mail.job.Job;
-
-@Component
+//@Component
 public class JobStatistics {
 
-	private final MultiKeyMap<String, AtomicInteger> countMap = new MultiKeyMap<String, AtomicInteger>();
+	/*private final MultiKeyMap<String, AtomicInteger> countMap = new MultiKeyMap<String, AtomicInteger>();
 
 	public void addCount(Job job, String category) {
 		this.addCount(job.getClass().getSimpleName(), category);
@@ -35,5 +29,5 @@ public class JobStatistics {
 
 	public void clear() {
 		this.countMap.clear();
-	}
+	}*/
 }

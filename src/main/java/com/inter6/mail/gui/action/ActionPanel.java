@@ -18,9 +18,10 @@ import org.springframework.stereotype.Component;
 
 import com.inter6.mail.gui.data.DataPanel;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
+import com.inter6.mail.job.smtp.SmtpSendJobObserver;
 
 @Component
-public class ActionPanel extends JPanel {
+public class ActionPanel extends JPanel implements SmtpSendJobObserver {
 	private static final long serialVersionUID = -1786161460680791823L;
 
 	@Autowired
@@ -32,6 +33,7 @@ public class ActionPanel extends JPanel {
 	private final JButton startButton = new JButton("Start");
 	private final JButton stopButton = new JButton("Stop");
 	private final JProgressBar progressBar = new JProgressBar();
+	private final JLabel progressLabel = new JLabel("--%");
 
 	private AbstractSmtpSendJob currentJob;
 
@@ -52,8 +54,9 @@ public class ActionPanel extends JPanel {
 		{
 			progressPanel.add(new JLabel("--:--:--"), BorderLayout.WEST);
 			this.progressBar.setBorder(new EmptyBorder(0, 10, 0, 10));
+			this.progressBar.setMaximum(100);
 			progressPanel.add(this.progressBar, BorderLayout.CENTER);
-			progressPanel.add(new JLabel("---%"), BorderLayout.EAST);
+			progressPanel.add(this.progressLabel, BorderLayout.EAST);
 		}
 		this.add(progressPanel);
 
@@ -64,20 +67,42 @@ public class ActionPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent ev) {
-			String jobName = "unknown";
 			try {
 				ActionPanel.this.currentJob = ActionPanel.this.dataPanel.getSendJob();
-				jobName = ActionPanel.this.currentJob.getClass().getSimpleName();
-				ActionPanel.this.startButton.setEnabled(false);
-				ActionPanel.this.stopButton.setEnabled(true);
-				ActionPanel.this.currentJob.execute();
-				ActionPanel.this.logPanel.info("job done - JOB:" + jobName);
+				new Thread(ActionPanel.this.currentJob).start();
 			} catch (Throwable e) {
-				ActionPanel.this.logPanel.error("job fail ! - JOB:" + jobName, e);
-			} finally {
-				ActionPanel.this.startButton.setEnabled(true);
-				ActionPanel.this.stopButton.setEnabled(false);
+				ActionPanel.this.logPanel.error("job build fail !", e);
 			}
 		}
 	};
+
+	@Override
+	public void onStart(long startTime) {
+		// TODO 진행율 초기화
+		ActionPanel.this.startButton.setEnabled(false);
+		ActionPanel.this.stopButton.setEnabled(true);
+	}
+
+	@Override
+	public void onSuccess() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onError(Throwable e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onDone(long startTime, long elapsedTime) {
+		ActionPanel.this.startButton.setEnabled(true);
+		ActionPanel.this.stopButton.setEnabled(false);
+	}
+
+	@Override
+	public void onProgress(float progressRate) {
+		this.progressBar.setValue((int) progressRate);
+		this.progressLabel.setText(String.format("%.2f", progressRate) + "%");
+	}
 }

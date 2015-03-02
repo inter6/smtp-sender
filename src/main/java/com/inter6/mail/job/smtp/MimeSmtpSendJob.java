@@ -129,10 +129,4 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 	public void terminate() throws InterruptedException {
 		// unsupport
 	}
-
-	@Override
-	public float getProgressRate() {
-		// unsupport
-		return 0;
-	}
 }

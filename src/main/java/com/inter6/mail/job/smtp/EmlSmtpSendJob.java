@@ -50,7 +50,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 	}
 
 	@Override
-	public float getProgressRate() {
+	protected float getProgressRate() {
 		return this.progressRate;
 	}
 }
