@@ -8,9 +8,11 @@ import java.awt.event.ActionListener;
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,8 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver {
 
 	private final JButton startButton = new JButton("Start");
 	private final JButton stopButton = new JButton("Stop");
+	private final JCheckBox useMultiThreadCheckBox = new JCheckBox("Multi-Thread");
+	private final JTextField maxThreadCountFiled = new JTextField(2);
 	private final JProgressBar progressBar = new JProgressBar();
 	private final JLabel progressLabel = new JLabel("--%");
 
@@ -46,6 +50,16 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver {
 			this.startButton.addActionListener(this.startEvent);
 			sendPanel.add(this.startButton);
 			sendPanel.add(this.stopButton);
+			sendPanel.add(this.useMultiThreadCheckBox);
+			sendPanel.add(new JLabel("Max:"));
+			sendPanel.add(this.maxThreadCountFiled);
+
+			// XXX 구현되면 삭제
+			this.useMultiThreadCheckBox.setSelected(true);
+			this.useMultiThreadCheckBox.setEnabled(false);
+			this.maxThreadCountFiled.setText("8");
+			this.maxThreadCountFiled.setEnabled(false);
+
 			this.stopButton.setEnabled(false);
 		}
 		this.add(sendPanel);
