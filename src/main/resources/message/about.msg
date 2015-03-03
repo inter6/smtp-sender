@@ -5,6 +5,9 @@ Repository: https://github.com/inter6/smtp-sender
 
 Release History
 
+v0.3.1-dev
+- Improve Multi-thread
+
 v0.3.0
 - Support Multi-thread
 - Display Send Progress Rate
