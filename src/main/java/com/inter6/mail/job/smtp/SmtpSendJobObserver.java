@@ -4,11 +4,7 @@ public interface SmtpSendJobObserver {
 
 	public void onStart(long startTime);
 
-	public void onSuccess();
-
-	public void onError(Throwable e);
-
 	public void onDone(long startTime, long elapsedTime);
 
-	public void onProgress(float progressRate);
+	public void onProgress(float progressRate, long startTime, long currentTime);
 }

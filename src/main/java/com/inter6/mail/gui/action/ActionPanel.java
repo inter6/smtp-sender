@@ -36,8 +36,9 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver {
 	private final JButton stopButton = new JButton("Stop");
 	private final JCheckBox useMultiThreadCheckBox = new JCheckBox("Multi-Thread");
 	private final JTextField maxThreadCountFiled = new JTextField(2);
+	private final JLabel elapsedTimeLabel = new JLabel("--:--:--");
 	private final JProgressBar progressBar = new JProgressBar();
-	private final JLabel progressLabel = new JLabel("--%");
+	private final JLabel progressLabel = new JLabel("0.00 %");
 
 	private AbstractSmtpSendJob currentJob;
 
@@ -47,26 +48,27 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver {
 
 		JPanel sendPanel = new JPanel(new FlowLayout());
 		{
-			this.startButton.addActionListener(this.startEvent);
 			sendPanel.add(this.startButton);
 			sendPanel.add(this.stopButton);
 			sendPanel.add(this.useMultiThreadCheckBox);
 			sendPanel.add(new JLabel("Max:"));
 			sendPanel.add(this.maxThreadCountFiled);
 
+			this.startButton.addActionListener(this.startEvent);
+			this.stopButton.addActionListener(this.stopEvent);
+			this.stopButton.setEnabled(false);
+
 			// XXX 구현되면 삭제
 			this.useMultiThreadCheckBox.setSelected(true);
 			this.useMultiThreadCheckBox.setEnabled(false);
 			this.maxThreadCountFiled.setText("8");
 			this.maxThreadCountFiled.setEnabled(false);
-
-			this.stopButton.setEnabled(false);
 		}
 		this.add(sendPanel);
 
 		JPanel progressPanel = new JPanel(new BorderLayout());
 		{
-			progressPanel.add(new JLabel("--:--:--"), BorderLayout.WEST);
+			progressPanel.add(this.elapsedTimeLabel, BorderLayout.WEST);
 			this.progressBar.setBorder(new EmptyBorder(0, 10, 0, 10));
 			this.progressBar.setMaximum(100);
 			progressPanel.add(this.progressBar, BorderLayout.CENTER);
@@ -90,33 +92,56 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver {
 		}
 	};
 
+	private final ActionListener stopEvent = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent ev) {
+			if (ActionPanel.this.currentJob == null) {
+				return;
+			}
+
+			try {
+				ActionPanel.this.currentJob.terminate();
+			} catch (Throwable e) {
+				ActionPanel.this.logPanel.error("job terminate fail !", e);
+			}
+		}
+	};
+
 	@Override
 	public void onStart(long startTime) {
-		// TODO 진행율 초기화
+		this.elapsedTimeLabel.setText("0:0:0");
+		this.progressBar.setValue(0);
+		this.progressLabel.setText("0.00 %");
 		ActionPanel.this.startButton.setEnabled(false);
 		ActionPanel.this.stopButton.setEnabled(true);
 	}
 
 	@Override
-	public void onSuccess() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onError(Throwable e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onDone(long startTime, long elapsedTime) {
+		this.currentJob = null;
+		this.elapsedTimeLabel.setText(this.formatElapsedTime(elapsedTime));
+		this.progressBar.setValue(100);
+		this.progressLabel.setText("100.00 %");
 		ActionPanel.this.startButton.setEnabled(true);
 		ActionPanel.this.stopButton.setEnabled(false);
 	}
 
 	@Override
-	public void onProgress(float progressRate) {
-		this.progressBar.setValue((int) progressRate);
-		this.progressLabel.setText(String.format("%.2f", progressRate) + "%");
+	public void onProgress(float progressRate, long startTime, long currentTime) {
+		this.elapsedTimeLabel.setText(this.formatElapsedTime(currentTime - startTime));
+
+		float validRate = progressRate > 99 ? progressRate : 99;
+		this.progressBar.setValue((int) validRate);
+		this.progressLabel.setText(String.format("%.2f", validRate) + " %");
+	}
+
+	private String formatElapsedTime(long elapsedTime) {
+		long elapsedSec = elapsedTime / 1000;
+		long s = elapsedSec % 60;
+		elapsedSec /= 60;
+		long m = elapsedSec % 60;
+		long h = elapsedSec / 60;
+		return h + ":" + m + ":" + s;
 	}
 }

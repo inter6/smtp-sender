@@ -63,7 +63,9 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 			while (this.isRun) {
 				Map<String, SmtpSendJobObserver> observers = ModuleService.getBeans(SmtpSendJobObserver.class);
 				for (SmtpSendJobObserver observer : observers.values()) {
-					observer.onProgress(AbstractSmtpSendMasterJob.this.getProgressRate());
+					observer.onProgress(AbstractSmtpSendMasterJob.this.getProgressRate(),
+							AbstractSmtpSendMasterJob.this.getStartTime(),
+							System.currentTimeMillis());
 				}
 				try {
 					Thread.sleep(1000);

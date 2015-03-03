@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -52,5 +53,14 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 	@Override
 	protected float getProgressRate() {
 		return this.progressRate;
+	}
+
+	@Override
+	public String toString() {
+		String info = "EmlSmtpSendJob FILES:" + this.emlSourceData.getFiles();
+		if (info.length() > 50) {
+			info = StringUtils.substring(info, 0, 100) + "...";
+		}
+		return info;
 	}
 }

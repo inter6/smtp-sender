@@ -59,19 +59,11 @@ public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 			}
 
 			this.doSend();
-			this.logPanel.info("smtp send done - JOB:" + this.getClass().getSimpleName());
+			this.logPanel.info("smtp send done - JOB:" + this);
 			//			this.jobStatistics.addCount(this, "success");
-
-			for (SmtpSendJobObserver observer : observers.values()) {
-				observer.onSuccess();
-			}
 		} catch (Throwable e) {
-			this.logPanel.error("smtp send fail ! - JOB:" + this.getClass().getSimpleName(), e);
+			this.logPanel.error("smtp send fail ! - JOB:" + this, e);
 			//			this.jobStatistics.addCount(this, "fail");
-
-			for (SmtpSendJobObserver observer : observers.values()) {
-				observer.onError(e);
-			}
 		} finally {
 			this.stopWatch.stop();
 			for (SmtpSendJobObserver observer : observers.values()) {
@@ -98,5 +90,9 @@ public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 
 	protected PostSendSettingData getPostSendSettingData() {
 		return this.postSendSettingPanel.getPostSendSettingData();
+	}
+
+	protected long getStartTime() {
+		return this.stopWatch.getStartTime();
 	}
 }

@@ -129,4 +129,10 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 	public void terminate() throws InterruptedException {
 		// unsupport
 	}
+
+	@Override
+	public String toString() {
+		String info = "MimeSmtpSendJob";
+		return info;
+	}
 }
