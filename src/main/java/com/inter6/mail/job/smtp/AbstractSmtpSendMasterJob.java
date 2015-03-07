@@ -3,6 +3,7 @@ package com.inter6.mail.job.smtp;
 import java.util.Map;
 
 import com.inter6.mail.job.thread.ThreadSupportJob;
+import com.inter6.mail.model.action.ActionData;
 import com.inter6.mail.module.ModuleService;
 import com.inter6.mail.module.Workers;
 
@@ -10,24 +11,31 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 
 	private Workers workers;
 	private final Object workerLock = new Object();
+	private ActionData actionData;
 
 	@Override
 	protected void doSend() throws Throwable {
+		this.actionData = this.getActionData();
+
 		JobProgressMonitor monitor = new JobProgressMonitor();
 		try {
-			synchronized (this.workerLock) {
-				this.workers = new Workers();
-				this.workers.setPoolSize(4, 8);
-				this.workers.initailize(this.getClass().getName());
+			if (this.actionData.isUseMultiThread()) {
+				synchronized (this.workerLock) {
+					this.workers = new Workers();
+					this.workers.setPoolSize(this.actionData.getMaxThreadCount() / 2, this.actionData.getMaxThreadCount());
+					this.workers.initailize(this.getClass().getName());
+				}
 			}
 			monitor.start();
 			this.doMasterJob();
-			while (this.workers.isRun()) {
-				Thread.sleep(1000);
+			if (this.actionData.isUseMultiThread()) {
+				while (this.workers.isRun()) {
+					Thread.sleep(1000);
+				}
 			}
 		} finally {
-			synchronized (this.workerLock) {
-				if (this.workers != null) {
+			if (this.actionData.isUseMultiThread() && this.workers != null) {
+				synchronized (this.workerLock) {
 					this.workers.terminate();
 				}
 			}
@@ -37,8 +45,12 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 
 	protected abstract void doMasterJob();
 
-	protected void orderWorker(ThreadSupportJob workerJob) {
-		this.workers.execute(workerJob);
+	protected void orderWorker(ThreadSupportJob workerJob) throws Throwable {
+		if (this.actionData.isUseMultiThread()) {
+			this.workers.execute(workerJob);
+		} else {
+			workerJob.execute();
+		}
 	}
 
 	@Override

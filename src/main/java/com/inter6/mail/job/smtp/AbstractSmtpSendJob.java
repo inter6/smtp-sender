@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.inter6.mail.gui.action.ActionPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.advanced.PostSendSettingPanel;
 import com.inter6.mail.gui.advanced.PreSendSettingPanel;
 import com.inter6.mail.gui.data.EnvelopePanel;
 import com.inter6.mail.gui.setting.ServerPanel;
 import com.inter6.mail.job.thread.ThreadSupportJob;
+import com.inter6.mail.model.action.ActionData;
 import com.inter6.mail.model.advanced.PostSendSettingData;
 import com.inter6.mail.model.advanced.PreSendSettingData;
 import com.inter6.mail.model.data.EnvelopeData;
@@ -36,6 +38,9 @@ public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 	private PostSendSettingPanel postSendSettingPanel;
 
 	@Autowired
+	private ActionPanel actionPanel;
+
+	@Autowired
 	private LogPanel logPanel;
 
 	private StopWatch stopWatch;
@@ -51,6 +56,7 @@ public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 	@Override
 	public void execute() {
 		Map<String, SmtpSendJobObserver> observers = ModuleService.getBeans(SmtpSendJobObserver.class);
+		//		this.jobStatistics.clear();
 		try {
 			this.stopWatch = new StopWatch();
 			this.stopWatch.start();
@@ -90,6 +96,10 @@ public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 
 	protected PostSendSettingData getPostSendSettingData() {
 		return this.postSendSettingPanel.getPostSendSettingData();
+	}
+
+	protected ActionData getActionData() {
+		return this.actionPanel.getActionData();
 	}
 
 	protected long getStartTime() {

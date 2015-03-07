@@ -1,6 +1,5 @@
 package com.inter6.mail.model;
 
-
 //@Component
 public class JobStatistics {
 
