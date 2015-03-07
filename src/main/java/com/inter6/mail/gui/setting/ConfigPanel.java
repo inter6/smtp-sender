@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -81,9 +80,6 @@ public class ConfigPanel extends JPanel {
 			Map<String, ConfigObserver> observers = ModuleService.getBeans(ConfigObserver.class);
 			for (ConfigObserver observer : observers.values()) {
 				observer.loadConfig();
-				if (observer instanceof JComponent) {
-					((JComponent) observer).validate();
-				}
 			}
 
 			this.appConfig.setFile(configFile);

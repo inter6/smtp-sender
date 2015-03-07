@@ -28,6 +28,7 @@ import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.EmlSmtpSendJob;
+import com.inter6.mail.model.AppSession;
 import com.inter6.mail.model.data.EmlSourceData;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
@@ -39,10 +40,11 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	@Autowired
 	private AppConfig appConfig;
 
+	@Autowired
+	private AppSession appSession;
+
 	private final DefaultListModel emlListModel = new DefaultListModel();
 	private final JList emlList = new JList(this.emlListModel);
-
-	//	private File lastSelectDir;
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -70,14 +72,13 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// FIXME 마지막으로 선택한 디렉토리 지정
-			JFileChooser fileChooser = new JFileChooser(/*EmlSourcePanel.this.lastSelectDir*/);
+			JFileChooser fileChooser = new JFileChooser(EmlSourcePanel.this.appSession.getLastSelectSourceDir());
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			if (fileChooser.showOpenDialog(EmlSourcePanel.this) == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
 				if (file.isFile()) {
-					EmlSourcePanel.this.emlListModel.addElement(file);
-					//					EmlSourcePanel.this.lastSelectDir = file.getParentFile();
+					EmlSourcePanel.this.emlListModel.addElement(file.getAbsolutePath());
+					EmlSourcePanel.this.appSession.setLastSelectSourceDir(file.getParent());
 				}
 			}
 		}
@@ -130,7 +131,7 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	@Override
 	public void loadConfig() {
-		this.emlListModel.removeAllElements();
+		this.emlListModel.clear();
 		EmlSourceData emlSourceData = new Gson().fromJson(this.appConfig.getUnsplitString("eml.source.data"), EmlSourceData.class);
 		if (emlSourceData == null) {
 			return;
@@ -139,10 +140,7 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 		Collection<File> files = emlSourceData.getFiles();
 		if (CollectionUtils.isNotEmpty(files)) {
 			for (File file : files) {
-				this.emlListModel.addElement(file);
-				/*if (file.exists()) {
-					this.lastSelectDir = file.getParentFile();
-				}*/
+				this.emlListModel.addElement(file.getAbsolutePath());
 			}
 		}
 	}

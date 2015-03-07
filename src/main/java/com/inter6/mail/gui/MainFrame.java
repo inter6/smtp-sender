@@ -6,8 +6,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +18,9 @@ import com.inter6.mail.gui.menu.TopMenuBar;
 import com.inter6.mail.gui.setting.SettingPanel;
 
 @Component
+@Slf4j
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = -6461973454673997240L;
-
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private TopMenuBar topMenuBar;
@@ -43,7 +42,7 @@ public class MainFrame extends JFrame {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-			this.log.error("set look and feel fail !", e);
+			log.error("set look and feel fail !", e);
 		}
 
 		this.setTitle("smtp-sender by inter6.com");

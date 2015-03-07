@@ -17,16 +17,15 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class LogPanel extends JPanel {
 	private static final long serialVersionUID = 752623058795917575L;
-
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final JTextArea logArea = new JTextArea();
 	private final Object appendLock = new Object();
@@ -89,7 +88,7 @@ public class LogPanel extends JPanel {
 	};
 
 	public void info(String msg) {
-		this.log.info(msg);
+		log.info(msg);
 		this.append(msg);
 	}
 
@@ -99,7 +98,7 @@ public class LogPanel extends JPanel {
 	}
 
 	public void error(String msg, Throwable e) {
-		this.log.error(msg, e);
+		log.error(msg, e);
 		this.append(msg + (e != null ? " ERR:" + e.getMessage() : ""));
 	}
 

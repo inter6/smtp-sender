@@ -27,6 +27,7 @@ import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.DirSmtpSendJob;
+import com.inter6.mail.model.AppSession;
 import com.inter6.mail.model.data.DirSourceData;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
@@ -38,11 +39,12 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	@Autowired
 	private AppConfig appConfig;
 
+	@Autowired
+	private AppSession appSession;
+
 	private final JCheckBox recursiveCheckButton = new JCheckBox("Recursive");
 	private final DefaultListModel dirListModel = new DefaultListModel();
 	private final JList dirList = new JList(this.dirListModel);
-
-	//	private File lastSelectDir;
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -69,14 +71,13 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// FIXME 마지막으로 선택한 디렉토리 지정
-			JFileChooser fileChooser = new JFileChooser(/*DirSourcePanel.this.lastSelectDir*/);
+			JFileChooser fileChooser = new JFileChooser(DirSourcePanel.this.appSession.getLastSelectSourceDir());
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			if (fileChooser.showOpenDialog(DirSourcePanel.this) == JFileChooser.APPROVE_OPTION) {
 				File dir = fileChooser.getSelectedFile();
 				if (dir.isDirectory()) {
-					DirSourcePanel.this.dirListModel.addElement(dir);
-					//					DirSourcePanel.this.lastSelectDir = dir;
+					DirSourcePanel.this.dirListModel.addElement(dir.getAbsolutePath());
+					DirSourcePanel.this.appSession.setLastSelectSourceDir(dir.getAbsolutePath());
 				}
 			}
 		}
@@ -112,7 +113,7 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	@Override
 	public void loadConfig() {
-		this.dirListModel.removeAllElements();
+		this.dirListModel.clear();
 		DirSourceData dirSourceData = new Gson().fromJson(this.appConfig.getUnsplitString("dir.source.data"), DirSourceData.class);
 		if (dirSourceData == null) {
 			return;
@@ -121,10 +122,7 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 		Collection<File> dirs = dirSourceData.getDirs();
 		if (CollectionUtils.isNotEmpty(dirs)) {
 			for (File dir : dirs) {
-				this.dirListModel.addElement(dir);
-				/*if (dir.exists()) {
-					this.lastSelectDir = dir;
-				}*/
+				this.dirListModel.addElement(dir.getAbsolutePath());
 			}
 		}
 		this.recursiveCheckButton.setSelected(dirSourceData.isRecursive());

@@ -1,16 +1,16 @@
 package com.inter6.mail;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.inter6.mail.gui.MainFrame;
 import com.inter6.mail.module.ModuleService;
 import com.inter6.mail.service.XTrustProvider;
 
+@Slf4j
 public class Application {
-	private final static Logger log = LoggerFactory.getLogger(Application.class);
 
 	public static void main(String[] args) {
 		log.info("application start");

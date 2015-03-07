@@ -23,9 +23,11 @@ import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
+import com.inter6.mail.model.AppSession;
 import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.component.content.AttachmentPartData;
 import com.inter6.mail.model.component.content.PartData;
+import com.inter6.mail.module.ModuleService;
 
 public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
@@ -38,7 +40,6 @@ public class AttachmentPartPanel extends ContentPartPanel {
 	private final JComboBox filenameEncodingOptionBox = new JComboBox(new String[] { "B", "Q" });
 	private final JComboBox transferOptionBox = new JComboBox(new String[] { "base64", "quoted-printable", "8bit", "7bit", "binary" });
 	private final JTextField pathField = new JTextField(30);
-	private File lastSelectFile;
 
 	protected AttachmentPartPanel(ContentType contentType, Integer nested) {
 		super(contentType, nested);
@@ -121,7 +122,8 @@ public class AttachmentPartPanel extends ContentPartPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JFileChooser fileChooser = new JFileChooser(AttachmentPartPanel.this.lastSelectFile);
+			AppSession appSession = ModuleService.getBean(AppSession.class);
+			JFileChooser fileChooser = new JFileChooser(appSession.getLastSelectAttachDir());
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			if (fileChooser.showOpenDialog(AttachmentPartPanel.this) == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
@@ -129,7 +131,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 					AttachmentPartPanel.this.filenameField.setText(file.getName());
 					AttachmentPartPanel.this.pathField.setText(file.getAbsolutePath());
 					AttachmentPartPanel.this.typeField.setText(AttachmentPartPanel.this.getContentType(file));
-					AttachmentPartPanel.this.lastSelectFile = file;
+					appSession.setLastSelectAttachDir(file.getParent());
 				}
 			}
 		}
