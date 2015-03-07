@@ -1,11 +1,11 @@
-smtp-sender v0.3.0-dev (unstable - 15/03/01)
+smtp-sender v0.3.1 (stable - 15/03/08)
 
 Developer: inter6 <inter6@inter6.com>
 Repository: https://github.com/inter6/smtp-sender
 
 Release History
 
-v0.3.1-dev
+v0.3.1
 - Improve Multi-thread
 
 v0.3.0
