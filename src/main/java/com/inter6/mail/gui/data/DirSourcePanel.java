@@ -102,9 +102,9 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	private DirSourceData getDirSourceData() {
 		DirSourceData dirSourceData = new DirSourceData();
-		List<File> dirs = new ArrayList<File>();
+		List<String> dirs = new ArrayList<String>();
 		for (int i = 0; i < this.dirListModel.size(); i++) {
-			dirs.add((File) this.dirListModel.get(i));
+			dirs.add((String) this.dirListModel.get(i));
 		}
 		dirSourceData.setDirs(dirs);
 		dirSourceData.setRecursive(this.recursiveCheckButton.isSelected());
@@ -119,10 +119,10 @@ public class DirSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			return;
 		}
 
-		Collection<File> dirs = dirSourceData.getDirs();
+		Collection<String> dirs = dirSourceData.getDirs();
 		if (CollectionUtils.isNotEmpty(dirs)) {
-			for (File dir : dirs) {
-				this.dirListModel.addElement(dir.getAbsolutePath());
+			for (String dir : dirs) {
+				this.dirListModel.addElement(dir);
 			}
 		}
 		this.recursiveCheckButton.setSelected(dirSourceData.isRecursive());

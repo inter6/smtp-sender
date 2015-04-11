@@ -1,6 +1,5 @@
 package com.inter6.mail.job.smtp;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.Collection;
 
@@ -33,10 +32,10 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 
 	@Override
 	protected void doMasterJob() {
-		Collection<File> files = this.emlSourceData.getFiles();
+		Collection<String> files = this.emlSourceData.getFiles();
 
 		int idx = 0;
-		for (File file : files) {
+		for (String file : files) {
 			try {
 				MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
 				mimeSmtpSendJob.setMessageStream(new FileInputStream(file));

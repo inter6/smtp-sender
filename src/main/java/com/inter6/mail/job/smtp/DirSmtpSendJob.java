@@ -40,8 +40,8 @@ public class DirSmtpSendJob extends AbstractSmtpSendMasterJob {
 	protected void doMasterJob() {
 		List<File> allFiles = new ArrayList<File>();
 
-		for (File dir : this.dirSourceData.getDirs()) {
-			Collection<File> files = FileUtils.listFiles(dir, new String[] { "eml" }, this.dirSourceData.isRecursive());
+		for (String dir : this.dirSourceData.getDirs()) {
+			Collection<File> files = FileUtils.listFiles(new File(dir), new String[] { "eml" }, this.dirSourceData.isRecursive());
 			if (CollectionUtils.isEmpty(files)) {
 				continue;
 			}

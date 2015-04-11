@@ -121,9 +121,9 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	private EmlSourceData getEmlSourceData() {
 		EmlSourceData emlSourceData = new EmlSourceData();
-		List<File> files = new ArrayList<File>();
+		List<String> files = new ArrayList<String>();
 		for (int i = 0; i < this.emlListModel.size(); i++) {
-			files.add((File) this.emlListModel.get(i));
+			files.add((String) this.emlListModel.get(i));
 		}
 		emlSourceData.setFiles(files);
 		return emlSourceData;
@@ -137,10 +137,10 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			return;
 		}
 
-		Collection<File> files = emlSourceData.getFiles();
+		Collection<String> files = emlSourceData.getFiles();
 		if (CollectionUtils.isNotEmpty(files)) {
-			for (File file : files) {
-				this.emlListModel.addElement(file.getAbsolutePath());
+			for (String file : files) {
+				this.emlListModel.addElement(file);
 			}
 		}
 	}
