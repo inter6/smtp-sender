@@ -51,6 +51,9 @@ public class DatePanel extends JPanel {
 	}
 
 	public void setDateData(DateData dateData) {
+		if (dateData == null) {
+			return;
+		}
 		this.useCheckBox.setSelected(dateData.isUse());
 		this.textField.setText(dateData.getText());
 		this.nowCheckBox.setSelected(dateData.isNow());
