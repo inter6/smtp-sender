@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -30,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.gui.component.DatePanel;
 import com.inter6.mail.gui.component.SubjectPanel;
 import com.inter6.mail.gui.component.TextViewDialog;
 import com.inter6.mail.gui.data.edit.EditAddressPanel;
@@ -39,6 +41,7 @@ import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.MimeSmtpSendJob;
 import com.inter6.mail.model.component.AddressData;
+import com.inter6.mail.model.component.DateData;
 import com.inter6.mail.model.component.HeaderData;
 import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.model.component.content.PartData;
@@ -53,6 +56,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 	private static final long serialVersionUID = -4373325495997044386L;
 
 	private final SubjectPanel subjectPanel = new SubjectPanel("Subject", 30, true);
+	private final DatePanel datePanel = new DatePanel("Date", 30, true, true);
 
 	@Autowired
 	private AppConfig appConfig;
@@ -77,6 +81,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 		wrapPanel.setLayout(new BoxLayout(wrapPanel, BoxLayout.Y_AXIS));
 		{
 			wrapPanel.add(this.subjectPanel);
+			wrapPanel.add(this.datePanel);
 			wrapPanel.add(this.editAddressPanel);
 			wrapPanel.add(this.editHeaderPanel);
 			wrapPanel.add(this.editMessagePanel);
@@ -124,6 +129,15 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 			mimeMessage.setSubject(subjectData.encodeSubject());
 		}
 
+		DateData dateData = this.datePanel.getDateData();
+		if (dateData.isUse()) {
+			if (dateData.isNow()) {
+				mimeMessage.setSentDate(new Date());
+			} else {
+				mimeMessage.setHeader("Date", dateData.getText());
+			}
+		}
+
 		List<AddressData> addressDatas = this.editAddressPanel.getAddressDatas();
 		for (AddressData addressData : addressDatas) {
 			if (!addressData.isUse()) {
@@ -157,6 +171,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 	private EditSourceData getEditSourceData() {
 		EditSourceData editSourceData = new EditSourceData();
 		editSourceData.setSubjectData(this.subjectPanel.getSubjectData());
+		editSourceData.setDateData(this.datePanel.getDateData());
 		editSourceData.setEditAddressData(this.editAddressPanel.getEditAddressData());
 		editSourceData.setEditHeaderData(this.editHeaderPanel.getEditHeaderData());
 		editSourceData.setEditMessageData(this.editMessagePanel.getEditMessageData());
@@ -172,6 +187,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 		}
 
 		this.subjectPanel.setSubjectData(editSourceData.getSubjectData());
+		this.datePanel.setDateData(editSourceData.getDateData());
 		this.editAddressPanel.setEditAddressData(editSourceData.getEditAddressData());
 		this.editHeaderPanel.setEditHeaderData(editSourceData.getEditHeaderData());
 		this.editMessagePanel.setEditMessageData(editSourceData.getEditMessageData());
