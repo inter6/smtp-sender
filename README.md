@@ -8,12 +8,16 @@ SMTP로 메일을 전송하는 Java GUI 프로그램.
 ![smtp-sender v0.3.1](http://www.inter6.com/_media/mail:smtp:smtp-sender_v0.3.1.png)
 
 v1.0.0 (ToDo)
-- Add Tools - Base64, RFC2074 encoder/decoder
-- Add Tools - DNS Query, Ping
+- Load EML file to MIME Editor
 - Custom Plugin
 
-v0.3.2 (In progress)
-- Load EML file to MIME Editor
+v0.4.0 (In Progress)
+- Add Tools - Base64, RFC2074 encoder/decoder
+- Add Tools - DNS Query, Ping
+
+v0.3.2
+- Add/Replace Date header
+- Bug fix
 
 v0.3.1
 - Improve Multi-thread

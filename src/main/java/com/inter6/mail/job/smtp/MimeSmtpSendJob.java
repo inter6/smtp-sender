@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Set;
 
 import javax.mail.MessagingException;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
 import com.inter6.mail.model.AdvancedMimeMessage;
 import com.inter6.mail.model.AuthOption;
 import com.inter6.mail.model.advanced.PostSendSettingData;
+import com.inter6.mail.model.component.DateData;
 import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.service.SmtpService;
 
@@ -77,6 +79,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		if (this.isParseMimeCondition()) {
 			AdvancedMimeMessage mimeMessage = new AdvancedMimeMessage(messageStream);
 			this.replaceSubject(mimeMessage);
+			this.replaceDate(mimeMessage);
 			mimeMessage.saveChanges();
 			mimeMessage.writeTo(copyStream);
 			copyStream.flush();
@@ -93,6 +96,10 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		if (replaceSubjectData.isUse()) {
 			return true;
 		}
+		DateData replaceDateData = this.getPreSendSettingData().getDateData();
+		if (replaceDateData.isUse()) {
+			return true;
+		}
 		return false;
 	}
 
@@ -102,6 +109,19 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 			return false;
 		}
 		mimeMessage.setSubject(replaceSubjectData.encodeSubject());
+		return true;
+	}
+
+	private boolean replaceDate(AdvancedMimeMessage mimeMessage) throws MessagingException {
+		DateData replaceDateData = this.getPreSendSettingData().getDateData();
+		if (!replaceDateData.isUse()) {
+			return false;
+		}
+		if (replaceDateData.isNow()) {
+			mimeMessage.setSentDate(new Date());
+		} else {
+			mimeMessage.setHeader("Date", replaceDateData.getText());
+		}
 		return true;
 	}
 

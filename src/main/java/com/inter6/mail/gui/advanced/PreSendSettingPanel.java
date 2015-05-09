@@ -14,8 +14,10 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.component.DatePanel;
 import com.inter6.mail.gui.component.SubjectPanel;
 import com.inter6.mail.model.advanced.PreSendSettingData;
+import com.inter6.mail.model.component.DateData;
 import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.module.AppConfig;
 
@@ -27,6 +29,7 @@ public class PreSendSettingPanel extends JPanel implements ConfigObserver {
 	private AppConfig appConfig;
 
 	private final SubjectPanel subjectPanel = new SubjectPanel("Replace Subject", 20, false);
+	private final DatePanel datePanel = new DatePanel("Replace Date", 20, true, true);
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -39,11 +42,13 @@ public class PreSendSettingPanel extends JPanel implements ConfigObserver {
 		}
 		this.add(labelPanel);
 		this.add(this.subjectPanel);
+		this.add(this.datePanel);
 	}
 
 	public PreSendSettingData getPreSendSettingData() {
 		PreSendSettingData preSendSettingData = new PreSendSettingData();
 		preSendSettingData.setReplaceSubjectData(this.subjectPanel.getSubjectData());
+		preSendSettingData.setDateData(this.datePanel.getDateData());
 		return preSendSettingData;
 	}
 
@@ -56,6 +61,10 @@ public class PreSendSettingPanel extends JPanel implements ConfigObserver {
 		SubjectData replaceSubjectData = preSendSettingData.getReplaceSubjectData();
 		if (replaceSubjectData != null) {
 			this.subjectPanel.setSubjectData(replaceSubjectData);
+		}
+		DateData replaceDateData = preSendSettingData.getDateData();
+		if (replaceDateData != null) {
+			this.datePanel.setDateData(replaceDateData);
 		}
 	}
 
