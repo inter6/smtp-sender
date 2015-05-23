@@ -142,10 +142,14 @@ public abstract class ContentPartPanel extends JPanel {
 		if (partData == null) {
 			return;
 		}
-		if (CollectionUtils.isNotEmpty(partData.getChildPartDatas())) {
-			for (PartData childPartData : partData.getChildPartDatas()) {
-				this.addChildPanel(childPartData.getContentType()).setComponentsFromPartData(childPartData);
-			}
+
+		this.setComponentsFromPartData(partData);
+		if (CollectionUtils.isEmpty(partData.getChildPartDatas())) {
+			return;
+		}
+		for (PartData childPartData : partData.getChildPartDatas()) {
+			ContentPartPanel childPartPanel = this.addChildPanel(childPartData.getContentType());
+			childPartPanel.setPartData(childPartData);
 		}
 	}
 
