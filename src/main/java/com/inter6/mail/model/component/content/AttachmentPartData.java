@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class AttachmentPartData extends PartData {
 	private String contentTypeStr; // NOPMD
+	private boolean isContentIdUse; // NOPMD
 	private String contentId; // NOPMD
 	private String contentDisposition; // NOPMD
 	private String contentTransferEncoding; // NOPMD

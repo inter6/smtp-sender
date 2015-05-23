@@ -19,6 +19,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import lombok.Getter;
+
 import org.apache.commons.collections4.CollectionUtils;
 
 import com.inter6.mail.gui.action.LogPanel;
@@ -29,6 +31,7 @@ import com.inter6.mail.module.ModuleService;
 public abstract class ContentPartPanel extends JPanel {
 	private static final long serialVersionUID = -3928978805796944620L;
 
+	@Getter
 	protected final ContentType contentType;
 	private final int nested;
 
@@ -139,10 +142,14 @@ public abstract class ContentPartPanel extends JPanel {
 		if (partData == null) {
 			return;
 		}
-		if (CollectionUtils.isNotEmpty(partData.getChildPartDatas())) {
-			for (PartData childPartData : partData.getChildPartDatas()) {
-				this.addChildPanel(childPartData.getContentType()).setComponentsFromPartData(childPartData);
-			}
+
+		this.setComponentsFromPartData(partData);
+		if (CollectionUtils.isEmpty(partData.getChildPartDatas())) {
+			return;
+		}
+		for (PartData childPartData : partData.getChildPartDatas()) {
+			ContentPartPanel childPartPanel = this.addChildPanel(childPartData.getContentType());
+			childPartPanel.setPartData(childPartData);
 		}
 	}
 

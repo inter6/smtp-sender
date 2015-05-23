@@ -18,7 +18,9 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -114,8 +116,13 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 	private byte[] buildMessage() throws Throwable {
 		MimeMessage mimeMessage = new MimeMessage(Session.getInstance(new Properties()));
 		this.buildMessageHeader(mimeMessage);
-		// TODO 최상위 파트를 바꿀 수 있는 기능
-		mimeMessage.setContent((Multipart) this.editMessagePanel.buildContentPart());
+
+		Object contentPart = this.editMessagePanel.buildContentPart();
+		if (contentPart instanceof MimeMultipart) {
+			mimeMessage.setContent((Multipart) contentPart);
+		} else if (contentPart instanceof MimeBodyPart) {
+			mimeMessage.setContent(contentPart, ((MimeBodyPart) contentPart).getContentType());
+		}
 		mimeMessage.saveChanges();
 
 		ByteArrayOutputStream memStream = new ByteArrayOutputStream();
