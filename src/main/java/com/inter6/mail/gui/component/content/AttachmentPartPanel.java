@@ -14,6 +14,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -33,6 +34,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
 
 	private final JTextField typeField = new JTextField("application/octet-stream", 20);
+	private final JCheckBox contentIdUseCheckBox = new JCheckBox();
 	private final JTextField contentIdField = new JTextField(25);
 	private final JComboBox dispositionOptionBox = new JComboBox(new String[] { "attachment", "inline" });
 	private final JTextField filenameField = new JTextField(20);
@@ -64,6 +66,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			{
 				dispositionPanel.add(new JLabel("Content-Disposition: "));
 				dispositionPanel.add(this.dispositionOptionBox);
+				this.dispositionOptionBox.addActionListener(this.changeDispositionEvent);
 				dispositionPanel.add(new JLabel("; filename="));
 				dispositionPanel.add(this.filenameField);
 				dispositionPanel.add(this.filenameCharsetField);
@@ -80,6 +83,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 
 			JPanel contentIdPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			{
+				contentIdPanel.add(this.contentIdUseCheckBox);
 				contentIdPanel.add(new JLabel("Content-ID: <"));
 				contentIdPanel.add(this.contentIdField);
 				contentIdPanel.add(new JLabel(">"));
@@ -104,6 +108,16 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		}
 		this.wrapPanel.add(actionPanel, BorderLayout.CENTER);
 	}
+
+	private final ActionListener changeDispositionEvent = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if ("inline".equalsIgnoreCase((String) AttachmentPartPanel.this.dispositionOptionBox.getSelectedItem())) {
+				AttachmentPartPanel.this.contentIdUseCheckBox.setSelected(true);
+			}
+		}
+	};
 
 	private final ActionListener generateCidEvent = new ActionListener() {
 
@@ -155,9 +169,11 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		part.setHeader("Content-Disposition", this.dispositionOptionBox.getSelectedItem() + "; filename=\"" + encodedFilename + "\"");
 		part.setHeader("Content-Transfer-Encoding", (String) this.transferOptionBox.getSelectedItem());
 
-		String contentId = this.contentIdField.getText();
-		if (StringUtils.isNotBlank(contentId)) {
-			part.setContentID("<" + contentId + ">");
+		if (this.contentIdUseCheckBox.isSelected()) {
+			String contentId = this.contentIdField.getText();
+			if (StringUtils.isNotBlank(contentId)) {
+				part.setContentID("<" + contentId + ">");
+			}
 		}
 		return part;
 	}
@@ -166,6 +182,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 	protected PartData getPartDataFromComponents() {
 		AttachmentPartData attachmentPartData = new AttachmentPartData();
 		attachmentPartData.setContentTypeStr(this.typeField.getText());
+		attachmentPartData.setContentIdUse(this.contentIdUseCheckBox.isSelected());
 		attachmentPartData.setContentId(this.contentIdField.getText());
 		attachmentPartData.setContentDisposition((String) this.dispositionOptionBox.getSelectedItem());
 		attachmentPartData.setContentTransferEncoding((String) this.transferOptionBox.getSelectedItem());
@@ -183,6 +200,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		}
 		AttachmentPartData attachmentPartData = (AttachmentPartData) partData;
 		this.typeField.setText(attachmentPartData.getContentTypeStr());
+		this.contentIdUseCheckBox.setSelected(attachmentPartData.isContentIdUse());
 		this.contentIdField.setText(attachmentPartData.getContentId());
 		this.dispositionOptionBox.setSelectedItem(attachmentPartData.getContentDisposition());
 		this.transferOptionBox.setSelectedItem(attachmentPartData.getContentTransferEncoding());
