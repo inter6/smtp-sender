@@ -151,7 +151,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 				StringUtils.defaultString(this.filenameCharsetField.getText(), "UTF-8"),
 				(String) this.filenameEncodingOptionBox.getSelectedItem());
 
-		part.setHeader("Content-Type", this.getContentType(file) + "; name=\"" + encodedFilename + "\"");
+		part.setHeader("Content-Type", this.typeField.getText() + "; name=\"" + encodedFilename + "\"");
 		part.setHeader("Content-Disposition", this.dispositionOptionBox.getSelectedItem() + "; filename=\"" + encodedFilename + "\"");
 		part.setHeader("Content-Transfer-Encoding", (String) this.transferOptionBox.getSelectedItem());
 
