@@ -1,8 +1,15 @@
 package com.inter6.mail.gui.data.edit;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.annotation.PostConstruct;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +27,64 @@ public class EditMessagePanel extends JPanel {
 	@Autowired
 	private LogPanel logPanel;
 
+	private final JComboBox rootTypeSelectBox = new JComboBox();
 	private ContentPartPanel rootPartPanel;
 
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new BorderLayout());
 
-		// TODO 최상위 파트를 바꿀 수 있는 기능
+		JPanel selectPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		{
+			selectPanel.add(new JLabel("Content-Type: "));
+			this.rootTypeSelectBox.setModel(new DefaultComboBoxModel(this.getAvailableRootTypes()));
+			this.rootTypeSelectBox.addActionListener(this.changeRootTypeEvent);
+			selectPanel.add(this.rootTypeSelectBox);
+		}
+		this.add(selectPanel, BorderLayout.NORTH);
+
 		try {
 			this.rootPartPanel = ContentPartPanel.createPanelByRoot(ContentType.MULTIPART_MIXED);
 			this.add(this.rootPartPanel, BorderLayout.CENTER);
 		} catch (Exception e) {
 			this.logPanel.error("create content panel fail ! - TYPE:" + ContentType.MULTIPART_MIXED, e);
+		}
+	}
+
+	private Vector<ContentType> getAvailableRootTypes() {
+		Vector<ContentType> childTypes = new Vector<ContentType>();
+		childTypes.add(ContentType.MULTIPART_MIXED);
+		childTypes.add(ContentType.MULTIPART_ALTERNATIVE);
+		childTypes.add(ContentType.MULTIPART_RELATED);
+		childTypes.add(ContentType.TEXT_PLAIN);
+		childTypes.add(ContentType.TEXT_HTML);
+		childTypes.add(ContentType.ATTACHMENT);
+		return childTypes;
+	}
+
+	private final ActionListener changeRootTypeEvent = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			EditMessagePanel.this.changeRootPartPanel();
+		}
+	};
+
+	private void changeRootPartPanel() {
+		ContentType currentType = this.rootPartPanel.getContentType();
+		ContentType selectType = (ContentType) this.rootTypeSelectBox.getSelectedItem();
+		if (currentType == selectType) {
+			return;
+		}
+
+		try {
+			ContentPartPanel newPartPanel = ContentPartPanel.createPanelByRoot(selectType);
+			this.remove(this.rootPartPanel);
+			this.rootPartPanel = newPartPanel;
+			this.add(this.rootPartPanel, BorderLayout.CENTER);
+			this.getParent().getParent().validate();
+		} catch (Exception e) {
+			this.logPanel.error("create content panel fail ! - TYPE:" + selectType, e);
 		}
 	}
 
@@ -41,6 +94,7 @@ public class EditMessagePanel extends JPanel {
 
 	public EditMessageData getEditMessageData() {
 		EditMessageData editMessageData = new EditMessageData();
+		editMessageData.setRootContentType((ContentType) this.rootTypeSelectBox.getSelectedItem());
 		editMessageData.setRootPartData(this.rootPartPanel.getPartData());
 		return editMessageData;
 	}
@@ -49,7 +103,12 @@ public class EditMessagePanel extends JPanel {
 		if (editMessageData == null) {
 			return;
 		}
-		// TODO 최상위 파트를 바꿀 수 있는 기능
+
+		// MARK 이전 버전 config 파일 호환
+		if (editMessageData.getRootContentType() != null) {
+			this.rootTypeSelectBox.setSelectedItem(editMessageData.getRootContentType());
+		}
+		this.changeRootPartPanel();
 		this.rootPartPanel.setPartData(editMessageData.getRootPartData());
 	}
 }
