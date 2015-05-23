@@ -1,9 +1,14 @@
-smtp-sender v0.3.2 (stable - 15/05/09)
+smtp-sender v0.4.0 (released: 15/05/23)
 
 Developer: inter6 <inter6@inter6.com>
 Repository: https://github.com/inter6/smtp-sender
 
 Release History
+
+v0.4.0
+- Can change root Content-Type in MIME Editor
+- Add Tools - RFC2074 encoder/decoder
+- Bug fix
 
 v0.3.2
 - Add/Replace Date header

@@ -11,9 +11,14 @@ v1.0.0 (ToDo)
 - Load EML file to MIME Editor
 - Custom Plugin
 
-v0.4.0 (In Progress)
-- Add Tools - Base64, RFC2074 encoder/decoder
+v0.4.1 (In Progress)
+- Add Tools - Base64 encoder/decoder
 - Add Tools - DNS Query, Ping
+
+v0.4.0
+- Can change root Content-Type in MIME Editor
+- Add Tools - RFC2074 encoder/decoder
+- Bug fix
 
 v0.3.2
 - Add/Replace Date header
