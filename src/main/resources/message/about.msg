@@ -5,6 +5,10 @@ Repository: https://github.com/inter6/smtp-sender
 
 Release History
 
+v0.4.1
+- Add Tools - Base64 encoder/decoder
+- Add Tools - DNS Query
+
 v0.4.0
 - Can change root Content-Type in MIME Editor
 - Add Tools - RFC2074 encoder/decoder
