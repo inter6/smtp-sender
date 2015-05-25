@@ -27,7 +27,7 @@ import com.inter6.mail.module.ModuleService;
 public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 	private static final long serialVersionUID = 3869102798552221510L;
 
-	private Rfc2074Dialog base64Dialog;
+	private Rfc2074Dialog rfc2074Dialog;
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -37,10 +37,10 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (this.base64Dialog == null || !this.base64Dialog.isVisible()) {
-			this.base64Dialog = new Rfc2074Dialog();
+		if (this.rfc2074Dialog == null || !this.rfc2074Dialog.isVisible()) {
+			this.rfc2074Dialog = new Rfc2074Dialog();
 		}
-		this.base64Dialog.setVisible(true);
+		this.rfc2074Dialog.setVisible(true);
 	}
 
 	private class Rfc2074Dialog extends JDialog {
@@ -55,6 +55,7 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 			super(ModuleService.getBean(MainFrame.class));
 			this.setTitle("RFC2047 Encoder/Decoder");
 			this.setSize(600, 400);
+			this.setResizable(false);
 			this.initLayout();
 		}
 
