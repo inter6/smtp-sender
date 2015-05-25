@@ -1,9 +1,13 @@
-smtp-sender v0.4.0 (released: 15/05/23)
+smtp-sender v0.4.1 (released: 15/05/25)
 
 Developer: inter6 <inter6@inter6.com>
 Repository: https://github.com/inter6/smtp-sender
 
 Release History
+
+v0.4.1
+- Add Tools - Base64 encoder/decoder
+- Add Tools - DNS Query
 
 v0.4.0
 - Can change root Content-Type in MIME Editor
