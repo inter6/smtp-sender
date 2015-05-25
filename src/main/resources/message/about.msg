@@ -1,4 +1,4 @@
-smtp-sender v0.4.0 (released: 15/05/23)
+smtp-sender v0.4.1 (released: 15/05/25)
 
 Developer: inter6 <inter6@inter6.com>
 Repository: https://github.com/inter6/smtp-sender
