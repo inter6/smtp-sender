@@ -212,12 +212,12 @@ public class SmtpService {
 			smtpClient.quit();
 			this.debug(smtpClient);
 		} catch (IOException e) {
-			// do nothing
+			log.debug("smtp close fail !", e);
 		}
 		try {
 			smtpClient.disconnect();
 		} catch (IOException e) {
-			// do nothing
+			log.debug("smtp disconnect fail !", e);
 		}
 	}
 
