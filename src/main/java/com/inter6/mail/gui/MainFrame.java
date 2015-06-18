@@ -39,11 +39,11 @@ public class MainFrame extends JFrame {
 
 	public void execute() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		try {
+		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			log.error("set look and feel fail !", e);
-		}
+		}*/
 
 		this.setTitle("smtp-sender by inter6.com");
 		this.setSize(1200, 800);
