@@ -72,7 +72,7 @@ public class DataPanel extends JPanel implements ConfigObserver {
 				sourceSelectGroup.add(this.emlSourceButton);
 				sourceSelectGroup.add(this.dirSourceButton);
 
-				this.mimeSourceButton.doClick();
+				this.editSourceButton.doClick();
 			}
 			sourcePanel.add(sourceSelectPanel, BorderLayout.NORTH);
 			sourcePanel.add(this.sourceInputPanel, BorderLayout.CENTER);
