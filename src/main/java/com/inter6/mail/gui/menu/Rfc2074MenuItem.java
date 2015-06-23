@@ -46,8 +46,8 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 	private class Rfc2074Dialog extends JDialog {
 		private static final long serialVersionUID = 5320394394074238399L;
 
-		private final JTextArea decodeTextArea = new JTextArea(10, 30);
-		private final JTextArea encodeTextArea = new JTextArea(10, 30);
+		private final JTextArea decodeTextArea = new JTextArea(9, 30);
+		private final JTextArea encodeTextArea = new JTextArea(9, 30);
 		private final JTextField charsetField = new JTextField("UTF-8", 8);
 		private final JComboBox encodingOptionBox = new JComboBox(new String[] { "B", "Q" });
 
@@ -64,11 +64,11 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 			this.add(new JScrollPane(this.decodeTextArea), BorderLayout.NORTH);
 			JPanel actionPanel = new JPanel(new FlowLayout());
 			{
-				JButton encodeButton = new JButton("Encode ⬇︎");
+				JButton encodeButton = new JButton("Encode ▼");
 				encodeButton.addActionListener(this.encodeAction);
 				actionPanel.add(encodeButton);
 
-				JButton decodeButton = new JButton("Decode ⬆︎");
+				JButton decodeButton = new JButton("Decode ▲");
 				decodeButton.addActionListener(this.decodeAction);
 				actionPanel.add(decodeButton);
 

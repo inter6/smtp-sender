@@ -55,7 +55,7 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 		private final JCheckBox serverUseCheckBox = new JCheckBox();
 		private final JTextField serverIpField = new JTextField("8.8.8.8", 20);
 		private final JTextField serverPortField = new JTextField("53", 5);
-		private final JTextArea resultArea = new JTextArea(10, 30);
+		private final JTextArea resultArea = new JTextArea(9, 30);
 
 		private DnsDialog() {
 			super(ModuleService.getBean(MainFrame.class));

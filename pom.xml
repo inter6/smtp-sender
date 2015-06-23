@@ -137,8 +137,6 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<archive>
-							</archive>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
 									<resource>META-INF/spring.handlers</resource>
