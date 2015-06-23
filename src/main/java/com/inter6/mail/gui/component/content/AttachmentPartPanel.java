@@ -113,9 +113,8 @@ public class AttachmentPartPanel extends ContentPartPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if ("inline".equalsIgnoreCase((String) AttachmentPartPanel.this.dispositionOptionBox.getSelectedItem())) {
-				AttachmentPartPanel.this.contentIdUseCheckBox.setSelected(true);
-			}
+			boolean isInline = "inline".equalsIgnoreCase((String) AttachmentPartPanel.this.dispositionOptionBox.getSelectedItem());
+			AttachmentPartPanel.this.contentIdUseCheckBox.setSelected(isInline);
 		}
 	};
 
