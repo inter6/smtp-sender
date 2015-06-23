@@ -1,5 +1,7 @@
 package com.inter6.mail.gui.data;
 
+import lombok.extern.log4j.Log4j;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -8,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
@@ -54,6 +57,7 @@ import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
 
 @Component
+@Log4j
 public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
 	private static final long serialVersionUID = -4373325495997044386L;
 
@@ -121,7 +125,12 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 		if (contentPart instanceof MimeMultipart) {
 			mimeMessage.setContent((Multipart) contentPart);
 		} else if (contentPart instanceof MimeBodyPart) {
-			mimeMessage.setContent(contentPart, ((MimeBodyPart) contentPart).getContentType());
+			MimeBodyPart bodyPart = (MimeBodyPart) contentPart;
+			mimeMessage.setDataHandler(bodyPart.getDataHandler());
+			Enumeration headers = bodyPart.getAllHeaderLines();
+			while (headers.hasMoreElements()) {
+				mimeMessage.addHeaderLine((String) headers.nextElement());
+			}
 		}
 		mimeMessage.saveChanges();
 
