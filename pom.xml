@@ -14,6 +14,7 @@
 		<spring-framework.version>4.1.2.RELEASE</spring-framework.version>
 		<logback.version>1.1.2</logback.version>
 		<junit.version>4.11</junit.version>
+		<clover.version>4.0.4</clover.version>
 	</properties>
 
 	<dependencies>
@@ -124,6 +125,14 @@
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.atlassian.maven.plugins</groupId>
+				<artifactId>maven-clover2-plugin</artifactId>
+				<version>${clover.version}</version>
+				<configuration>
+					<licenseLocation>/Volumes/osx_data/java/clover/clover.license</licenseLocation>
 				</configuration>
 			</plugin>
 			<plugin>
