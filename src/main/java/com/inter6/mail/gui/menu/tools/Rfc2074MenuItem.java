@@ -1,9 +1,9 @@
-package com.inter6.mail.gui.menu;
+package com.inter6.mail.gui.menu.tools;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.inter6.mail.gui.MainFrame;
+import com.inter6.mail.module.ModuleService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.mail.internet.MimeUtility;
@@ -16,12 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
-import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 @Component
 public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
@@ -49,7 +47,7 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 		private final JTextArea decodeTextArea = new JTextArea(9, 30);
 		private final JTextArea encodeTextArea = new JTextArea(9, 30);
 		private final JTextField charsetField = new JTextField("UTF-8", 8);
-		private final JComboBox encodingOptionBox = new JComboBox(new String[] { "B", "Q" });
+		private final JComboBox encodingOptionBox = new JComboBox(new String[]{"B", "Q"});
 
 		private Rfc2074Dialog() {
 			super(ModuleService.getBean(MainFrame.class));

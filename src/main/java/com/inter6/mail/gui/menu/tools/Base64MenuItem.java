@@ -1,9 +1,10 @@
-package com.inter6.mail.gui.menu;
+package com.inter6.mail.gui.menu.tools;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.inter6.mail.gui.MainFrame;
+import com.inter6.mail.module.ModuleService;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JButton;
@@ -14,13 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
-import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 @Component
 public class Base64MenuItem extends JMenuItem implements ActionListener {

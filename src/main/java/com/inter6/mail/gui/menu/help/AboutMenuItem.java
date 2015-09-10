@@ -1,20 +1,18 @@
-package com.inter6.mail.gui.menu;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.annotation.PostConstruct;
-import javax.swing.JMenuItem;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package com.inter6.mail.gui.menu.help;
 
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.TextViewDialog;
 import com.inter6.mail.module.ModuleService;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.swing.JMenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Component
 public class AboutMenuItem extends JMenuItem implements ActionListener {

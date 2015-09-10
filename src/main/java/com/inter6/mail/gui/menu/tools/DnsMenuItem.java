@@ -1,10 +1,12 @@
-package com.inter6.mail.gui.menu;
+package com.inter6.mail.gui.menu.tools;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.InetSocketAddress;
+import com.inter6.mail.gui.MainFrame;
+import com.inter6.mail.module.ModuleService;
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.stereotype.Component;
+import org.xbill.DNS.Lookup;
+import org.xbill.DNS.Record;
+import org.xbill.DNS.SimpleResolver;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -18,15 +20,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.stereotype.Component;
-import org.xbill.DNS.Lookup;
-import org.xbill.DNS.Record;
-import org.xbill.DNS.SimpleResolver;
-
-import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.InetSocketAddress;
 
 @Component
 public class DnsMenuItem extends JMenuItem implements ActionListener {
