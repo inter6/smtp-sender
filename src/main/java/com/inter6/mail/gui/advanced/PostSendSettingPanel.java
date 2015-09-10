@@ -1,9 +1,11 @@
 package com.inter6.mail.gui.advanced;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.google.gson.Gson;
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.model.advanced.PostSendSettingData;
+import com.inter6.mail.module.AppConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -14,14 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.model.advanced.PostSendSettingData;
-import com.inter6.mail.module.AppConfig;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 @Component
 public class PostSendSettingPanel extends JPanel implements ConfigObserver {
@@ -73,7 +71,7 @@ public class PostSendSettingPanel extends JPanel implements ConfigObserver {
 
 	public PostSendSettingData getPostSendSettingData() {
 		PostSendSettingData postSendSettingData = new PostSendSettingData();
-		postSendSettingData.setSaveEml(this.saveUseCheckBox.isSelected());
+		postSendSettingData.setSaveEml(false/*this.saveUseCheckBox.isSelected()*/);
 		postSendSettingData.setSaveEmlDir(this.savePathField.getText());
 		return postSendSettingData;
 	}

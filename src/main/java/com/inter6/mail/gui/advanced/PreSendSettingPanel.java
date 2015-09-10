@@ -1,17 +1,5 @@
 package com.inter6.mail.gui.advanced;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-
-import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.component.DatePanel;
@@ -20,6 +8,16 @@ import com.inter6.mail.model.advanced.PreSendSettingData;
 import com.inter6.mail.model.component.DateData;
 import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.module.AppConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import java.awt.FlowLayout;
 
 @Component
 public class PreSendSettingPanel extends JPanel implements ConfigObserver {
@@ -47,8 +45,8 @@ public class PreSendSettingPanel extends JPanel implements ConfigObserver {
 
 	public PreSendSettingData getPreSendSettingData() {
 		PreSendSettingData preSendSettingData = new PreSendSettingData();
-		preSendSettingData.setReplaceSubjectData(this.subjectPanel.getSubjectData());
-		preSendSettingData.setDateData(this.datePanel.getDateData());
+		preSendSettingData.setReplaceSubjectData(new SubjectData()/*this.subjectPanel.getSubjectData()*/);
+		preSendSettingData.setDateData(new DateData()/*this.datePanel.getDateData()*/);
 		return preSendSettingData;
 	}
 

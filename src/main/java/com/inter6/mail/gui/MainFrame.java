@@ -1,21 +1,16 @@
 package com.inter6.mail.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.JFrame;
-import javax.swing.UIManager;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.inter6.mail.gui.action.ActionPanel;
-import com.inter6.mail.gui.advanced.AdvancedPanel;
 import com.inter6.mail.gui.data.DataPanel;
 import com.inter6.mail.gui.menu.TopMenuBar;
 import com.inter6.mail.gui.setting.SettingPanel;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.swing.JFrame;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 @Component
 @Slf4j
@@ -31,8 +26,8 @@ public class MainFrame extends JFrame {
 	@Autowired
 	private DataPanel dataPanel;
 
-	@Autowired
-	private AdvancedPanel advancedPanel;
+	/*@Autowired
+	private AdvancedPanel advancedPanel;*/
 
 	@Autowired
 	private ActionPanel actionPanel;
@@ -59,7 +54,7 @@ public class MainFrame extends JFrame {
 		this.setJMenuBar(this.topMenuBar);
 		this.add(this.settingPanel, BorderLayout.NORTH);
 		this.add(this.dataPanel, BorderLayout.CENTER);
-		this.add(this.advancedPanel, BorderLayout.EAST);
+//		this.add(this.advancedPanel, BorderLayout.EAST);
 		this.add(this.actionPanel, BorderLayout.SOUTH);
 	}
 }
