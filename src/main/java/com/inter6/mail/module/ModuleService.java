@@ -1,18 +1,14 @@
 package com.inter6.mail.module;
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Setter;
 import org.springframework.context.ApplicationContext;
+
+import java.util.Map;
 
 public class ModuleService {
 
-	private static ApplicationContext context; // NOPMD
-
-	@Autowired
-	private ModuleService(ApplicationContext applicationContext) {
-		context = applicationContext;
-	}
+	@Setter
+	private static ApplicationContext context;
 
 	public static Object getBean(String name) {
 		return context.getBean(name);
