@@ -6,31 +6,32 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @Component
-public class SaveConfigAsMenuItem extends SaveConfigMenuItem {
+public class SaveConfigAsMenuItem extends JMenuItem implements ActionListener {
 
 	@Autowired
 	private LogPanel logPanel;
 
+	@Autowired
+	private SaveConfigMenuItem saveConfigMenuItem;
+
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setText("Save Config As...");
-		this.addActionListener(clickEvent);
+		this.addActionListener(this);
 	}
 
-	private ActionListener clickEvent = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JFileChooser fileChooser = new JFileChooser();
-			if (fileChooser.showSaveDialog(SaveConfigAsMenuItem.this) != JFileChooser.APPROVE_OPTION) {
-				SaveConfigAsMenuItem.this.logPanel.info("save config cancel.");
-				return;
-			}
-			SaveConfigAsMenuItem.this.saveConfig(fileChooser.getSelectedFile());
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JFileChooser fileChooser = new JFileChooser();
+		if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+			this.logPanel.info("save config cancel.");
+			return;
 		}
-	};
+		saveConfigMenuItem.saveConfig(fileChooser.getSelectedFile());
+	}
 }

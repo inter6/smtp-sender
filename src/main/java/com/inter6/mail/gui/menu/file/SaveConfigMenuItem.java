@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.Map;
 
 @Component
-public class SaveConfigMenuItem extends JMenuItem {
+public class SaveConfigMenuItem extends JMenuItem implements ActionListener {
 
 	@Autowired
 	private AppConfig appConfig;
@@ -31,27 +31,24 @@ public class SaveConfigMenuItem extends JMenuItem {
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setText("Save Config");
-		this.addActionListener(clickEvent);
+		this.addActionListener(this);
 	}
 
-	private ActionListener clickEvent = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			File configFile = SaveConfigMenuItem.this.appConfig.getFile();
-			if (configFile == null) {
-				JFileChooser fileChooser = new JFileChooser();
-				if (fileChooser.showSaveDialog(SaveConfigMenuItem.this) != JFileChooser.APPROVE_OPTION) {
-					SaveConfigMenuItem.this.logPanel.info("save config cancel.");
-					return;
-				}
-				configFile = fileChooser.getSelectedFile();
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		File configFile = this.appConfig.getFile();
+		if (configFile == null) {
+			JFileChooser fileChooser = new JFileChooser();
+			if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+				this.logPanel.info("save config cancel.");
+				return;
 			}
-			SaveConfigMenuItem.this.saveConfig(configFile);
+			configFile = fileChooser.getSelectedFile();
 		}
-	};
+		this.saveConfig(configFile);
+	}
 
-	protected void saveConfig(File configFile) {
+	public void saveConfig(File configFile) {
 		try {
 			Map<String, ConfigObserver> observers = ModuleService.getBeans(ConfigObserver.class);
 			for (ConfigObserver observer : observers.values()) {

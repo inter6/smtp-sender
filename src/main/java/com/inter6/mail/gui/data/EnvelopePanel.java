@@ -1,6 +1,13 @@
 package com.inter6.mail.gui.data;
 
-import java.awt.FlowLayout;
+import com.google.gson.Gson;
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.model.data.EnvelopeData;
+import com.inter6.mail.module.AppConfig;
+import com.inter6.mail.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -9,16 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.model.data.EnvelopeData;
-import com.inter6.mail.module.AppConfig;
-import com.inter6.mail.util.StringUtil;
+import java.awt.FlowLayout;
 
 @Component
 public class EnvelopePanel extends JPanel implements ConfigObserver {
@@ -28,7 +26,7 @@ public class EnvelopePanel extends JPanel implements ConfigObserver {
 	private AppConfig appConfig;
 
 	private final JTextField fromFiled = new JTextField(40);
-	private final JTextArea toArea = new JTextArea(5, 40);
+	private final JTextArea toArea = new JTextArea(3, 40);
 
 	@PostConstruct
 	private void init() { // NOPMD
