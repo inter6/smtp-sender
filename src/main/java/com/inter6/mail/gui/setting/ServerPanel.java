@@ -1,9 +1,12 @@
 package com.inter6.mail.gui.setting;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.google.gson.Gson;
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.model.AuthOption;
+import com.inter6.mail.model.setting.ServerData;
+import com.inter6.mail.module.AppConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JComboBox;
@@ -11,15 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.model.AuthOption;
-import com.inter6.mail.model.setting.ServerData;
-import com.inter6.mail.module.AppConfig;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 @Component
 public class ServerPanel extends JPanel implements ConfigObserver {
@@ -28,11 +26,11 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private AppConfig appConfig;
 
-	private final JTextField hostFiled = new JTextField(40);
+	private final JTextField hostFiled = new JTextField(25);
 	private final JTextField portField = new JTextField("25", 5);
-	private final JComboBox connectTypeOptionBox = new JComboBox(new String[] { "NONE", "SSL", "TLS" });
-	private final JTextField idField = new JTextField(20);
-	private final JPasswordField passwordField = new JPasswordField(20);
+	private final JComboBox connectTypeOptionBox = new JComboBox(new String[]{"NONE", "SSL", "TLS"});
+	private final JTextField idField = new JTextField(15);
+	private final JPasswordField passwordField = new JPasswordField(15);
 	private final JComboBox authOptionBox = new JComboBox(AuthOption.allItems());
 
 	@PostConstruct
