@@ -1,37 +1,5 @@
 package com.inter6.mail.gui.data;
 
-import lombok.extern.log4j.Log4j;
-
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
-
-import javax.annotation.PostConstruct;
-import javax.mail.Address;
-import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.inter6.mail.gui.ConfigObserver;
@@ -55,6 +23,37 @@ import com.inter6.mail.model.component.content.PartDataJsonSerializer;
 import com.inter6.mail.model.data.EditSourceData;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
+import lombok.extern.log4j.Log4j;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.mail.Address;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Properties;
 
 @Component
 @Log4j
@@ -94,11 +93,16 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 		}
 		this.add(new JScrollPane(wrapPanel), BorderLayout.CENTER);
 
-		JPanel actionPanel = new JPanel(new FlowLayout());
+		JPanel actionPanel = new JPanel();
+		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
 		{
 			JButton viewButton = new JButton("View");
 			viewButton.addActionListener(this.viewEvent);
 			actionPanel.add(viewButton);
+
+			JButton saveButton = new JButton("Save");
+			saveButton.addActionListener(this.saveEvent);
+			actionPanel.add(saveButton);
 		}
 		this.add(actionPanel, BorderLayout.EAST);
 	}
@@ -113,6 +117,26 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 						.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
 			} catch (Throwable e) {
 				EditSourcePanel.this.logPanel.error("build mime fail ! - ", e);
+			}
+		}
+	};
+
+	private final ActionListener saveEvent = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			try {
+				byte[] message = EditSourcePanel.this.buildMessage();
+				JFileChooser fileChooser = new JFileChooser();
+				if (fileChooser.showSaveDialog(EditSourcePanel.this) != JFileChooser.APPROVE_OPTION) {
+					EditSourcePanel.this.logPanel.info("save to eml cancel.");
+					return;
+				}
+				File saveFile = fileChooser.getSelectedFile();
+				FileUtils.writeByteArrayToFile(saveFile, message);
+				EditSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
+			} catch (Throwable e) {
+				EditSourcePanel.this.logPanel.error("save to eml fail ! - ", e);
 			}
 		}
 	};
@@ -162,7 +186,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 			RecipientType type = addressData.getRecipientType();
 			InternetAddress internetAddress = addressData.toInternetAddress();
 			if (type == null) {
-				mimeMessage.addFrom(new Address[] { internetAddress });
+				mimeMessage.addFrom(new Address[]{internetAddress});
 			} else {
 				mimeMessage.addRecipient(type, internetAddress);
 			}
