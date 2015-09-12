@@ -1,9 +1,13 @@
-smtp-sender v1.0.0 (released: 15/06/23)
+smtp-sender v1.0.1 (released: 15/09/12)
 
 Developer: inter6 <inter6@inter6.com>
 Repository: https://github.com/inter6/smtp-sender
 
 Release History
+
+v1.0.1
+- Change framework to Spring-Boot
+- UI Adjustment
 
 v1.0.0
 - Official Release
