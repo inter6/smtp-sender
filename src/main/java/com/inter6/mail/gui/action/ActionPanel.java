@@ -1,9 +1,14 @@
 package com.inter6.mail.gui.action;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.google.gson.Gson;
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.data.DataPanel;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
+import com.inter6.mail.job.smtp.SmtpSendJobObserver;
+import com.inter6.mail.model.action.ActionData;
+import com.inter6.mail.module.AppConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -14,17 +19,10 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.data.DataPanel;
-import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
-import com.inter6.mail.job.smtp.SmtpSendJobObserver;
-import com.inter6.mail.model.action.ActionData;
-import com.inter6.mail.module.AppConfig;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 @Component
 public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigObserver {
@@ -144,7 +142,7 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 		this.elapsedTimeLabel.setText(this.formatElapsedTime(currentTime - startTime));
 
 		// 끝나기 전까지는 99%로 보여준다.
-		float validRate = progressRate > 99 ? progressRate : 99;
+		float validRate = progressRate >= 100 ? 99 : progressRate;
 		this.progressBar.setValue((int) validRate);
 		this.progressLabel.setText(String.format("%.2f", validRate) + " %");
 	}
