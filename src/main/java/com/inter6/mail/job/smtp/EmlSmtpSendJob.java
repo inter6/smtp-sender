@@ -62,6 +62,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 			try {
 				MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
 				mimeSmtpSendJob.setMessageStream(new FileInputStream(emlFile));
+				mimeSmtpSendJob.setReplaceDateData(emlSourceData.getReplaceDateData());
 				this.orderWorker(mimeSmtpSendJob);
 			} catch (Throwable e) {
 				this.logPanel.error("eml send order fail ! - EML:" + emlFile, e);

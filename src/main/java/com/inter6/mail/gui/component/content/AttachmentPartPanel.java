@@ -216,8 +216,15 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		this.dispositionOptionBox.setSelectedItem(attachmentPartData.getContentDisposition());
 		this.transferOptionBox.setSelectedItem(attachmentPartData.getContentTransferEncoding());
 		this.pathField.setText(attachmentPartData.getFilePath());
-		this.typeNamePanel.setEncodingTextData(attachmentPartData.getTypeNameData());
-		this.dispositionFilenamePanel.setEncodingTextData(attachmentPartData.getDispositionFilenameData());
+
+		EncodingTextData typeNameData = attachmentPartData.getTypeNameData();
+		if (typeNameData != null) {
+			this.typeNamePanel.setEncodingTextData(typeNameData);
+		}
+		EncodingTextData dispositionFilenameData = attachmentPartData.getDispositionFilenameData();
+		if (dispositionFilenameData != null) {
+			this.dispositionFilenamePanel.setEncodingTextData(dispositionFilenameData);
+		}
 	}
 
 	@Override

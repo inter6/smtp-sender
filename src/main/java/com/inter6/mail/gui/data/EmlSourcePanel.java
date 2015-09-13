@@ -2,10 +2,12 @@ package com.inter6.mail.gui.data;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.component.DatePanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.EmlSmtpSendJob;
 import com.inter6.mail.model.AppSession;
+import com.inter6.mail.model.component.DateData;
 import com.inter6.mail.model.data.EmlSourceData;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
@@ -45,6 +47,7 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	private final DefaultListModel fileListModel = new DefaultListModel();
 	private final JList fileList = new JList(this.fileListModel);
 	private final JCheckBox recursiveCheckButton = new JCheckBox("Recursive");
+	private final DatePanel replaceDatePanel = new DatePanel("Replace Date", 20, false, true);
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -67,6 +70,8 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			actionPanel.add(this.recursiveCheckButton);
 		}
 		this.add(actionPanel, BorderLayout.EAST);
+
+		this.add(replaceDatePanel, BorderLayout.SOUTH);
 	}
 
 	private final ActionListener addEvent = new ActionListener() {
@@ -131,6 +136,7 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 		}
 		emlSourceData.setFiles(files);
 		emlSourceData.setRecursive(this.recursiveCheckButton.isSelected());
+		emlSourceData.setReplaceDateData(this.replaceDatePanel.getDateData());
 		return emlSourceData;
 	}
 
@@ -149,6 +155,11 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			}
 		}
 		this.recursiveCheckButton.setSelected(emlSourceData.isRecursive());
+
+		DateData replaceDateData = emlSourceData.getReplaceDateData();
+		if (replaceDateData != null) {
+			this.replaceDatePanel.setDateData(replaceDateData);
+		}
 	}
 
 	@Override

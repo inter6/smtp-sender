@@ -46,7 +46,7 @@ public class PreSendSettingPanel extends JPanel implements ConfigObserver {
 	public PreSendSettingData getPreSendSettingData() {
 		PreSendSettingData preSendSettingData = new PreSendSettingData();
 		preSendSettingData.setReplaceSubjectData(new EncodingTextData()/*this.subjectPanel.getEncodingTextData()*/);
-		preSendSettingData.setDateData(new DateData()/*this.datePanel.getDateData()*/);
+		preSendSettingData.setDateData(new DateData()/*this.datePanel.getReplaceDateData()*/);
 		return preSendSettingData;
 	}
 

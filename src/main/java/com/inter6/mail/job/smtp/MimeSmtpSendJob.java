@@ -2,27 +2,19 @@ package com.inter6.mail.job.smtp;
 
 import com.inter6.mail.model.AdvancedMimeMessage;
 import com.inter6.mail.model.AuthOption;
-import com.inter6.mail.model.advanced.PostSendSettingData;
 import com.inter6.mail.model.component.DateData;
-import com.inter6.mail.model.component.EncodingTextData;
 import com.inter6.mail.service.SmtpService;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Set;
 
@@ -37,6 +29,9 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 
 	@Setter
 	private InputStream messageStream; // NOPMD
+
+	@Setter
+	private DateData replaceDateData; // NOPMD
 
 	@Override
 	protected void doSend() throws Throwable {
@@ -75,7 +70,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		ByteArrayOutputStream copyStream = new ByteArrayOutputStream();
 		if (this.isParseMimeCondition()) {
 			AdvancedMimeMessage mimeMessage = new AdvancedMimeMessage(messageStream);
-			this.replaceSubject(mimeMessage);
+//			this.replaceSubject(mimeMessage);
 			this.replaceDate(mimeMessage);
 			mimeMessage.saveChanges();
 			mimeMessage.writeTo(copyStream);
@@ -84,31 +79,28 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 			IOUtils.copy(messageStream, copyStream);
 		}
 
-		this.saveToEml(copyStream);
+//		this.saveToEml(copyStream);
 		return new ByteArrayInputStream(copyStream.toByteArray());
 	}
 
 	private boolean isParseMimeCondition() {
-		EncodingTextData replaceSubjectData = this.getPreSendSettingData().getReplaceSubjectData();
-		if (replaceSubjectData.isUse()) {
-			return true;
+		if (replaceDateData != null) {
+			return replaceDateData.isUse();
 		}
-		DateData replaceDateData = this.getPreSendSettingData().getDateData();
-		return replaceDateData.isUse();
+		return false;
 	}
 
-	private boolean replaceSubject(AdvancedMimeMessage mimeMessage) throws UnsupportedEncodingException, MessagingException {
+	/*private boolean replaceSubject(AdvancedMimeMessage mimeMessage) throws UnsupportedEncodingException, MessagingException {
 		EncodingTextData replaceSubjectData = this.getPreSendSettingData().getReplaceSubjectData();
 		if (!replaceSubjectData.isUse()) {
 			return false;
 		}
 		mimeMessage.setSubject(replaceSubjectData.encodeSubject());
 		return true;
-	}
+	}*/
 
 	private boolean replaceDate(AdvancedMimeMessage mimeMessage) throws MessagingException {
-		DateData replaceDateData = this.getPreSendSettingData().getDateData();
-		if (!replaceDateData.isUse()) {
+		if (replaceDateData == null || !replaceDateData.isUse()) {
 			return false;
 		}
 		if (replaceDateData.isNow()) {
@@ -119,7 +111,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		return true;
 	}
 
-	private boolean saveToEml(ByteArrayOutputStream copyStream) throws IOException {
+	/*private boolean saveToEml(ByteArrayOutputStream copyStream) throws IOException {
 		PostSendSettingData postSendSettingData = this.getPostSendSettingData();
 		if (!postSendSettingData.isSaveEml()) {
 			return false;
@@ -137,7 +129,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 			IOUtils.closeQuietly(saveOutput);
 		}
 		return true;
-	}
+	}*/
 
 	@Override
 	public void terminate() throws InterruptedException {

@@ -1,25 +1,20 @@
 package com.inter6.mail.job.smtp;
 
-import java.util.Map;
-
+import com.inter6.mail.gui.action.ActionPanel;
+import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.gui.data.EnvelopePanel;
+import com.inter6.mail.gui.setting.ServerPanel;
+import com.inter6.mail.job.thread.ThreadSupportJob;
+import com.inter6.mail.model.action.ActionData;
+import com.inter6.mail.model.data.EnvelopeData;
+import com.inter6.mail.model.setting.ServerData;
+import com.inter6.mail.module.ModuleService;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.inter6.mail.gui.action.ActionPanel;
-import com.inter6.mail.gui.action.LogPanel;
-import com.inter6.mail.gui.advanced.PostSendSettingPanel;
-import com.inter6.mail.gui.advanced.PreSendSettingPanel;
-import com.inter6.mail.gui.data.EnvelopePanel;
-import com.inter6.mail.gui.setting.ServerPanel;
-import com.inter6.mail.job.thread.ThreadSupportJob;
-import com.inter6.mail.model.action.ActionData;
-import com.inter6.mail.model.advanced.PostSendSettingData;
-import com.inter6.mail.model.advanced.PreSendSettingData;
-import com.inter6.mail.model.data.EnvelopeData;
-import com.inter6.mail.model.setting.ServerData;
-import com.inter6.mail.module.ModuleService;
+import java.util.Map;
 
 @Component
 @Scope("prototype")
@@ -30,12 +25,6 @@ public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 
 	@Autowired
 	private EnvelopePanel envelopePanel;
-
-	@Autowired
-	private PreSendSettingPanel preSendSettingPanel;
-
-	@Autowired
-	private PostSendSettingPanel postSendSettingPanel;
 
 	@Autowired
 	private ActionPanel actionPanel;
@@ -88,14 +77,6 @@ public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 
 	protected EnvelopeData getEnvelopeData() {
 		return this.envelopePanel.getEnvelopeData();
-	}
-
-	protected PreSendSettingData getPreSendSettingData() {
-		return this.preSendSettingPanel.getPreSendSettingData();
-	}
-
-	protected PostSendSettingData getPostSendSettingData() {
-		return this.postSendSettingPanel.getPostSendSettingData();
 	}
 
 	protected ActionData getActionData() {
