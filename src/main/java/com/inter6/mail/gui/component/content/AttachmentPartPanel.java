@@ -1,13 +1,14 @@
 package com.inter6.mail.gui.component.content;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Vector;
+import com.inter6.mail.gui.component.EncodingTextPanel;
+import com.inter6.mail.model.AppSession;
+import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.EncodingTextData;
+import com.inter6.mail.model.component.content.AttachmentPartData;
+import com.inter6.mail.model.component.content.PartData;
+import com.inter6.mail.module.ModuleService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import javax.activation.FileTypeMap;
 import javax.mail.internet.MimeBodyPart;
@@ -20,28 +21,26 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-
-import com.inter6.mail.model.AppSession;
-import com.inter6.mail.model.ContentType;
-import com.inter6.mail.model.component.content.AttachmentPartData;
-import com.inter6.mail.model.component.content.PartData;
-import com.inter6.mail.module.ModuleService;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
 
-	private final JTextField typeField = new JTextField("application/octet-stream", 20);
+	private final JTextField typeField = new JTextField("application/octet-stream", 15);
+	private final EncodingTextPanel typeNamePanel = new EncodingTextPanel("", 15, true);
 	private final JCheckBox contentIdUseCheckBox = new JCheckBox();
 	private final JTextField contentIdField = new JTextField(25);
-	private final JComboBox dispositionOptionBox = new JComboBox(new String[] { "attachment", "inline" });
-	private final JTextField filenameField = new JTextField(20);
-	private final JTextField filenameCharsetField = new JTextField("UTF-8", 6);
-	private final JComboBox filenameEncodingOptionBox = new JComboBox(new String[] { "B", "Q" });
-	private final JComboBox transferOptionBox = new JComboBox(new String[] { "base64", "quoted-printable", "8bit", "7bit", "binary" });
-	private final JTextField pathField = new JTextField(30);
+	private final JComboBox dispositionOptionBox = new JComboBox(new String[]{"attachment", "inline"});
+	private final EncodingTextPanel dispositionFilenamePanel = new EncodingTextPanel("", 15, true);
+	private final JComboBox transferOptionBox = new JComboBox(new String[]{"base64", "quoted-printable", "8bit", "7bit", "binary"});
+	private final JTextField pathField = new JTextField(40);
 
 	protected AttachmentPartPanel(ContentType contentType, Integer nested) {
 		super(contentType, nested);
@@ -58,7 +57,8 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			{
 				contentTypePanel.add(new JLabel("Content-Type: "));
 				contentTypePanel.add(this.typeField);
-				contentTypePanel.add(new JLabel("; name={Content-Disposition.filename}"));
+				contentTypePanel.add(new JLabel("; name="));
+				contentTypePanel.add(this.typeNamePanel);
 			}
 			headerPanel.add(contentTypePanel);
 
@@ -68,9 +68,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 				dispositionPanel.add(this.dispositionOptionBox);
 				this.dispositionOptionBox.addActionListener(this.changeDispositionEvent);
 				dispositionPanel.add(new JLabel("; filename="));
-				dispositionPanel.add(this.filenameField);
-				dispositionPanel.add(this.filenameCharsetField);
-				dispositionPanel.add(this.filenameEncodingOptionBox);
+				dispositionPanel.add(this.dispositionFilenamePanel);
 			}
 			headerPanel.add(dispositionPanel);
 
@@ -114,6 +112,8 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			boolean isInline = "inline".equalsIgnoreCase((String) AttachmentPartPanel.this.dispositionOptionBox.getSelectedItem());
+			AttachmentPartPanel.this.typeNamePanel.setUse(!isInline);
+			AttachmentPartPanel.this.dispositionFilenamePanel.setUse(!isInline);
 			AttachmentPartPanel.this.contentIdUseCheckBox.setSelected(isInline);
 		}
 	};
@@ -141,7 +141,8 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			if (fileChooser.showOpenDialog(AttachmentPartPanel.this) == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
 				if (file.isFile()) {
-					AttachmentPartPanel.this.filenameField.setText(file.getName());
+					AttachmentPartPanel.this.typeNamePanel.setText(file.getName());
+					AttachmentPartPanel.this.dispositionFilenamePanel.setText(file.getName());
 					AttachmentPartPanel.this.pathField.setText(file.getAbsolutePath());
 					AttachmentPartPanel.this.typeField.setText(AttachmentPartPanel.this.getContentType(file));
 					appSession.setLastSelectAttachDir(file.getParent());
@@ -160,12 +161,24 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		File file = new File(this.pathField.getText());
 		part.attachFile(file);
 
-		String encodedFilename = MimeUtility.encodeWord(StringUtils.defaultString(this.filenameField.getText(), file.getName()),
-				StringUtils.defaultString(this.filenameCharsetField.getText(), "UTF-8"),
-				(String) this.filenameEncodingOptionBox.getSelectedItem());
+		String typeAppendText = "";
+		EncodingTextData typeNameData = dispositionFilenamePanel.getEncodingTextData();
+		if (typeNameData.isUse()) {
+			String encodedTypeName = MimeUtility.encodeWord(StringUtils.defaultString(typeNameData.getText(), file.getName()),
+					StringUtils.defaultString(typeNameData.getCharset(), "UTF-8"), typeNameData.getEncoding());
+			typeAppendText += "; name=\"" + encodedTypeName + "\"";
+		}
 
-		part.setHeader("Content-Type", this.typeField.getText() + "; name=\"" + encodedFilename + "\"");
-		part.setHeader("Content-Disposition", this.dispositionOptionBox.getSelectedItem() + "; filename=\"" + encodedFilename + "\"");
+		String dispositionAppendText = "";
+		EncodingTextData dispositionFilenameData = dispositionFilenamePanel.getEncodingTextData();
+		if (dispositionFilenameData.isUse()) {
+			String encodedDispositionFilename = MimeUtility.encodeWord(StringUtils.defaultString(dispositionFilenameData.getText(), file.getName()),
+					StringUtils.defaultString(dispositionFilenameData.getCharset(), "UTF-8"), dispositionFilenameData.getEncoding());
+			dispositionAppendText += "; filename=\"" + encodedDispositionFilename + "\"";
+		}
+
+		part.setHeader("Content-Type", this.typeField.getText() + typeAppendText);
+		part.setHeader("Content-Disposition", this.dispositionOptionBox.getSelectedItem() + dispositionAppendText);
 		part.setHeader("Content-Transfer-Encoding", (String) this.transferOptionBox.getSelectedItem());
 
 		if (this.contentIdUseCheckBox.isSelected()) {
@@ -186,9 +199,8 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		attachmentPartData.setContentDisposition((String) this.dispositionOptionBox.getSelectedItem());
 		attachmentPartData.setContentTransferEncoding((String) this.transferOptionBox.getSelectedItem());
 		attachmentPartData.setFilePath(this.pathField.getText());
-		attachmentPartData.setFilename(this.filenameField.getText());
-		attachmentPartData.setFilenameCharset(this.filenameCharsetField.getText());
-		attachmentPartData.setFilenameEncoding((String) this.filenameEncodingOptionBox.getSelectedItem());
+		attachmentPartData.setTypeNameData(this.typeNamePanel.getEncodingTextData());
+		attachmentPartData.setDispositionFilenameData(this.dispositionFilenamePanel.getEncodingTextData());
 		return attachmentPartData;
 	}
 
@@ -204,9 +216,8 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		this.dispositionOptionBox.setSelectedItem(attachmentPartData.getContentDisposition());
 		this.transferOptionBox.setSelectedItem(attachmentPartData.getContentTransferEncoding());
 		this.pathField.setText(attachmentPartData.getFilePath());
-		this.filenameField.setText(attachmentPartData.getFilename());
-		this.filenameCharsetField.setText(attachmentPartData.getFilenameCharset());
-		this.filenameEncodingOptionBox.setSelectedItem(attachmentPartData.getFilenameEncoding());
+		this.typeNamePanel.setEncodingTextData(attachmentPartData.getTypeNameData());
+		this.dispositionFilenamePanel.setEncodingTextData(attachmentPartData.getDispositionFilenameData());
 	}
 
 	@Override

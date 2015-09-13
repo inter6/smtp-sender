@@ -1,15 +1,13 @@
 package com.inter6.mail.model.component;
 
-import java.io.UnsupportedEncodingException;
-
-import javax.mail.internet.MimeUtility;
-
 import lombok.Data;
-
 import org.apache.commons.lang3.StringUtils;
 
+import javax.mail.internet.MimeUtility;
+import java.io.UnsupportedEncodingException;
+
 @Data
-public class SubjectData {
+public class EncodingTextData {
 	private boolean isUse; // NOPMD
 	private String text; // NOPMD
 	private String charset; // NOPMD

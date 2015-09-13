@@ -3,10 +3,10 @@ package com.inter6.mail.gui.advanced;
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.component.DatePanel;
-import com.inter6.mail.gui.component.SubjectPanel;
+import com.inter6.mail.gui.component.EncodingTextPanel;
 import com.inter6.mail.model.advanced.PreSendSettingData;
 import com.inter6.mail.model.component.DateData;
-import com.inter6.mail.model.component.SubjectData;
+import com.inter6.mail.model.component.EncodingTextData;
 import com.inter6.mail.module.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class PreSendSettingPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private AppConfig appConfig;
 
-	private final SubjectPanel subjectPanel = new SubjectPanel("Replace Subject", 20, false);
+	private final EncodingTextPanel subjectPanel = new EncodingTextPanel("Replace Subject", 20, false);
 	private final DatePanel datePanel = new DatePanel("Replace Date", 20, true, true);
 
 	@PostConstruct
@@ -45,7 +45,7 @@ public class PreSendSettingPanel extends JPanel implements ConfigObserver {
 
 	public PreSendSettingData getPreSendSettingData() {
 		PreSendSettingData preSendSettingData = new PreSendSettingData();
-		preSendSettingData.setReplaceSubjectData(new SubjectData()/*this.subjectPanel.getSubjectData()*/);
+		preSendSettingData.setReplaceSubjectData(new EncodingTextData()/*this.subjectPanel.getEncodingTextData()*/);
 		preSendSettingData.setDateData(new DateData()/*this.datePanel.getDateData()*/);
 		return preSendSettingData;
 	}
@@ -56,9 +56,9 @@ public class PreSendSettingPanel extends JPanel implements ConfigObserver {
 		if (preSendSettingData == null) {
 			return;
 		}
-		SubjectData replaceSubjectData = preSendSettingData.getReplaceSubjectData();
+		EncodingTextData replaceSubjectData = preSendSettingData.getReplaceSubjectData();
 		if (replaceSubjectData != null) {
-			this.subjectPanel.setSubjectData(replaceSubjectData);
+			this.subjectPanel.setEncodingTextData(replaceSubjectData);
 		}
 		DateData replaceDateData = preSendSettingData.getDateData();
 		if (replaceDateData != null) {

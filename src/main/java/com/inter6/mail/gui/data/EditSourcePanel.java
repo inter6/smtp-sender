@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.DatePanel;
-import com.inter6.mail.gui.component.SubjectPanel;
+import com.inter6.mail.gui.component.EncodingTextPanel;
 import com.inter6.mail.gui.component.TextViewDialog;
 import com.inter6.mail.gui.data.edit.EditAddressPanel;
 import com.inter6.mail.gui.data.edit.EditHeaderPanel;
@@ -15,8 +15,8 @@ import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.MimeSmtpSendJob;
 import com.inter6.mail.model.component.AddressData;
 import com.inter6.mail.model.component.DateData;
+import com.inter6.mail.model.component.EncodingTextData;
 import com.inter6.mail.model.component.HeaderData;
-import com.inter6.mail.model.component.SubjectData;
 import com.inter6.mail.model.component.content.PartData;
 import com.inter6.mail.model.component.content.PartDataJsonDeserializer;
 import com.inter6.mail.model.component.content.PartDataJsonSerializer;
@@ -60,7 +60,7 @@ import java.util.Properties;
 public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
 	private static final long serialVersionUID = -4373325495997044386L;
 
-	private final SubjectPanel subjectPanel = new SubjectPanel("Subject", 30, true);
+	private final EncodingTextPanel subjectPanel = new EncodingTextPanel("Subject", 30, true);
 	private final DatePanel datePanel = new DatePanel("Date", 30, true, true);
 
 	@Autowired
@@ -164,7 +164,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 	}
 
 	private void buildMessageHeader(MimeMessage mimeMessage) throws MessagingException, UnsupportedEncodingException {
-		SubjectData subjectData = this.subjectPanel.getSubjectData();
+		EncodingTextData subjectData = this.subjectPanel.getEncodingTextData();
 		if (subjectData.isUse()) {
 			mimeMessage.setSubject(subjectData.encodeSubject());
 		}
@@ -210,7 +210,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 
 	private EditSourceData getEditSourceData() {
 		EditSourceData editSourceData = new EditSourceData();
-		editSourceData.setSubjectData(this.subjectPanel.getSubjectData());
+		editSourceData.setSubjectData(this.subjectPanel.getEncodingTextData());
 		editSourceData.setDateData(this.datePanel.getDateData());
 		editSourceData.setEditAddressData(this.editAddressPanel.getEditAddressData());
 		editSourceData.setEditHeaderData(this.editHeaderPanel.getEditHeaderData());
@@ -226,7 +226,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 			return;
 		}
 
-		this.subjectPanel.setSubjectData(editSourceData.getSubjectData());
+		this.subjectPanel.setEncodingTextData(editSourceData.getSubjectData());
 		this.datePanel.setDateData(editSourceData.getDateData());
 		this.editAddressPanel.setEditAddressData(editSourceData.getEditAddressData());
 		this.editHeaderPanel.setEditHeaderData(editSourceData.getEditHeaderData());

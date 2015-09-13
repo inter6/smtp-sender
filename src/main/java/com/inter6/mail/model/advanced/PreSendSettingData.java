@@ -1,12 +1,11 @@
 package com.inter6.mail.model.advanced;
 
-import lombok.Data;
-
 import com.inter6.mail.model.component.DateData;
-import com.inter6.mail.model.component.SubjectData;
+import com.inter6.mail.model.component.EncodingTextData;
+import lombok.Data;
 
 @Data
 public class PreSendSettingData {
-	private SubjectData replaceSubjectData; // NOPMD
+	private EncodingTextData replaceSubjectData; // NOPMD
 	private DateData dateData; // NOPMD
 }
