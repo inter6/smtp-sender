@@ -1,28 +1,5 @@
 package com.inter6.mail.gui.data;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.job.SendJobBuilder;
@@ -32,6 +9,28 @@ import com.inter6.mail.model.AppSession;
 import com.inter6.mail.model.data.EmlSourceData;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.ModuleService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Component
 public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
@@ -43,14 +42,15 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	@Autowired
 	private AppSession appSession;
 
-	private final DefaultListModel emlListModel = new DefaultListModel();
-	private final JList emlList = new JList(this.emlListModel);
+	private final DefaultListModel fileListModel = new DefaultListModel();
+	private final JList fileList = new JList(this.fileListModel);
+	private final JCheckBox recursiveCheckButton = new JCheckBox("Recursive");
 
 	@PostConstruct
 	private void init() { // NOPMD
 		this.setLayout(new BorderLayout());
 
-		this.add(new JScrollPane(this.emlList), BorderLayout.CENTER);
+		this.add(new JScrollPane(this.fileList), BorderLayout.CENTER);
 
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
@@ -64,6 +64,7 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			actionPanel.add(addButton);
 			actionPanel.add(removeButton);
 			actionPanel.add(dedupAndSortButton);
+			actionPanel.add(this.recursiveCheckButton);
 		}
 		this.add(actionPanel, BorderLayout.EAST);
 	}
@@ -73,13 +74,16 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser fileChooser = new JFileChooser(EmlSourcePanel.this.appSession.getLastSelectSourceDir());
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			if (fileChooser.showOpenDialog(EmlSourcePanel.this) == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
-				if (file.isFile()) {
-					EmlSourcePanel.this.emlListModel.addElement(file.getAbsolutePath());
-					EmlSourcePanel.this.appSession.setLastSelectSourceDir(file.getParent());
+				EmlSourcePanel.this.fileListModel.addElement(file.getAbsolutePath());
+
+				File dir = file;
+				if (dir.isFile()) {
+					dir = dir.getParentFile();
 				}
+				EmlSourcePanel.this.appSession.setLastSelectSourceDir(dir.getAbsolutePath());
 			}
 		}
 	};
@@ -88,8 +92,8 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			for (Object file : EmlSourcePanel.this.emlList.getSelectedValues()) {
-				EmlSourcePanel.this.emlListModel.removeElement(file);
+			for (Object file : EmlSourcePanel.this.fileList.getSelectedValues()) {
+				EmlSourcePanel.this.fileListModel.removeElement(file);
 			}
 		}
 	};
@@ -98,16 +102,16 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (EmlSourcePanel.this.emlListModel.isEmpty()) {
+			if (EmlSourcePanel.this.fileListModel.isEmpty()) {
 				return;
 			}
 			Set<Object> files = new TreeSet<Object>();
-			for (int i = 0; i < EmlSourcePanel.this.emlListModel.size(); i++) {
-				files.add(EmlSourcePanel.this.emlListModel.get(i));
+			for (int i = 0; i < EmlSourcePanel.this.fileListModel.size(); i++) {
+				files.add(EmlSourcePanel.this.fileListModel.get(i));
 			}
-			EmlSourcePanel.this.emlListModel.clear();
+			EmlSourcePanel.this.fileListModel.clear();
 			for (Object file : files) {
-				EmlSourcePanel.this.emlListModel.addElement(file);
+				EmlSourcePanel.this.fileListModel.addElement(file);
 			}
 		}
 	};
@@ -122,16 +126,17 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	private EmlSourceData getEmlSourceData() {
 		EmlSourceData emlSourceData = new EmlSourceData();
 		List<String> files = new ArrayList<String>();
-		for (int i = 0; i < this.emlListModel.size(); i++) {
-			files.add((String) this.emlListModel.get(i));
+		for (int i = 0; i < this.fileListModel.size(); i++) {
+			files.add((String) this.fileListModel.get(i));
 		}
 		emlSourceData.setFiles(files);
+		emlSourceData.setRecursive(this.recursiveCheckButton.isSelected());
 		return emlSourceData;
 	}
 
 	@Override
 	public void loadConfig() {
-		this.emlListModel.clear();
+		this.fileListModel.clear();
 		EmlSourceData emlSourceData = new Gson().fromJson(this.appConfig.getUnsplitString("eml.source.data"), EmlSourceData.class);
 		if (emlSourceData == null) {
 			return;
@@ -140,9 +145,10 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 		Collection<String> files = emlSourceData.getFiles();
 		if (CollectionUtils.isNotEmpty(files)) {
 			for (String file : files) {
-				this.emlListModel.addElement(file);
+				this.fileListModel.addElement(file);
 			}
 		}
+		this.recursiveCheckButton.setSelected(emlSourceData.isRecursive());
 	}
 
 	@Override
