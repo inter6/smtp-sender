@@ -1,5 +1,19 @@
 package com.inter6.mail.gui.data.edit;
 
+import com.inter6.mail.gui.component.AddressPanel;
+import com.inter6.mail.model.component.AddressData;
+import com.inter6.mail.model.data.edit.EditAddressData;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -8,22 +22,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.inter6.mail.gui.component.AddressPanel;
-import com.inter6.mail.model.component.AddressData;
-import com.inter6.mail.model.data.edit.EditAddressData;
-
 @Component
 @Scope("prototype")
 public class EditAddressPanel extends JPanel {
@@ -31,7 +29,7 @@ public class EditAddressPanel extends JPanel {
 
 	private final List<AddressPanel> addressPanels = new ArrayList<AddressPanel>();
 
-	private final JComboBox typeOptionBox = new JComboBox(new String[] { "From", "To", "Cc", "Bcc" });
+	private final JComboBox typeOptionBox = new JComboBox(new String[]{"From", "To", "Cc", "Bcc"});
 
 	@PostConstruct
 	private void init() { // NOPMD

@@ -1,15 +1,14 @@
 package com.inter6.mail.gui.advanced;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 @Component
 public class AdvancedPanel extends JPanel {

@@ -35,9 +35,13 @@ public class DataPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private EmlSourcePanel emlSourcePanel;
 
+	@Autowired
+	private ScpSourcePanel scpSourcePanel;
+
 	private final JRadioButton editSourceButton = new JRadioButton("Editor");
 	private final JRadioButton mimeSourceButton = new JRadioButton("MIME");
 	private final JRadioButton emlSourceButton = new JRadioButton("EML");
+	private final JRadioButton scpSourceButton = new JRadioButton("SCP");
 	private final JPanel sourceInputPanel = new JPanel(new BorderLayout());
 	private SendJobBuilder selectedJobBuilder;
 
@@ -54,14 +58,17 @@ public class DataPanel extends JPanel implements ConfigObserver {
 				this.editSourceButton.addActionListener(this.sourceSelectChangeEvent);
 				this.mimeSourceButton.addActionListener(this.sourceSelectChangeEvent);
 				this.emlSourceButton.addActionListener(this.sourceSelectChangeEvent);
+				this.scpSourceButton.addActionListener(this.sourceSelectChangeEvent);
 				sourceSelectPanel.add(this.editSourceButton);
 				sourceSelectPanel.add(this.mimeSourceButton);
 				sourceSelectPanel.add(this.emlSourceButton);
+				sourceSelectPanel.add(this.scpSourceButton);
 
 				ButtonGroup sourceSelectGroup = new ButtonGroup();
 				sourceSelectGroup.add(this.editSourceButton);
 				sourceSelectGroup.add(this.mimeSourceButton);
 				sourceSelectGroup.add(this.emlSourceButton);
+				sourceSelectGroup.add(this.scpSourceButton);
 
 				this.editSourceButton.doClick();
 			}
@@ -82,6 +89,8 @@ public class DataPanel extends JPanel implements ConfigObserver {
 				DataPanel.this.setSourcePanel(DataPanel.this.mimeSourcePanel);
 			} else if (sourceButton == DataPanel.this.emlSourceButton) {
 				DataPanel.this.setSourcePanel(DataPanel.this.emlSourcePanel);
+			} else if (sourceButton == DataPanel.this.scpSourceButton) {
+				DataPanel.this.setSourcePanel(DataPanel.this.scpSourcePanel);
 			}
 		}
 	};
@@ -106,6 +115,8 @@ public class DataPanel extends JPanel implements ConfigObserver {
 			this.mimeSourceButton.doClick();
 		} else if ("eml".equals(sourcePanel)) {
 			this.emlSourceButton.doClick();
+		} else if ("scp".equals(sourcePanel)) {
+			this.scpSourceButton.doClick();
 		} else {
 			this.editSourceButton.doClick();
 		}
@@ -119,6 +130,8 @@ public class DataPanel extends JPanel implements ConfigObserver {
 			this.appConfig.setProperty("source.type", "mime");
 		} else if (this.emlSourceButton.isSelected()) {
 			this.appConfig.setProperty("source.type", "eml");
+		} else if (this.scpSourceButton.isSelected()) {
+			this.appConfig.setProperty("source.type", "scp");
 		}
 	}
 }

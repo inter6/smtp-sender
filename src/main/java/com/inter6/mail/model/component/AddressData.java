@@ -1,13 +1,11 @@
 package com.inter6.mail.model.component;
 
-import java.io.UnsupportedEncodingException;
+import com.inter6.mail.model.AdvancedInternetAddress;
+import lombok.Data;
 
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
-
-import lombok.Data;
-
-import com.inter6.mail.model.AdvancedInternetAddress;
+import java.io.UnsupportedEncodingException;
 
 @Data
 public class AddressData {

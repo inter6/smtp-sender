@@ -1,14 +1,11 @@
 package com.inter6.mail.gui.component.content;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
+import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.content.PartData;
+import com.inter6.mail.module.ModuleService;
+import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -18,15 +15,15 @@ import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-
-import lombok.Getter;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import com.inter6.mail.gui.action.LogPanel;
-import com.inter6.mail.model.ContentType;
-import com.inter6.mail.model.component.content.PartData;
-import com.inter6.mail.module.ModuleService;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
 
 public abstract class ContentPartPanel extends JPanel {
 	private static final long serialVersionUID = -3928978805796944620L;
@@ -189,7 +186,8 @@ public abstract class ContentPartPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ContentPartPanel.this.upChildPanel(ChildWrapPanel.this);
-			};
+			}
+
 		};
 
 		private final ActionListener downEvent = new ActionListener() {
@@ -197,7 +195,8 @@ public abstract class ContentPartPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ContentPartPanel.this.downChildPanel(ChildWrapPanel.this);
-			};
+			}
+
 		};
 
 		private final ActionListener removeEvent = new ActionListener() {

@@ -1,9 +1,8 @@
 package com.inter6.mail.model;
 
-import java.io.UnsupportedEncodingException;
-
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeUtility;
+import java.io.UnsupportedEncodingException;
 
 public class AdvancedInternetAddress extends InternetAddress {
 	private static final long serialVersionUID = -1167890302580784155L;

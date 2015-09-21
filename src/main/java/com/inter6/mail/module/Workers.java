@@ -1,5 +1,9 @@
 package com.inter6.mail.module;
 
+import com.inter6.mail.job.thread.ThreadSupportJob;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -8,17 +12,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.inter6.mail.job.thread.ThreadSupportJob;
-
 /**
  * Worker 패턴의 ThreadPool 구현체<br>
  * <ul>
- * 	<li>기본 worker Thread 개수 : 1 ~ core*2</li>
- * 	<li>job 싸이클간 대기 시간 3초.</li>
- * 	<li>에러 발생시 대기 시간 10초.</li>
+ * <li>기본 worker Thread 개수 : 1 ~ core*2</li>
+ * <li>job 싸이클간 대기 시간 3초.</li>
+ * <li>에러 발생시 대기 시간 10초.</li>
  * </ul>
  */
 public class Workers {
@@ -151,7 +150,6 @@ public class Workers {
 	 * java api에 존재하지 않아서 구현 - java 에서는 생산자/소비자 패턴만 지원
 	 *
 	 * @author ysko
-	 *
 	 */
 	private static class BlockPolicy implements RejectedExecutionHandler {
 		private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -171,12 +169,11 @@ public class Workers {
 	/**
 	 * woker Thread생성 지원을 위한 Factory<br>
 	 * <ul>
-	 * 	<li>daemon thread</li>
-	 * 	<li>같은 thread group</li>
+	 * <li>daemon thread</li>
+	 * <li>같은 thread group</li>
 	 * </ul>
 	 *
 	 * @author ysko
-	 *
 	 */
 	private static class WorkersFactory implements ThreadFactory {
 		private final Logger log = LoggerFactory.getLogger(this.getClass());

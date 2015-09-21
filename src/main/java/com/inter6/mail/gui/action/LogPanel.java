@@ -1,11 +1,8 @@
 package com.inter6.mail.gui.action;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.util.Date;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -16,11 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.util.Date;
 
 @Component
 @Slf4j

@@ -1,5 +1,9 @@
 package com.inter6.mail.service;
 
+import javax.net.ssl.ManagerFactoryParameters;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactorySpi;
+import javax.net.ssl.X509TrustManager;
 import java.security.AccessController;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
@@ -8,11 +12,6 @@ import java.security.PrivilegedAction;
 import java.security.Provider;
 import java.security.Security;
 import java.security.cert.X509Certificate;
-
-import javax.net.ssl.ManagerFactoryParameters;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactorySpi;
-import javax.net.ssl.X509TrustManager;
 
 /*
  * The contents of this file are subject to the "END USER LICENSE AGREEMENT FOR F5
@@ -49,7 +48,7 @@ public class XTrustProvider extends Provider {
 	private final static String INFO = "XTrust JSSE Provider (implements trust factory with truststore validation disabled)";
 	private final static double VERSION = 1.0D;
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public XTrustProvider() {
 		super(NAME, VERSION, INFO);
 
@@ -90,7 +89,7 @@ public class XTrustProvider extends Provider {
 
 		@Override
 		protected TrustManager[] engineGetTrustManagers() {
-			return new TrustManager[] {
+			return new TrustManager[]{
 					new X509TrustManager() {
 						@Override
 						public X509Certificate[] getAcceptedIssuers() {

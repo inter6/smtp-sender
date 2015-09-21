@@ -26,7 +26,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private AppConfig appConfig;
 
-	private final JTextField hostFiled = new JTextField(25);
+	private final JTextField hostField = new JTextField(25);
 	private final JTextField portField = new JTextField("25", 5);
 	private final JComboBox connectTypeOptionBox = new JComboBox(new String[]{"NONE", "SSL", "TLS"});
 	private final JTextField idField = new JTextField(15);
@@ -40,7 +40,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 		JPanel hostPanel = new JPanel(new FlowLayout());
 		{
 			hostPanel.add(new JLabel("Host"));
-			hostPanel.add(this.hostFiled);
+			hostPanel.add(this.hostField);
 			hostPanel.add(new JLabel("Port"));
 			hostPanel.add(this.portField);
 			hostPanel.add(this.connectTypeOptionBox);
@@ -83,7 +83,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 
 	public ServerData getServerData() {
 		ServerData serverData = new ServerData();
-		serverData.setHost(this.hostFiled.getText());
+		serverData.setHost(this.hostField.getText());
 		serverData.setPort(this.portField.getText());
 		serverData.setConnectType((String) this.connectTypeOptionBox.getSelectedItem());
 		serverData.setId(this.idField.getText());
@@ -98,7 +98,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 		if (serverData == null) {
 			return;
 		}
-		this.hostFiled.setText(serverData.getHost());
+		this.hostField.setText(serverData.getHost());
 		this.portField.setText(Integer.toString(serverData.getPort()));
 		this.connectTypeOptionBox.setSelectedItem(serverData.getConnectType());
 		this.idField.setText(serverData.getId());

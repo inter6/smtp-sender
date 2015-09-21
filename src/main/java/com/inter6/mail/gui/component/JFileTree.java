@@ -1,15 +1,14 @@
 package com.inter6.mail.gui.component;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Iterator;
-import java.util.Vector;
-
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Iterator;
+import java.util.Vector;
 
 public class JFileTree extends JTree {
 	private static final long serialVersionUID = -8962517684111301582L;
@@ -81,8 +80,8 @@ class FileSystemModel implements TreeModel {
 		File targetFile = new File(fileParentPath, newFileName);
 		oldFile.renameTo(targetFile);
 		File parent = new File(fileParentPath);
-		int[] changedChildrenIndices = { this.getIndexOfChild(parent, targetFile) };
-		Object[] changedChildren = { targetFile };
+		int[] changedChildrenIndices = {this.getIndexOfChild(parent, targetFile)};
+		Object[] changedChildren = {targetFile};
 		this.fireTreeNodesChanged(path.getParentPath(), changedChildrenIndices, changedChildren);
 
 	}

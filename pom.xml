@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.inter6.mail</groupId>
 	<artifactId>smtp-sender</artifactId>
-	<version>1.0.1</version>
+	<version>1.1.0</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -77,6 +77,11 @@
 			<groupId>dnsjava</groupId>
 			<artifactId>dnsjava</artifactId>
 			<version>2.1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.53</version>
 		</dependency>
 	</dependencies>
 

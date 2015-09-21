@@ -1,10 +1,10 @@
 package com.inter6.mail.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class StringUtil {
 

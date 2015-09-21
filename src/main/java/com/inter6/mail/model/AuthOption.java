@@ -9,13 +9,13 @@ public enum AuthOption {
 	private String text;
 	private AUTH_METHOD method;
 
-	private AuthOption(String text, AUTH_METHOD method) {
+	AuthOption(String text, AUTH_METHOD method) {
 		this.text = text;
 		this.method = method;
 	}
 
 	public static AuthOption[] allItems() {
-		return new AuthOption[] { NONE, PLAIN, LOGIN, CRAM_MD5, XOAUTH };
+		return new AuthOption[]{NONE, PLAIN, LOGIN, CRAM_MD5, XOAUTH};
 	}
 
 	@Override

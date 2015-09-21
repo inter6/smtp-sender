@@ -1,11 +1,11 @@
 package com.inter6.mail.job.smtp;
 
-import java.util.Map;
-
 import com.inter6.mail.job.thread.ThreadSupportJob;
 import com.inter6.mail.model.action.ActionData;
 import com.inter6.mail.module.ModuleService;
 import com.inter6.mail.module.Workers;
+
+import java.util.Map;
 
 public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 
@@ -43,7 +43,7 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 		}
 	}
 
-	protected abstract void doMasterJob();
+	protected abstract void doMasterJob() throws Throwable;
 
 	protected void orderWorker(ThreadSupportJob workerJob) throws Throwable {
 		if (this.actionData.isUseMultiThread()) {

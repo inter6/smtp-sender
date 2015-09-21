@@ -43,7 +43,7 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 	private final JButton startButton = new JButton("Start");
 	private final JButton stopButton = new JButton("Stop");
 	private final JCheckBox useMultiThreadCheckBox = new JCheckBox("Multi-Thread", true);
-	private final JTextField maxThreadCountFiled = new JTextField("8", 2);
+	private final JTextField maxThreadCountField = new JTextField("8", 2);
 	private final JLabel elapsedTimeLabel = new JLabel("--:--:--");
 	private final JProgressBar progressBar = new JProgressBar();
 	private final JLabel progressLabel = new JLabel("0.00 %");
@@ -60,7 +60,7 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 			sendPanel.add(this.stopButton);
 			sendPanel.add(this.useMultiThreadCheckBox);
 			sendPanel.add(new JLabel("Max:"));
-			sendPanel.add(this.maxThreadCountFiled);
+			sendPanel.add(this.maxThreadCountField);
 
 			this.startButton.addActionListener(this.startEvent);
 			this.stopButton.addActionListener(this.stopEvent);
@@ -120,7 +120,7 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 		this.progressBar.setValue(0);
 		this.progressLabel.setText("0.00 %");
 		this.useMultiThreadCheckBox.setEnabled(false);
-		this.maxThreadCountFiled.setEnabled(false);
+		this.maxThreadCountField.setEnabled(false);
 		ActionPanel.this.startButton.setEnabled(false);
 		ActionPanel.this.stopButton.setEnabled(true);
 	}
@@ -132,7 +132,7 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 		this.progressBar.setValue(100);
 		this.progressLabel.setText("100.00 %");
 		this.useMultiThreadCheckBox.setEnabled(true);
-		this.maxThreadCountFiled.setEnabled(true);
+		this.maxThreadCountField.setEnabled(true);
 		ActionPanel.this.startButton.setEnabled(true);
 		ActionPanel.this.stopButton.setEnabled(false);
 	}
@@ -159,7 +159,7 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 	public ActionData getActionData() {
 		ActionData actionData = new ActionData();
 		actionData.setUseMultiThread(this.useMultiThreadCheckBox.isSelected());
-		actionData.setMaxThreadCount(Integer.parseInt(this.maxThreadCountFiled.getText()));
+		actionData.setMaxThreadCount(Integer.parseInt(this.maxThreadCountField.getText()));
 		return actionData;
 	}
 
@@ -170,7 +170,7 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 			return;
 		}
 		this.useMultiThreadCheckBox.setSelected(actionData.isUseMultiThread());
-		this.maxThreadCountFiled.setText(actionData.getMaxThreadCount() + "");
+		this.maxThreadCountField.setText(actionData.getMaxThreadCount() + "");
 	}
 
 	@Override

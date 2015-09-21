@@ -25,7 +25,7 @@ public class EnvelopePanel extends JPanel implements ConfigObserver {
 	@Autowired
 	private AppConfig appConfig;
 
-	private final JTextField fromFiled = new JTextField(40);
+	private final JTextField fromField = new JTextField(40);
 	private final JTextArea toArea = new JTextArea(3, 40);
 
 	@PostConstruct
@@ -34,7 +34,7 @@ public class EnvelopePanel extends JPanel implements ConfigObserver {
 		JPanel fromPanel = new JPanel(new FlowLayout());
 		{
 			fromPanel.add(new JLabel("Mail From"));
-			fromPanel.add(this.fromFiled);
+			fromPanel.add(this.fromField);
 		}
 		this.add(fromPanel);
 		JPanel toPanel = new JPanel(new FlowLayout());
@@ -47,7 +47,7 @@ public class EnvelopePanel extends JPanel implements ConfigObserver {
 
 	public EnvelopeData getEnvelopeData() {
 		EnvelopeData envelopeData = new EnvelopeData();
-		envelopeData.setMailFrom(this.fromFiled.getText());
+		envelopeData.setMailFrom(this.fromField.getText());
 		envelopeData.setRcptTos(StringUtil.splitToSet(this.toArea.getText(), "\n"));
 		return envelopeData;
 	}
@@ -58,7 +58,7 @@ public class EnvelopePanel extends JPanel implements ConfigObserver {
 		if (envelopeData == null) {
 			return;
 		}
-		this.fromFiled.setText(envelopeData.getMailFrom());
+		this.fromField.setText(envelopeData.getMailFrom());
 		this.toArea.setText(StringUtils.join(envelopeData.getRcptTos(), "\n"));
 	}
 

@@ -1,14 +1,12 @@
 package com.inter6.mail.model;
 
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.module.AppConfig;
 import lombok.Getter;
 import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.module.AppConfig;
 
 @Component
 public class AppSession implements ConfigObserver {

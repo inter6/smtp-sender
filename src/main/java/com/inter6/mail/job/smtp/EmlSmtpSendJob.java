@@ -35,8 +35,8 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 	private float progressRate;
 
 	@Override
-	protected void doMasterJob() {
-		List<File> emlFiles = new ArrayList<File>();
+	protected void doMasterJob() throws Throwable {
+		List<File> emlFiles = new ArrayList<>();
 
 		for (String path : this.emlSourceData.getFiles()) {
 			File file = new File(path);
@@ -57,8 +57,8 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 		}
 		this.logPanel.info("eml file count - COUNT:" + emlFiles.size());
 
-		int idx = 0;
-		for (File emlFile : emlFiles) {
+		for (int i = 0; i < emlFiles.size(); i++) {
+			File emlFile = emlFiles.get(i);
 			try {
 				MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
 				mimeSmtpSendJob.setMessageStream(new FileInputStream(emlFile));
@@ -67,9 +67,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 			} catch (Throwable e) {
 				this.logPanel.error("eml send order fail ! - EML:" + emlFile, e);
 			}
-
-			idx++;
-			this.progressRate = (float) idx / (float) emlFiles.size() * 100f;
+			this.progressRate = (float) i / (float) emlFiles.size() * 100f;
 		}
 	}
 

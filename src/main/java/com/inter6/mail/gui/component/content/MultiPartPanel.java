@@ -1,8 +1,9 @@
 package com.inter6.mail.gui.component.content;
 
-import java.awt.BorderLayout;
-import java.util.List;
-import java.util.Vector;
+import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.content.MultiPartData;
+import com.inter6.mail.model.component.content.PartData;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
@@ -10,12 +11,9 @@ import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.swing.JLabel;
-
-import org.apache.commons.collections4.CollectionUtils;
-
-import com.inter6.mail.model.ContentType;
-import com.inter6.mail.model.component.content.MultiPartData;
-import com.inter6.mail.model.component.content.PartData;
+import java.awt.BorderLayout;
+import java.util.List;
+import java.util.Vector;
 
 public class MultiPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = -4555796509776825034L;

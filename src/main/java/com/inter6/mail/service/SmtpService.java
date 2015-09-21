@@ -1,20 +1,5 @@
 package com.inter6.mail.service;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Writer;
-import java.net.SocketException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
@@ -23,6 +8,20 @@ import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Writer;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SmtpService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -93,7 +92,7 @@ public class SmtpService {
 		}
 	}
 
-	private AuthenticatingSMTPClient connect() throws SocketException, IOException {
+	private AuthenticatingSMTPClient connect() throws IOException {
 		AuthenticatingSMTPClient smtpClient;
 		if ("ssl".equalsIgnoreCase(this.connectType)) {
 			smtpClient = new AuthenticatingSMTPClient("SSL", true, this.encoding);

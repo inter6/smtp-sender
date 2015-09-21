@@ -1,7 +1,5 @@
 package com.inter6.mail.model;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.inter6.mail.gui.component.content.AttachmentPartPanel;
 import com.inter6.mail.gui.component.content.ContentPartPanel;
 import com.inter6.mail.gui.component.content.MultiPartPanel;
@@ -10,6 +8,7 @@ import com.inter6.mail.model.component.content.AttachmentPartData;
 import com.inter6.mail.model.component.content.MultiPartData;
 import com.inter6.mail.model.component.content.PartData;
 import com.inter6.mail.model.component.content.TextPartData;
+import org.apache.commons.lang3.StringUtils;
 
 public enum ContentType {
 	MULTIPART_MIXED("multipart", "mixed", MultiPartPanel.class, MultiPartData.class),
@@ -24,7 +23,7 @@ public enum ContentType {
 	private Class<? extends ContentPartPanel> panelClass;
 	private Class<? extends PartData> dataClass;
 
-	private ContentType(String type, String subType, Class<? extends ContentPartPanel> panelClass, Class<? extends PartData> dataClass) {
+	ContentType(String type, String subType, Class<? extends ContentPartPanel> panelClass, Class<? extends PartData> dataClass) {
 		this.type = type;
 		this.subType = subType;
 		this.panelClass = panelClass;
