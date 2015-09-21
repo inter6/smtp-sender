@@ -97,12 +97,12 @@ public class LogPanel extends JPanel {
 
 	public void error(String msg, Throwable e) {
 		log.error(msg, e);
-		this.append(msg + (e != null ? " ERR:" + e.getMessage() : ""));
+		this.append(msg + (e != null ? " - ERR:" + e.getMessage() : ""));
 	}
 
 	public void errorAndShowDialog(String msg, Throwable e) {
 		this.error(msg, e);
-		JOptionPane.showMessageDialog(this, msg + (e != null ? " ERR:" + e.getMessage() : ""));
+		JOptionPane.showMessageDialog(this, msg + (e != null ? " - ERR:" + e.getMessage() : ""));
 	}
 
 	private void append(String msg) {

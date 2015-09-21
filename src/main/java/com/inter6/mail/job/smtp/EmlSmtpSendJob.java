@@ -67,7 +67,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 			} catch (Throwable e) {
 				this.logPanel.error("eml send order fail ! - EML:" + emlFile, e);
 			}
-			this.progressRate = (float) i / (float) emlFiles.size() * 100f;
+			this.progressRate = (float) (i + 1) / (float) emlFiles.size() * 100f;
 		}
 	}
 

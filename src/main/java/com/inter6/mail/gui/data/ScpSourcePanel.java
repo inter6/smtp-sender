@@ -42,11 +42,11 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	private AppConfig appConfig;
 
 	private final JTextField hostField = new JTextField(25);
-	private final JTextField portField = new JTextField(5);
+	private final JTextField portField = new JTextField("22", 5);
 	private final JTextField usernameField = new JTextField(15);
 	private final JPasswordField passwordField = new JPasswordField(15);
 
-	private final JTextField pathField = new JTextField(30);
+	private final JTextField pathField = new JTextField("/opt/eml/*.eml", 30);
 	private final DefaultListModel pathListModel = new DefaultListModel();
 	private final JList pathList = new JList(this.pathListModel);
 	private final DatePanel replaceDatePanel = new DatePanel("Replace Date", 20, false, true);
@@ -135,7 +135,7 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			if (ScpSourcePanel.this.pathListModel.isEmpty()) {
 				return;
 			}
-			Set<Object> paths = new TreeSet<Object>();
+			Set<Object> paths = new TreeSet<>();
 			for (int i = 0; i < ScpSourcePanel.this.pathListModel.size(); i++) {
 				paths.add(ScpSourcePanel.this.pathListModel.get(i));
 			}
