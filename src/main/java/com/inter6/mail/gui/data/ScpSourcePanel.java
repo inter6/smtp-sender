@@ -16,24 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Component
 public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
@@ -47,8 +35,8 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	private final JPasswordField passwordField = new JPasswordField(15);
 
 	private final JTextField pathField = new JTextField("/opt/eml/*.eml", 30);
-	private final DefaultListModel pathListModel = new DefaultListModel();
-	private final JList pathList = new JList(this.pathListModel);
+	private final DefaultListModel<String> pathListModel = new DefaultListModel<>();
+	private final JList<String> pathList = new JList<>(this.pathListModel);
 	private final DatePanel replaceDatePanel = new DatePanel("Replace Date", 20, false, true);
 
 	@PostConstruct
@@ -86,7 +74,7 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 				addPanel.add(this.pathField);
 
 				JButton addButton = new JButton("Add");
-				addButton.addActionListener(this.addEvent);
+				addButton.addActionListener(this.createAddEvent());
 				addPanel.add(addButton);
 			}
 			listPanel.add(addPanel, BorderLayout.NORTH);
@@ -98,8 +86,8 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			{
 				JButton removeButton = new JButton("Remove");
 				JButton dedupAndSortButton = new JButton("Dedup&Sort");
-				removeButton.addActionListener(this.removeEvent);
-				dedupAndSortButton.addActionListener(this.dedupAndSortEvent);
+				removeButton.addActionListener(this.createRemoveEvent());
+				dedupAndSortButton.addActionListener(this.createDedupAndSortEvent());
 				actionPanel.add(removeButton);
 				actionPanel.add(dedupAndSortButton);
 			}
@@ -110,41 +98,47 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 		this.add(replaceDatePanel, BorderLayout.SOUTH);
 	}
 
-	private final ActionListener addEvent = new ActionListener() {
+	private ActionListener createAddEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			ScpSourcePanel.this.pathListModel.addElement(pathField.getText());
-		}
-	};
-
-	private final ActionListener removeEvent = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			for (Object path : ScpSourcePanel.this.pathList.getSelectedValues()) {
-				ScpSourcePanel.this.pathListModel.removeElement(path);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ScpSourcePanel.this.pathListModel.addElement(pathField.getText());
 			}
-		}
-	};
+		};
+	}
 
-	private final ActionListener dedupAndSortEvent = new ActionListener() {
+	private ActionListener createRemoveEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (ScpSourcePanel.this.pathListModel.isEmpty()) {
-				return;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (String path : ScpSourcePanel.this.pathList.getSelectedValuesList()) {
+					ScpSourcePanel.this.pathListModel.removeElement(path);
+				}
 			}
-			Set<Object> paths = new TreeSet<>();
-			for (int i = 0; i < ScpSourcePanel.this.pathListModel.size(); i++) {
-				paths.add(ScpSourcePanel.this.pathListModel.get(i));
+		};
+	}
+
+	private ActionListener createDedupAndSortEvent() {
+		return new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (ScpSourcePanel.this.pathListModel.isEmpty()) {
+					return;
+				}
+				Set<String> paths = new TreeSet<>();
+				for (int i = 0; i < ScpSourcePanel.this.pathListModel.size(); i++) {
+					paths.add(ScpSourcePanel.this.pathListModel.get(i));
+				}
+				ScpSourcePanel.this.pathListModel.clear();
+				for (String path : paths) {
+					ScpSourcePanel.this.pathListModel.addElement(path);
+				}
 			}
-			ScpSourcePanel.this.pathListModel.clear();
-			for (Object path : paths) {
-				ScpSourcePanel.this.pathListModel.addElement(path);
-			}
-		}
-	};
+		};
+	}
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
@@ -168,7 +162,7 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 		List<String> paths = new ArrayList<>();
 		for (int i = 0; i < this.pathListModel.size(); i++) {
-			paths.add((String) this.pathListModel.get(i));
+			paths.add(this.pathListModel.get(i));
 		}
 		scpSourceData.setPaths(paths);
 		scpSourceData.setReplaceDateData(this.replaceDatePanel.getDateData());

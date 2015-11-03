@@ -9,13 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -28,10 +23,10 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 
 	private final JTextField hostField = new JTextField(25);
 	private final JTextField portField = new JTextField("25", 5);
-	private final JComboBox connectTypeOptionBox = new JComboBox(new String[]{"NONE", "SSL", "TLS"});
+	private final JComboBox<String> connectTypeOptionBox = new JComboBox<>(new String[]{"NONE", "SSL", "TLS"});
 	private final JTextField idField = new JTextField(15);
 	private final JPasswordField passwordField = new JPasswordField(15);
-	private final JComboBox authOptionBox = new JComboBox(AuthOption.allItems());
+	private final JComboBox<AuthOption> authOptionBox = new JComboBox<>(AuthOption.allItems());
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -54,25 +49,27 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 			accountPanel.add(new JLabel("PW"));
 			accountPanel.add(this.passwordField);
 
-			this.authOptionBox.addActionListener(this.authChangeEvent);
+			this.authOptionBox.addActionListener(this.createAuthChangeEvent());
 			this.authOptionBox.setSelectedIndex(0);
 			accountPanel.add(this.authOptionBox);
 		}
 		this.add(accountPanel, BorderLayout.CENTER);
 	}
 
-	private final ActionListener authChangeEvent = new ActionListener() {
+	private ActionListener createAuthChangeEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			AuthOption authOption = (AuthOption) ServerPanel.this.authOptionBox.getSelectedItem();
-			if (authOption == AuthOption.NONE) {
-				ServerPanel.this.setEnableAccountField(false);
-			} else {
-				ServerPanel.this.setEnableAccountField(true);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AuthOption authOption = (AuthOption) ServerPanel.this.authOptionBox.getSelectedItem();
+				if (authOption == AuthOption.NONE) {
+					ServerPanel.this.setEnableAccountField(false);
+				} else {
+					ServerPanel.this.setEnableAccountField(true);
+				}
 			}
-		}
-	};
+		};
+	}
 
 	private void setEnableAccountField(boolean isEnable) {
 		this.idField.setEnabled(isEnable);

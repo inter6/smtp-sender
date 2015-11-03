@@ -7,16 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -40,7 +32,7 @@ public class Base64MenuItem extends JMenuItem implements ActionListener {
 		this.base64Dialog.setVisible(true);
 	}
 
-	private class Base64Dialog extends JDialog {
+	private static class Base64Dialog extends JDialog {
 		private static final long serialVersionUID = -6824166515619216301L;
 
 		private final JTextArea decodeTextArea = new JTextArea(9, 30);
@@ -61,11 +53,11 @@ public class Base64MenuItem extends JMenuItem implements ActionListener {
 			JPanel actionPanel = new JPanel(new FlowLayout());
 			{
 				JButton encodeButton = new JButton("Encode ▼");
-				encodeButton.addActionListener(this.encodeAction);
+				encodeButton.addActionListener(this.createEncodeAction());
 				actionPanel.add(encodeButton);
 
 				JButton decodeButton = new JButton("Decode ▲");
-				decodeButton.addActionListener(this.decodeAction);
+				decodeButton.addActionListener(this.createDecodeAction());
 				actionPanel.add(decodeButton);
 
 				actionPanel.add(this.charsetField);
@@ -74,40 +66,44 @@ public class Base64MenuItem extends JMenuItem implements ActionListener {
 			this.add(new JScrollPane(this.encodeTextArea), BorderLayout.SOUTH);
 		}
 
-		private final ActionListener encodeAction = new ActionListener() {
+		private ActionListener createEncodeAction() {
+			return new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				try {
-					String decodeText = StringUtils.defaultIfEmpty(Base64Dialog.this.decodeTextArea.getText(), "");
-					String charset = StringUtils.defaultIfBlank(Base64Dialog.this.charsetField.getText(), "UTF-8");
-					String encodeText = Base64.encodeBase64String(decodeText.getBytes(charset));
-					Base64Dialog.this.encodeTextArea.setText(encodeText);
-				} catch (Throwable e) {
-					JOptionPane.showMessageDialog(Base64Dialog.this,
-							e.getClass().getSimpleName() + " - " + e.getMessage(),
-							"Encoding fail !",
-							JOptionPane.ERROR_MESSAGE);
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					try {
+						String decodeText = StringUtils.defaultIfEmpty(Base64Dialog.this.decodeTextArea.getText(), "");
+						String charset = StringUtils.defaultIfBlank(Base64Dialog.this.charsetField.getText(), "UTF-8");
+						String encodeText = Base64.encodeBase64String(decodeText.getBytes(charset));
+						Base64Dialog.this.encodeTextArea.setText(encodeText);
+					} catch (Throwable e) {
+						JOptionPane.showMessageDialog(Base64Dialog.this,
+								e.getClass().getSimpleName() + " - " + e.getMessage(),
+								"Encoding fail !",
+								JOptionPane.ERROR_MESSAGE);
+					}
 				}
-			}
-		};
+			};
+		}
 
-		private final ActionListener decodeAction = new ActionListener() {
+		private ActionListener createDecodeAction() {
+			return new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				try {
-					String encodeText = StringUtils.defaultIfEmpty(Base64Dialog.this.encodeTextArea.getText(), "");
-					String charset = StringUtils.defaultIfBlank(Base64Dialog.this.charsetField.getText(), "UTF-8");
-					byte[] decodeBytes = Base64.decodeBase64(encodeText);
-					Base64Dialog.this.decodeTextArea.setText(new String(decodeBytes, charset));
-				} catch (Throwable e) {
-					JOptionPane.showMessageDialog(Base64Dialog.this,
-							e.getClass().getSimpleName() + " - " + e.getMessage(),
-							"Decoding fail !",
-							JOptionPane.ERROR_MESSAGE);
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					try {
+						String encodeText = StringUtils.defaultIfEmpty(Base64Dialog.this.encodeTextArea.getText(), "");
+						String charset = StringUtils.defaultIfBlank(Base64Dialog.this.charsetField.getText(), "UTF-8");
+						byte[] decodeBytes = Base64.decodeBase64(encodeText);
+						Base64Dialog.this.decodeTextArea.setText(new String(decodeBytes, charset));
+					} catch (Throwable e) {
+						JOptionPane.showMessageDialog(Base64Dialog.this,
+								e.getClass().getSimpleName() + " - " + e.getMessage(),
+								"Decoding fail !",
+								JOptionPane.ERROR_MESSAGE);
+					}
 				}
-			}
-		};
+			};
+		}
 	}
 }

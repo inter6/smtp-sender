@@ -9,19 +9,8 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.SimpleResolver;
 
 import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetSocketAddress;
@@ -46,7 +35,7 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 		this.dnsDialog.setVisible(true);
 	}
 
-	private class DnsDialog extends JDialog {
+	private static class DnsDialog extends JDialog {
 		private static final long serialVersionUID = -8148265075267497887L;
 
 		private final JTextField searchHostField = new JTextField(30);
@@ -74,7 +63,7 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 					targetPanel.add(new JLabel("Search Domain: "));
 					targetPanel.add(this.searchHostField);
 					JButton queryButton = new JButton("Query");
-					queryButton.addActionListener(this.queryEvent);
+					queryButton.addActionListener(this.createQueryEvent());
 					targetPanel.add(queryButton);
 				}
 				wrapPanel.add(targetPanel);
@@ -94,47 +83,49 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 			this.add(wrapPanel, BorderLayout.CENTER);
 		}
 
-		private final ActionListener queryEvent = new ActionListener() {
+		private ActionListener createQueryEvent() {
+			return new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				try {
-					String searchHost = DnsDialog.this.searchHostField.getText();
-					SimpleResolver resolver = new SimpleResolver();
-					if (DnsDialog.this.serverUseCheckBox.isSelected()) {
-						resolver.setAddress(new InetSocketAddress(
-								DnsDialog.this.serverIpField.getText(),
-								Integer.parseInt(DnsDialog.this.serverPortField.getText())));
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					try {
+						String searchHost = DnsDialog.this.searchHostField.getText();
+						SimpleResolver resolver = new SimpleResolver();
+						if (DnsDialog.this.serverUseCheckBox.isSelected()) {
+							resolver.setAddress(new InetSocketAddress(
+									DnsDialog.this.serverIpField.getText(),
+									Integer.parseInt(DnsDialog.this.serverPortField.getText())));
+						}
+						this.queryDns(searchHost, "A", resolver);
+						this.queryDns(searchHost, "MX", resolver);
+					} catch (Throwable e) {
+						JOptionPane.showMessageDialog(DnsDialog.this,
+								e.getClass().getSimpleName() + " - " + e.getMessage(),
+								"DNS Query fail !",
+								JOptionPane.ERROR_MESSAGE);
 					}
-					this.queryDns(searchHost, "A", resolver);
-					this.queryDns(searchHost, "MX", resolver);
-				} catch (Throwable e) {
-					JOptionPane.showMessageDialog(DnsDialog.this,
-							e.getClass().getSimpleName() + " - " + e.getMessage(),
-							"DNS Query fail !",
-							JOptionPane.ERROR_MESSAGE);
 				}
-			}
 
-			private void queryDns(String searchHost, String type, SimpleResolver resolver) {
-				try {
-					Lookup lookup = new Lookup(searchHost, org.xbill.DNS.Type.value(type));
-					lookup.setResolver(resolver);
-					Record[] records = lookup.run();
-					if (ArrayUtils.isEmpty(records)) {
-						DnsDialog.this.resultArea.append("not found " + type + " record of " + searchHost + "\n");
-						return;
+				private void queryDns(String searchHost, String type, SimpleResolver resolver) {
+					try {
+						Lookup lookup = new Lookup(searchHost, org.xbill.DNS.Type.value(type));
+						lookup.setResolver(resolver);
+						Record[] records = lookup.run();
+						if (ArrayUtils.isEmpty(records)) {
+							DnsDialog.this.resultArea.append("not found " + type + " record of " + searchHost + "\n");
+							return;
+						}
+						for (Record record : lookup.run()) {
+							DnsDialog.this.resultArea.append(record.toString() + "\n");
+						}
+					} catch (Throwable e) {
+						JOptionPane.showMessageDialog(DnsDialog.this,
+								e.getClass().getSimpleName() + " - " + e.getMessage(),
+								"DNS Query fail !",
+								JOptionPane.ERROR_MESSAGE);
 					}
-					for (Record record : lookup.run()) {
-						DnsDialog.this.resultArea.append(record.toString() + "\n");
-					}
-				} catch (Throwable e) {
-					JOptionPane.showMessageDialog(DnsDialog.this,
-							e.getClass().getSimpleName() + " - " + e.getMessage(),
-							"DNS Query fail !",
-							JOptionPane.ERROR_MESSAGE);
 				}
-			}
-		};
+			};
+		}
 	}
 }

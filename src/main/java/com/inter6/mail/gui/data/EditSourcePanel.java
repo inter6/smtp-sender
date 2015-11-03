@@ -38,12 +38,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
@@ -97,49 +93,53 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
 		{
 			JButton viewButton = new JButton("View");
-			viewButton.addActionListener(this.viewEvent);
+			viewButton.addActionListener(this.createViewEvent());
 			actionPanel.add(viewButton);
 
 			JButton saveButton = new JButton("Save");
-			saveButton.addActionListener(this.saveEvent);
+			saveButton.addActionListener(this.createSaveEvent());
 			actionPanel.add(saveButton);
 		}
 		this.add(actionPanel, BorderLayout.EAST);
 	}
 
-	private final ActionListener viewEvent = new ActionListener() {
+	private ActionListener createViewEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			try {
-				byte[] message = EditSourcePanel.this.buildMessage();
-				TextViewDialog.createDialog(new String(message))
-						.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
-			} catch (Throwable e) {
-				EditSourcePanel.this.logPanel.error("build mime fail ! - ", e);
-			}
-		}
-	};
-
-	private final ActionListener saveEvent = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			try {
-				byte[] message = EditSourcePanel.this.buildMessage();
-				JFileChooser fileChooser = new JFileChooser();
-				if (fileChooser.showSaveDialog(EditSourcePanel.this) != JFileChooser.APPROVE_OPTION) {
-					EditSourcePanel.this.logPanel.info("save to eml cancel.");
-					return;
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				try {
+					byte[] message = EditSourcePanel.this.buildMessage();
+					TextViewDialog.createDialog(new String(message, "UTF-8"))
+							.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
+				} catch (Throwable e) {
+					EditSourcePanel.this.logPanel.error("build mime fail ! - ", e);
 				}
-				File saveFile = fileChooser.getSelectedFile();
-				FileUtils.writeByteArrayToFile(saveFile, message);
-				EditSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
-			} catch (Throwable e) {
-				EditSourcePanel.this.logPanel.error("save to eml fail ! - ", e);
 			}
-		}
-	};
+		};
+	}
+
+	private ActionListener createSaveEvent() {
+		return new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				try {
+					byte[] message = EditSourcePanel.this.buildMessage();
+					JFileChooser fileChooser = new JFileChooser();
+					if (fileChooser.showSaveDialog(EditSourcePanel.this) != JFileChooser.APPROVE_OPTION) {
+						EditSourcePanel.this.logPanel.info("save to eml cancel.");
+						return;
+					}
+					File saveFile = fileChooser.getSelectedFile();
+					FileUtils.writeByteArrayToFile(saveFile, message);
+					EditSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
+				} catch (Throwable e) {
+					EditSourcePanel.this.logPanel.error("save to eml fail ! - ", e);
+				}
+			}
+		};
+	}
 
 	private byte[] buildMessage() throws Throwable {
 		MimeMessage mimeMessage = new MimeMessage(Session.getInstance(new Properties()));

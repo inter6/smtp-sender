@@ -2,11 +2,8 @@ package com.inter6.mail.gui.component;
 
 import com.inter6.mail.model.component.DateData;
 
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -29,17 +26,19 @@ public class DatePanel extends JPanel {
 		this.add(this.textField);
 
 		this.nowCheckBox.setSelected(isNow);
-		this.nowCheckBox.addActionListener(this.nowEvent);
+		this.nowCheckBox.addActionListener(this.createNowEvent());
 		this.add(this.nowCheckBox);
 	}
 
-	private final ActionListener nowEvent = new ActionListener() {
+	private ActionListener createNowEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			DatePanel.this.textField.setEnabled(!DatePanel.this.nowCheckBox.isSelected());
-		}
-	};
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				DatePanel.this.textField.setEnabled(!DatePanel.this.nowCheckBox.isSelected());
+			}
+		};
+	}
 
 	public DateData getDateData() {
 		DateData dateData = new DateData();

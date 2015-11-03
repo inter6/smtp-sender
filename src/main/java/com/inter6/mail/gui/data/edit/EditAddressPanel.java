@@ -9,14 +9,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -27,9 +22,9 @@ import java.util.List;
 public class EditAddressPanel extends JPanel {
 	private static final long serialVersionUID = -2074315658132902201L;
 
-	private final List<AddressPanel> addressPanels = new ArrayList<AddressPanel>();
+	private final List<AddressPanel> addressPanels = new ArrayList<>();
 
-	private final JComboBox typeOptionBox = new JComboBox(new String[]{"From", "To", "Cc", "Bcc"});
+	private final JComboBox<String> typeOptionBox = new JComboBox<>(new String[]{"From", "To", "Cc", "Bcc"});
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -45,7 +40,7 @@ public class EditAddressPanel extends JPanel {
 			actionPanel.add(this.typeOptionBox);
 
 			JButton addButton = new JButton("Add");
-			addButton.addActionListener(this.addEvent);
+			addButton.addActionListener(this.createAddEvent());
 			actionPanel.add(addButton);
 		}
 		this.add(actionPanel);
@@ -68,36 +63,40 @@ public class EditAddressPanel extends JPanel {
 			wrapPanel.add(addressPanel);
 
 			JButton removeButton = new JButton("Remove");
-			removeButton.addActionListener(this.removeEvent);
+			removeButton.addActionListener(this.createRemoveEvent());
 			wrapPanel.add(removeButton);
 		}
 		return wrapPanel;
 	}
 
-	private final ActionListener addEvent = new ActionListener() {
+	private ActionListener createAddEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			String type = (String) EditAddressPanel.this.typeOptionBox.getSelectedItem();
-			JPanel addressPanel = EditAddressPanel.this.createAddressPanel(type);
-			EditAddressPanel.this.add(addressPanel, EditAddressPanel.this.getComponentCount() - 1);
-			EditAddressPanel.this.updateUI();
-		}
-	};
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String type = (String) EditAddressPanel.this.typeOptionBox.getSelectedItem();
+				JPanel addressPanel = EditAddressPanel.this.createAddressPanel(type);
+				EditAddressPanel.this.add(addressPanel, EditAddressPanel.this.getComponentCount() - 1);
+				EditAddressPanel.this.updateUI();
+			}
+		};
+	}
 
-	private final ActionListener removeEvent = new ActionListener() {
+	private ActionListener createRemoveEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			Container wrapPanel = ((JButton) e.getSource()).getParent();
-			EditAddressPanel.this.addressPanels.remove(wrapPanel.getComponent(0));
-			EditAddressPanel.this.remove(wrapPanel);
-			EditAddressPanel.this.updateUI();
-		}
-	};
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Container wrapPanel = ((JButton) e.getSource()).getParent();
+				EditAddressPanel.this.addressPanels.remove(wrapPanel.getComponent(0));
+				EditAddressPanel.this.remove(wrapPanel);
+				EditAddressPanel.this.updateUI();
+			}
+		};
+	}
 
 	public List<AddressData> getAddressDatas() {
-		List<AddressData> addressDatas = new ArrayList<AddressData>();
+		List<AddressData> addressDatas = new ArrayList<>();
 		for (AddressPanel addressPanel : this.addressPanels) {
 			AddressData addressData = addressPanel.getAddressData();
 			if (StringUtils.isBlank(addressData.getAddress())) {

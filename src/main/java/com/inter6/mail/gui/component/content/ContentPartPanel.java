@@ -166,9 +166,9 @@ public abstract class ContentPartPanel extends JPanel {
 				JButton upButton = new JButton("Up");
 				JButton downButton = new JButton("Down");
 				JButton removeButton = new JButton("Remove");
-				upButton.addActionListener(this.upEvent);
-				downButton.addActionListener(this.downEvent);
-				removeButton.addActionListener(this.removeEvent);
+				upButton.addActionListener(this.createUpEvent());
+				downButton.addActionListener(this.createDownEvent());
+				removeButton.addActionListener(this.createRemoveEvent());
 				actionPanel.add(upButton);
 				actionPanel.add(downButton);
 				actionPanel.add(removeButton);
@@ -177,31 +177,37 @@ public abstract class ContentPartPanel extends JPanel {
 			this.add(this.contentPanel, BorderLayout.CENTER);
 		}
 
-		private final ActionListener upEvent = new ActionListener() {
+		private ActionListener createUpEvent() {
+			return new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ContentPartPanel.this.upChildPanel(ChildWrapPanel.this);
-			}
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					ContentPartPanel.this.upChildPanel(ChildWrapPanel.this);
+				}
 
-		};
+			};
+		}
 
-		private final ActionListener downEvent = new ActionListener() {
+		private ActionListener createDownEvent() {
+			return new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ContentPartPanel.this.downChildPanel(ChildWrapPanel.this);
-			}
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					ContentPartPanel.this.downChildPanel(ChildWrapPanel.this);
+				}
 
-		};
+			};
+		}
 
-		private final ActionListener removeEvent = new ActionListener() {
+		private ActionListener createRemoveEvent() {
+			return new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ContentPartPanel.this.removeChildPanel(ChildWrapPanel.this);
-			}
-		};
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					ContentPartPanel.this.removeChildPanel(ChildWrapPanel.this);
+				}
+			};
+		}
 	}
 
 	protected void upChildPanel(ChildWrapPanel childWrapPanel) {

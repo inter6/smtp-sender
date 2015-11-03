@@ -16,23 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Component
 public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
@@ -44,8 +34,8 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	@Autowired
 	private AppSession appSession;
 
-	private final DefaultListModel fileListModel = new DefaultListModel();
-	private final JList fileList = new JList(this.fileListModel);
+	private final DefaultListModel<String> fileListModel = new DefaultListModel<>();
+	private final JList<String> fileList = new JList<>(this.fileListModel);
 	private final JCheckBox recursiveCheckButton = new JCheckBox("Recursive");
 	private final DatePanel replaceDatePanel = new DatePanel("Replace Date", 20, false, true);
 
@@ -61,9 +51,9 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 			JButton addButton = new JButton("Add");
 			JButton removeButton = new JButton("Remove");
 			JButton dedupAndSortButton = new JButton("Dedup&Sort");
-			addButton.addActionListener(this.addEvent);
-			removeButton.addActionListener(this.removeEvent);
-			dedupAndSortButton.addActionListener(this.dedupAndSortEvent);
+			addButton.addActionListener(this.createAddEvent());
+			removeButton.addActionListener(this.createRemoveEvent());
+			dedupAndSortButton.addActionListener(this.createDedupAndSortEvent());
 			actionPanel.add(addButton);
 			actionPanel.add(removeButton);
 			actionPanel.add(dedupAndSortButton);
@@ -74,52 +64,58 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 		this.add(replaceDatePanel, BorderLayout.SOUTH);
 	}
 
-	private final ActionListener addEvent = new ActionListener() {
+	private ActionListener createAddEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JFileChooser fileChooser = new JFileChooser(EmlSourcePanel.this.appSession.getLastSelectSourceDir());
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			if (fileChooser.showOpenDialog(EmlSourcePanel.this) == JFileChooser.APPROVE_OPTION) {
-				File file = fileChooser.getSelectedFile();
-				EmlSourcePanel.this.fileListModel.addElement(file.getAbsolutePath());
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser(EmlSourcePanel.this.appSession.getLastSelectSourceDir());
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				if (fileChooser.showOpenDialog(EmlSourcePanel.this) == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					EmlSourcePanel.this.fileListModel.addElement(file.getAbsolutePath());
 
-				File dir = file;
-				if (dir.isFile()) {
-					dir = dir.getParentFile();
+					File dir = file;
+					if (dir.isFile()) {
+						dir = dir.getParentFile();
+					}
+					EmlSourcePanel.this.appSession.setLastSelectSourceDir(dir.getAbsolutePath());
 				}
-				EmlSourcePanel.this.appSession.setLastSelectSourceDir(dir.getAbsolutePath());
 			}
-		}
-	};
+		};
+	}
 
-	private final ActionListener removeEvent = new ActionListener() {
+	private ActionListener createRemoveEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			for (Object file : EmlSourcePanel.this.fileList.getSelectedValues()) {
-				EmlSourcePanel.this.fileListModel.removeElement(file);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (String file : EmlSourcePanel.this.fileList.getSelectedValuesList()) {
+					EmlSourcePanel.this.fileListModel.removeElement(file);
+				}
 			}
-		}
-	};
+		};
+	}
 
-	private final ActionListener dedupAndSortEvent = new ActionListener() {
+	private ActionListener createDedupAndSortEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (EmlSourcePanel.this.fileListModel.isEmpty()) {
-				return;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (EmlSourcePanel.this.fileListModel.isEmpty()) {
+					return;
+				}
+				Set<String> files = new TreeSet<>();
+				for (int i = 0; i < EmlSourcePanel.this.fileListModel.size(); i++) {
+					files.add(EmlSourcePanel.this.fileListModel.get(i));
+				}
+				EmlSourcePanel.this.fileListModel.clear();
+				for (String file : files) {
+					EmlSourcePanel.this.fileListModel.addElement(file);
+				}
 			}
-			Set<Object> files = new TreeSet<Object>();
-			for (int i = 0; i < EmlSourcePanel.this.fileListModel.size(); i++) {
-				files.add(EmlSourcePanel.this.fileListModel.get(i));
-			}
-			EmlSourcePanel.this.fileListModel.clear();
-			for (Object file : files) {
-				EmlSourcePanel.this.fileListModel.addElement(file);
-			}
-		}
-	};
+		};
+	}
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
@@ -130,9 +126,9 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	private EmlSourceData getEmlSourceData() {
 		EmlSourceData emlSourceData = new EmlSourceData();
-		List<String> files = new ArrayList<String>();
+		List<String> files = new ArrayList<>();
 		for (int i = 0; i < this.fileListModel.size(); i++) {
-			files.add((String) this.fileListModel.get(i));
+			files.add(this.fileListModel.get(i));
 		}
 		emlSourceData.setFiles(files);
 		emlSourceData.setRecursive(this.recursiveCheckButton.isSelected());

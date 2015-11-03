@@ -9,13 +9,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -26,7 +22,7 @@ import java.util.List;
 public class EditHeaderPanel extends JPanel {
 	private static final long serialVersionUID = -4212866465171426774L;
 
-	private final List<HeaderPanel> headerPanels = new ArrayList<HeaderPanel>();
+	private final List<HeaderPanel> headerPanels = new ArrayList<>();
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -38,7 +34,7 @@ public class EditHeaderPanel extends JPanel {
 		JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		{
 			JButton addButton = new JButton("Add");
-			addButton.addActionListener(this.addEvent);
+			addButton.addActionListener(this.createAddEvent());
 			actionPanel.add(addButton);
 		}
 		this.add(actionPanel);
@@ -61,34 +57,38 @@ public class EditHeaderPanel extends JPanel {
 			wrapPanel.add(headerPanel);
 
 			JButton removeButton = new JButton("Remove");
-			removeButton.addActionListener(this.removeEvent);
+			removeButton.addActionListener(this.createRemoveEvent());
 			wrapPanel.add(removeButton);
 		}
 		return wrapPanel;
 	}
 
-	private final ActionListener addEvent = new ActionListener() {
+	private ActionListener createAddEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			EditHeaderPanel.this.add(EditHeaderPanel.this.createHeaderPanel(), EditHeaderPanel.this.getComponentCount() - 1);
-			EditHeaderPanel.this.updateUI();
-		}
-	};
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EditHeaderPanel.this.add(EditHeaderPanel.this.createHeaderPanel(), EditHeaderPanel.this.getComponentCount() - 1);
+				EditHeaderPanel.this.updateUI();
+			}
+		};
+	}
 
-	private final ActionListener removeEvent = new ActionListener() {
+	private ActionListener createRemoveEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			Container wrapPanel = ((JButton) e.getSource()).getParent();
-			EditHeaderPanel.this.headerPanels.remove(wrapPanel.getComponent(0));
-			EditHeaderPanel.this.remove(wrapPanel);
-			EditHeaderPanel.this.updateUI();
-		}
-	};
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Container wrapPanel = ((JButton) e.getSource()).getParent();
+				EditHeaderPanel.this.headerPanels.remove(wrapPanel.getComponent(0));
+				EditHeaderPanel.this.remove(wrapPanel);
+				EditHeaderPanel.this.updateUI();
+			}
+		};
+	}
 
 	public List<HeaderData> getHeaderDatas() {
-		List<HeaderData> headerDatas = new ArrayList<HeaderData>();
+		List<HeaderData> headerDatas = new ArrayList<>();
 		for (HeaderPanel headerPanel : this.headerPanels) {
 			HeaderData headerData = headerPanel.getHeaderData();
 			if (StringUtils.isBlank(headerData.getKey())) {
