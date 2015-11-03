@@ -13,16 +13,8 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import javax.activation.FileTypeMap;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -37,9 +29,9 @@ public class AttachmentPartPanel extends ContentPartPanel {
 	private final EncodingTextPanel typeNamePanel = new EncodingTextPanel("", 15, true);
 	private final JCheckBox contentIdUseCheckBox = new JCheckBox();
 	private final JTextField contentIdField = new JTextField(25);
-	private final JComboBox dispositionOptionBox = new JComboBox(new String[]{"attachment", "inline"});
+	private final JComboBox<String> dispositionOptionBox = new JComboBox<>(new String[]{"attachment", "inline"});
 	private final EncodingTextPanel dispositionFilenamePanel = new EncodingTextPanel("", 15, true);
-	private final JComboBox transferOptionBox = new JComboBox(new String[]{"base64", "quoted-printable", "8bit", "7bit", "binary"});
+	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[]{"base64", "quoted-printable", "8bit", "7bit", "binary"});
 	private final JTextField pathField = new JTextField(40);
 
 	protected AttachmentPartPanel(ContentType contentType, Integer nested) {

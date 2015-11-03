@@ -1,6 +1,6 @@
 package com.inter6.mail.gui.component;
 
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
@@ -20,7 +20,7 @@ public class JFileTree extends JTree {
 
 class FileSystemModel implements TreeModel {
 	private final File rootDir;
-	private final Vector<TreeModelListener> listeners = new Vector<TreeModelListener>();
+	private final Vector<TreeModelListener> listeners = new Vector<>();
 
 	public FileSystemModel(File rootDir) throws FileNotFoundException {
 		if (rootDir == null || !rootDir.exists() || !rootDir.isDirectory()) {
@@ -89,7 +89,7 @@ class FileSystemModel implements TreeModel {
 	private void fireTreeNodesChanged(TreePath parentPath, int[] indices, Object[] children) {
 		TreeModelEvent event = new TreeModelEvent(this, parentPath, indices, children);
 		Iterator<TreeModelListener> iterator = this.listeners.iterator();
-		TreeModelListener listener = null;
+		TreeModelListener listener;
 		while (iterator.hasNext()) {
 			listener = iterator.next();
 			listener.treeNodesChanged(event);

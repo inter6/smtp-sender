@@ -10,8 +10,8 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
-import javax.swing.JLabel;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Vector;
 
@@ -53,8 +53,7 @@ public class MultiPartPanel extends ContentPartPanel {
 
 	@Override
 	protected PartData getPartDataFromComponents() {
-		MultiPartData multiPartData = new MultiPartData();
-		return multiPartData;
+		return new MultiPartData();
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public class MultiPartPanel extends ContentPartPanel {
 
 	@Override
 	protected Vector<ContentType> getAvailableChildTypes(List<ContentPartPanel> addedChildPanels) {
-		Vector<ContentType> childTypes = new Vector<ContentType>();
+		Vector<ContentType> childTypes = new Vector<>();
 		childTypes.add(ContentType.MULTIPART_MIXED);
 		childTypes.add(ContentType.MULTIPART_ALTERNATIVE);
 		childTypes.add(ContentType.MULTIPART_RELATED);

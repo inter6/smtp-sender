@@ -2,21 +2,17 @@ package com.inter6.mail.gui.component;
 
 import com.inter6.mail.model.component.AddressData;
 
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 
 public class AddressPanel extends JPanel {
 	private static final long serialVersionUID = -2074315658132902201L;
 
 	private final JCheckBox useCheckBox = new JCheckBox();
-	private final JComboBox typeOptionBox = new JComboBox(new String[]{"From", "To", "Cc", "Bcc"});
+	private final JComboBox<String> typeOptionBox = new JComboBox<>(new String[]{"From", "To", "Cc", "Bcc"});
 	private final JTextField personalField = new JTextField(10);
 	private final JTextField personalCharsetField = new JTextField("UTF-8", 6);
-	private final JComboBox personalEncodingOptionBox = new JComboBox(new String[]{"B", "Q"});
+	private final JComboBox<String> personalEncodingOptionBox = new JComboBox<>(new String[]{"B", "Q"});
 	private final JTextField addressField = new JTextField(15);
 
 	public AddressPanel() {

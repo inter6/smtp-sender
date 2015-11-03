@@ -7,17 +7,11 @@ import com.inter6.mail.module.ModuleService;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 
-import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -32,17 +26,17 @@ public abstract class ContentPartPanel extends JPanel {
 	protected final ContentType contentType;
 	private final int nested;
 
-	private final List<ChildWrapPanel> childWrapPanels = new ArrayList<ContentPartPanel.ChildWrapPanel>();
+	private final List<ChildWrapPanel> childWrapPanels = new ArrayList<>();
 
 	protected final JPanel wrapPanel = new JPanel();
 	private final JPanel childContainerPanel = new JPanel();
 	private final JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	private final JComboBox childTypeSelectBox = new JComboBox();
+	private final JComboBox<ContentType> childTypeSelectBox = new JComboBox<>();
 	private final JButton addChildButton = new JButton("Add Child");
 
 	public static ContentPartPanel createPanel(ContentType contentType, int nested) throws Exception {
 		Class<? extends ContentPartPanel> panelClass = contentType.getPanelClass();
-		ContentPartPanel contentPanel = panelClass.getDeclaredConstructor(ContentType.class, Integer.class).newInstance(contentType, new Integer(nested));
+		ContentPartPanel contentPanel = panelClass.getDeclaredConstructor(ContentType.class, Integer.class).newInstance(contentType, nested);
 		contentPanel.initLayout();
 		return contentPanel;
 	}
@@ -76,7 +70,7 @@ public abstract class ContentPartPanel extends JPanel {
 	private void setActionComponents() {
 		Vector<ContentType> availableChildTypes = this.getAvailableChildTypes(this.getUnwrapChildPanels());
 		if (CollectionUtils.isNotEmpty(availableChildTypes)) {
-			this.childTypeSelectBox.setModel(new DefaultComboBoxModel(availableChildTypes));
+			this.childTypeSelectBox.setModel(new DefaultComboBoxModel<>(availableChildTypes));
 			this.actionPanel.setVisible(true);
 		} else {
 			this.actionPanel.setVisible(false);
@@ -84,7 +78,7 @@ public abstract class ContentPartPanel extends JPanel {
 	}
 
 	protected List<ContentPartPanel> getUnwrapChildPanels() {
-		List<ContentPartPanel> childPanels = new ArrayList<ContentPartPanel>();
+		List<ContentPartPanel> childPanels = new ArrayList<>();
 		for (ChildWrapPanel childWrapPanel : this.childWrapPanels) {
 			childPanels.add(childWrapPanel.contentPanel);
 		}
@@ -122,7 +116,7 @@ public abstract class ContentPartPanel extends JPanel {
 	public PartData getPartData() {
 		PartData partData = this.getPartDataFromComponents();
 		partData.setContentType(this.contentType);
-		List<PartData> childPartDatas = new ArrayList<PartData>();
+		List<PartData> childPartDatas = new ArrayList<>();
 		for (ContentPartPanel childPanel : this.getUnwrapChildPanels()) {
 			childPartDatas.add(childPanel.getPartData());
 		}
@@ -133,7 +127,7 @@ public abstract class ContentPartPanel extends JPanel {
 	protected abstract PartData getPartDataFromComponents();
 
 	public void setPartData(PartData partData) {
-		for (ChildWrapPanel childWrapPanel : new ArrayList<ChildWrapPanel>(this.childWrapPanels)) {
+		for (ChildWrapPanel childWrapPanel : new ArrayList<>(this.childWrapPanels)) {
 			this.removeChildPanel(childWrapPanel);
 		}
 		if (partData == null) {
@@ -146,7 +140,9 @@ public abstract class ContentPartPanel extends JPanel {
 		}
 		for (PartData childPartData : partData.getChildPartDatas()) {
 			ContentPartPanel childPartPanel = this.addChildPanel(childPartData.getContentType());
-			childPartPanel.setPartData(childPartData);
+			if (childPartPanel != null) {
+				childPartPanel.setPartData(childPartData);
+			}
 		}
 	}
 

@@ -4,12 +4,7 @@ import com.inter6.mail.job.thread.ThreadSupportJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -49,7 +44,7 @@ public class Workers {
 		}
 
 		this.workersName = workersName;
-		this.workQueue = new LinkedBlockingQueue<Runnable>(Workers.MAX_POOL_SIZE_DEFAULT);
+		this.workQueue = new LinkedBlockingQueue<>(Workers.MAX_POOL_SIZE_DEFAULT);
 
 		this.workerPoolExecutor = this.createThreadPoolExecutor(workersName);
 	}
@@ -121,27 +116,20 @@ public class Workers {
 		}
 		if (this.workQueue.isEmpty()) {
 			return this.workerPoolExecutor.getActiveCount() > 0;
-		} else {
-			return true;
 		}
+		return true;
 	}
 
 	public String getCurrentMonitoringInfo() {
 		if (this.workerPoolExecutor == null) {
 			return "this workers did not yet initialized !";
 		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("\nWorkers name:").append(this.workersName);
-		sb.append("\nComplete task count:").append(this.workerPoolExecutor.getCompletedTaskCount());
-		sb.append("\nCore worker count:").append(this.workerPoolExecutor.getCorePoolSize());
-		sb.append("\nActive worker count:").append(this.workerPoolExecutor.getActiveCount());
-		sb.append("\nMax worker count:").append(this.workerPoolExecutor.getMaximumPoolSize());
-		sb.append("\nWorker keep alive time:").append(this.workerPoolExecutor.getKeepAliveTime(TimeUnit.SECONDS)).append("sec");
-		return sb.toString();
-	}
-
-	public int getIntervalBySec() {
-		return 60;
+		return "\nWorkers name:" + this.workersName +
+				"\nComplete task count:" + this.workerPoolExecutor.getCompletedTaskCount() +
+				"\nCore worker count:" + this.workerPoolExecutor.getCorePoolSize() +
+				"\nActive worker count:" + this.workerPoolExecutor.getActiveCount() +
+				"\nMax worker count:" + this.workerPoolExecutor.getMaximumPoolSize() +
+				"\nWorker keep alive time:" + this.workerPoolExecutor.getKeepAliveTime(TimeUnit.SECONDS) + "sec";
 	}
 
 	/**

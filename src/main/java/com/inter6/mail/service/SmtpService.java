@@ -9,14 +9,7 @@ import org.apache.commons.net.smtp.SMTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Writer;
+import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -132,7 +125,7 @@ public class SmtpService {
 		smtpClient.setSender(this.mailFrom);
 		this.debug(smtpClient);
 
-		Set<String> failReceivers = new HashSet<String>();
+		Set<String> failReceivers = new HashSet<>();
 		for (String receiver : this.rcptTos) {
 			if (!smtpClient.addRecipient(receiver)) {
 				failReceivers.add(receiver);
@@ -147,7 +140,7 @@ public class SmtpService {
 		try {
 			smtpWriter = smtpClient.sendMessageData();
 			this.debug(smtpClient);
-			if (!(smtpWriter instanceof Writer)) {
+			if (smtpWriter == null) {
 				throw new IOException("smtp writer fail !");
 			}
 
@@ -177,7 +170,7 @@ public class SmtpService {
 	}
 
 	private void processHeader(BufferedReader br, BufferedWriter bw) throws IOException {
-		String line = null;
+		String line;
 		while ((line = br.readLine()) != null && !this.isBodyStart(line)) {
 			this.writeLine(bw, line);
 		}
@@ -186,7 +179,7 @@ public class SmtpService {
 
 	private void processBody(BufferedReader br, BufferedWriter bw) throws IOException {
 		char[] readBuffer = new char[1024 * 16]; // 16KB
-		int readSize = -1;
+		int readSize;
 		while ((readSize = br.read(readBuffer)) != -1) {
 			bw.write(readBuffer, 0, readSize);
 			this.debug(readBuffer);
