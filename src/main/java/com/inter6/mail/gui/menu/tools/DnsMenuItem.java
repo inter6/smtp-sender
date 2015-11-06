@@ -39,7 +39,7 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 		private static final long serialVersionUID = -8148265075267497887L;
 
 		private final JTextField searchHostField = new JTextField(30);
-		private final JCheckBox serverUseCheckBox = new JCheckBox();
+		private final JCheckBox serverUseCheckBox = new JCheckBox("DNS Server: ");
 		private final JTextField serverIpField = new JTextField("8.8.8.8", 20);
 		private final JTextField serverPortField = new JTextField("53", 5);
 		private final JTextArea resultArea = new JTextArea(9, 30);
@@ -71,7 +71,6 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 				JPanel serverPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 				{
 					serverPanel.add(this.serverUseCheckBox);
-					serverPanel.add(new JLabel("DNS Server: "));
 					serverPanel.add(this.serverIpField);
 					serverPanel.add(this.serverPortField);
 				}

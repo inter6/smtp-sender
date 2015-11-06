@@ -26,11 +26,11 @@ public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
 
 	private final JTextField typeField = new JTextField("application/octet-stream", 15);
-	private final EncodingTextPanel typeNamePanel = new EncodingTextPanel("", 15, true);
+	private final EncodingTextPanel typeNamePanel = new EncodingTextPanel("; name=", 15, true);
 	private final JCheckBox contentIdUseCheckBox = new JCheckBox();
 	private final JTextField contentIdField = new JTextField(25);
 	private final JComboBox<String> dispositionOptionBox = new JComboBox<>(new String[]{"attachment", "inline"});
-	private final EncodingTextPanel dispositionFilenamePanel = new EncodingTextPanel("", 15, true);
+	private final EncodingTextPanel dispositionFilenamePanel = new EncodingTextPanel("; filename=", 15, true);
 	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[]{"base64", "quoted-printable", "8bit", "7bit", "binary"});
 	private final JTextField pathField = new JTextField(40);
 
@@ -49,7 +49,6 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			{
 				contentTypePanel.add(new JLabel("Content-Type: "));
 				contentTypePanel.add(this.typeField);
-				contentTypePanel.add(new JLabel("; name="));
 				contentTypePanel.add(this.typeNamePanel);
 			}
 			headerPanel.add(contentTypePanel);
@@ -59,7 +58,6 @@ public class AttachmentPartPanel extends ContentPartPanel {
 				dispositionPanel.add(new JLabel("Content-Disposition: "));
 				dispositionPanel.add(this.dispositionOptionBox);
 				this.dispositionOptionBox.addActionListener(this.createChangeDispositionEvent());
-				dispositionPanel.add(new JLabel("; filename="));
 				dispositionPanel.add(this.dispositionFilenamePanel);
 			}
 			headerPanel.add(dispositionPanel);

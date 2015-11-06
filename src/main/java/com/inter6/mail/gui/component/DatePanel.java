@@ -18,8 +18,8 @@ public class DatePanel extends JPanel {
 		super(new FlowLayout(FlowLayout.LEFT));
 
 		this.useCheckBox.setSelected(isUse);
+		this.useCheckBox.setText(label);
 		this.add(this.useCheckBox);
-		this.add(new JLabel(label));
 
 		this.textField.setEnabled(!isNow);
 		this.textField.setColumns(columns);

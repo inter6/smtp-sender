@@ -39,7 +39,7 @@ public class MainFrame extends JFrame {
 			log.error("set look and feel fail !", e);
 		}*/
 
-		this.setTitle("smtp-sender v1.1.0 - inter6.com");
+		this.setTitle("smtp-sender v1.1.1 (released: 15/11/07) - inter6.com");
 		this.setSize(1000, 800);
 		this.setMinimumSize(new Dimension(600, 400));
 		this.initLayout();
