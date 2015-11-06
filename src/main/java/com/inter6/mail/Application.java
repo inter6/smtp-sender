@@ -34,7 +34,7 @@ public class Application {
 				Thread.sleep(1000);
 			} while (mainFrame.isVisible());
 		} catch (Throwable e) {
-			log.error("occured application kill !", e);
+			log.error("occurred application kill !", e);
 		} finally {
 			log.info("application exit");
 			if (context != null) {

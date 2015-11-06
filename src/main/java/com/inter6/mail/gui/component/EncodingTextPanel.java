@@ -2,12 +2,8 @@ package com.inter6.mail.gui.component;
 
 import com.inter6.mail.model.component.EncodingTextData;
 
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 
 public class EncodingTextPanel extends JPanel {
 	private static final long serialVersionUID = -4355410559162938889L;
@@ -15,14 +11,14 @@ public class EncodingTextPanel extends JPanel {
 	private final JCheckBox useCheckBox = new JCheckBox();
 	private final JTextField textField = new JTextField(20);
 	private final JTextField charsetField = new JTextField("UTF-8", 6);
-	private final JComboBox encodingOptionBox = new JComboBox(new String[]{"B", "Q"});
+	private final JComboBox<String> encodingOptionBox = new JComboBox<>(new String[]{"B", "Q"});
 
 	public EncodingTextPanel(String label, int columns, boolean isUse) {
 		super(new FlowLayout(FlowLayout.LEFT));
 
 		this.useCheckBox.setSelected(isUse);
+		this.useCheckBox.setText(label);
 		this.add(this.useCheckBox);
-		this.add(new JLabel(label));
 		this.textField.setColumns(columns);
 		this.add(this.textField);
 		this.add(this.charsetField);

@@ -11,16 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -62,8 +55,8 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 			sendPanel.add(new JLabel("Max:"));
 			sendPanel.add(this.maxThreadCountField);
 
-			this.startButton.addActionListener(this.startEvent);
-			this.stopButton.addActionListener(this.stopEvent);
+			this.startButton.addActionListener(this.createStartEvent());
+			this.stopButton.addActionListener(this.createStopEvent());
 			this.stopButton.setEnabled(false);
 		}
 		this.add(sendPanel);
@@ -85,34 +78,38 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 		this.add(this.logPanel);
 	}
 
-	private final ActionListener startEvent = new ActionListener() {
+	private ActionListener createStartEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent ev) {
-			try {
-				ActionPanel.this.currentJob = ActionPanel.this.dataPanel.getSendJob();
-				new Thread(ActionPanel.this.currentJob).start();
-			} catch (Throwable e) {
-				ActionPanel.this.logPanel.error("job build fail !", e);
+			@Override
+			public void actionPerformed(ActionEvent ev) {
+				try {
+					ActionPanel.this.currentJob = ActionPanel.this.dataPanel.getSendJob();
+					new Thread(ActionPanel.this.currentJob).start();
+				} catch (Throwable e) {
+					ActionPanel.this.logPanel.error("job build fail !", e);
+				}
 			}
-		}
-	};
+		};
+	}
 
-	private final ActionListener stopEvent = new ActionListener() {
+	private ActionListener createStopEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent ev) {
-			if (ActionPanel.this.currentJob == null) {
-				return;
+			@Override
+			public void actionPerformed(ActionEvent ev) {
+				if (ActionPanel.this.currentJob == null) {
+					return;
+				}
+
+				try {
+					ActionPanel.this.currentJob.terminate();
+				} catch (Throwable e) {
+					ActionPanel.this.logPanel.error("job terminate fail !", e);
+				}
 			}
-
-			try {
-				ActionPanel.this.currentJob.terminate();
-			} catch (Throwable e) {
-				ActionPanel.this.logPanel.error("job terminate fail !", e);
-			}
-		}
-	};
+		};
+	}
 
 	@Override
 	public void onStart(long startTime) {

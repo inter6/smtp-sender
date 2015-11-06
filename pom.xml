@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.inter6.mail</groupId>
 	<artifactId>smtp-sender</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -10,8 +10,6 @@
 		<encoding>UTF-8</encoding>
 		<project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
-
-		<clover.version>4.0.4</clover.version>
 	</properties>
 
 	<parent>
@@ -90,14 +88,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.atlassian.maven.plugins</groupId>
-				<artifactId>maven-clover2-plugin</artifactId>
-				<version>${clover.version}</version>
-				<configuration>
-					<licenseLocation>/Volumes/osx_data/java/clover/clover.license</licenseLocation>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

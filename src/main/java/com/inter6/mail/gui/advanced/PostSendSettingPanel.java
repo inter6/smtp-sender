@@ -8,16 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -51,23 +44,25 @@ public class PostSendSettingPanel extends JPanel implements ConfigObserver {
 			savePanel.add(this.savePathField);
 
 			JButton setSaveDirButton = new JButton("Directory");
-			setSaveDirButton.addActionListener(this.setSaveDirEvent);
+			setSaveDirButton.addActionListener(this.createSetSaveDirEvent());
 			savePanel.add(setSaveDirButton);
 		}
 		this.add(savePanel);
 	}
 
-	private final ActionListener setSaveDirEvent = new ActionListener() {
+	private ActionListener createSetSaveDirEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			if (fileChooser.showOpenDialog(PostSendSettingPanel.this) == JFileChooser.APPROVE_OPTION) {
-				PostSendSettingPanel.this.savePathField.setText(fileChooser.getSelectedFile().getAbsolutePath());
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				if (fileChooser.showOpenDialog(PostSendSettingPanel.this) == JFileChooser.APPROVE_OPTION) {
+					PostSendSettingPanel.this.savePathField.setText(fileChooser.getSelectedFile().getAbsolutePath());
+				}
 			}
-		}
-	};
+		};
+	}
 
 	public PostSendSettingData getPostSendSettingData() {
 		PostSendSettingData postSendSettingData = new PostSendSettingData();

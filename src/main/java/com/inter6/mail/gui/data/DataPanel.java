@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.ButtonGroup;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -55,10 +52,11 @@ public class DataPanel extends JPanel implements ConfigObserver {
 		{
 			JPanel sourceSelectPanel = new JPanel(new FlowLayout());
 			{
-				this.editSourceButton.addActionListener(this.sourceSelectChangeEvent);
-				this.mimeSourceButton.addActionListener(this.sourceSelectChangeEvent);
-				this.emlSourceButton.addActionListener(this.sourceSelectChangeEvent);
-				this.scpSourceButton.addActionListener(this.sourceSelectChangeEvent);
+				ActionListener sourceSelectChangeEvent = createSourceSelectChangeEvent();
+				this.editSourceButton.addActionListener(sourceSelectChangeEvent);
+				this.mimeSourceButton.addActionListener(sourceSelectChangeEvent);
+				this.emlSourceButton.addActionListener(sourceSelectChangeEvent);
+				this.scpSourceButton.addActionListener(sourceSelectChangeEvent);
 				sourceSelectPanel.add(this.editSourceButton);
 				sourceSelectPanel.add(this.mimeSourceButton);
 				sourceSelectPanel.add(this.emlSourceButton);
@@ -78,22 +76,24 @@ public class DataPanel extends JPanel implements ConfigObserver {
 		this.add(sourcePanel, BorderLayout.CENTER);
 	}
 
-	private final ActionListener sourceSelectChangeEvent = new ActionListener() {
+	private ActionListener createSourceSelectChangeEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			Object sourceButton = e.getSource();
-			if (sourceButton == DataPanel.this.editSourceButton) {
-				DataPanel.this.setSourcePanel(DataPanel.this.editSourcePanel);
-			} else if (sourceButton == DataPanel.this.mimeSourceButton) {
-				DataPanel.this.setSourcePanel(DataPanel.this.mimeSourcePanel);
-			} else if (sourceButton == DataPanel.this.emlSourceButton) {
-				DataPanel.this.setSourcePanel(DataPanel.this.emlSourcePanel);
-			} else if (sourceButton == DataPanel.this.scpSourceButton) {
-				DataPanel.this.setSourcePanel(DataPanel.this.scpSourcePanel);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object sourceButton = e.getSource();
+				if (sourceButton == DataPanel.this.editSourceButton) {
+					DataPanel.this.setSourcePanel(DataPanel.this.editSourcePanel);
+				} else if (sourceButton == DataPanel.this.mimeSourceButton) {
+					DataPanel.this.setSourcePanel(DataPanel.this.mimeSourcePanel);
+				} else if (sourceButton == DataPanel.this.emlSourceButton) {
+					DataPanel.this.setSourcePanel(DataPanel.this.emlSourcePanel);
+				} else if (sourceButton == DataPanel.this.scpSourceButton) {
+					DataPanel.this.setSourcePanel(DataPanel.this.scpSourcePanel);
+				}
 			}
-		}
-	};
+		};
+	}
 
 	private void setSourcePanel(JPanel sourcePanel) {
 		this.selectedJobBuilder = (SendJobBuilder) sourcePanel;

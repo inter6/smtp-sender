@@ -13,16 +13,8 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import javax.activation.FileTypeMap;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -34,12 +26,12 @@ public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
 
 	private final JTextField typeField = new JTextField("application/octet-stream", 15);
-	private final EncodingTextPanel typeNamePanel = new EncodingTextPanel("", 15, true);
+	private final EncodingTextPanel typeNamePanel = new EncodingTextPanel("; name=", 15, true);
 	private final JCheckBox contentIdUseCheckBox = new JCheckBox();
 	private final JTextField contentIdField = new JTextField(25);
-	private final JComboBox dispositionOptionBox = new JComboBox(new String[]{"attachment", "inline"});
-	private final EncodingTextPanel dispositionFilenamePanel = new EncodingTextPanel("", 15, true);
-	private final JComboBox transferOptionBox = new JComboBox(new String[]{"base64", "quoted-printable", "8bit", "7bit", "binary"});
+	private final JComboBox<String> dispositionOptionBox = new JComboBox<>(new String[]{"attachment", "inline"});
+	private final EncodingTextPanel dispositionFilenamePanel = new EncodingTextPanel("; filename=", 15, true);
+	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[]{"base64", "quoted-printable", "8bit", "7bit", "binary"});
 	private final JTextField pathField = new JTextField(40);
 
 	protected AttachmentPartPanel(ContentType contentType, Integer nested) {
@@ -57,7 +49,6 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			{
 				contentTypePanel.add(new JLabel("Content-Type: "));
 				contentTypePanel.add(this.typeField);
-				contentTypePanel.add(new JLabel("; name="));
 				contentTypePanel.add(this.typeNamePanel);
 			}
 			headerPanel.add(contentTypePanel);
@@ -66,8 +57,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			{
 				dispositionPanel.add(new JLabel("Content-Disposition: "));
 				dispositionPanel.add(this.dispositionOptionBox);
-				this.dispositionOptionBox.addActionListener(this.changeDispositionEvent);
-				dispositionPanel.add(new JLabel("; filename="));
+				this.dispositionOptionBox.addActionListener(this.createChangeDispositionEvent());
 				dispositionPanel.add(this.dispositionFilenamePanel);
 			}
 			headerPanel.add(dispositionPanel);
@@ -86,7 +76,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 				contentIdPanel.add(this.contentIdField);
 				contentIdPanel.add(new JLabel(">"));
 				JButton generateButton = new JButton("Generate");
-				generateButton.addActionListener(this.generateCidEvent);
+				generateButton.addActionListener(this.createGenerateCidEvent());
 				contentIdPanel.add(generateButton);
 
 				this.setGenerateCid();
@@ -101,55 +91,61 @@ public class AttachmentPartPanel extends ContentPartPanel {
 			actionPanel.add(this.pathField);
 
 			JButton attachButton = new JButton("Attach");
-			attachButton.addActionListener(this.attachEvent);
+			attachButton.addActionListener(this.createAttachEvent());
 			actionPanel.add(attachButton);
 		}
 		this.wrapPanel.add(actionPanel, BorderLayout.CENTER);
 	}
 
-	private final ActionListener changeDispositionEvent = new ActionListener() {
+	private ActionListener createChangeDispositionEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			boolean isInline = "inline".equalsIgnoreCase((String) AttachmentPartPanel.this.dispositionOptionBox.getSelectedItem());
-			AttachmentPartPanel.this.typeNamePanel.setUse(!isInline);
-			AttachmentPartPanel.this.dispositionFilenamePanel.setUse(!isInline);
-			AttachmentPartPanel.this.contentIdUseCheckBox.setSelected(isInline);
-		}
-	};
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				boolean isInline = "inline".equalsIgnoreCase((String) AttachmentPartPanel.this.dispositionOptionBox.getSelectedItem());
+				AttachmentPartPanel.this.typeNamePanel.setUse(!isInline);
+				AttachmentPartPanel.this.dispositionFilenamePanel.setUse(!isInline);
+				AttachmentPartPanel.this.contentIdUseCheckBox.setSelected(isInline);
+			}
+		};
+	}
 
-	private final ActionListener generateCidEvent = new ActionListener() {
+	private ActionListener createGenerateCidEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			AttachmentPartPanel.this.setGenerateCid();
-		}
-	};
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AttachmentPartPanel.this.setGenerateCid();
+			}
+		};
+	}
 
 	private void setGenerateCid() {
 		String contentId = "smtp_sender_attach_" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
 		this.contentIdField.setText(contentId);
 	}
 
-	private final ActionListener attachEvent = new ActionListener() {
+	private ActionListener createAttachEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			AppSession appSession = ModuleService.getBean(AppSession.class);
-			JFileChooser fileChooser = new JFileChooser(appSession.getLastSelectAttachDir());
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			if (fileChooser.showOpenDialog(AttachmentPartPanel.this) == JFileChooser.APPROVE_OPTION) {
-				File file = fileChooser.getSelectedFile();
-				if (file.isFile()) {
-					AttachmentPartPanel.this.typeNamePanel.setText(file.getName());
-					AttachmentPartPanel.this.dispositionFilenamePanel.setText(file.getName());
-					AttachmentPartPanel.this.pathField.setText(file.getAbsolutePath());
-					AttachmentPartPanel.this.typeField.setText(AttachmentPartPanel.this.getContentType(file));
-					appSession.setLastSelectAttachDir(file.getParent());
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AppSession appSession = ModuleService.getBean(AppSession.class);
+				JFileChooser fileChooser = new JFileChooser(appSession.getLastSelectAttachDir());
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				if (fileChooser.showOpenDialog(AttachmentPartPanel.this) == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					if (file.isFile()) {
+						AttachmentPartPanel.this.typeNamePanel.setText(file.getName());
+						AttachmentPartPanel.this.dispositionFilenamePanel.setText(file.getName());
+						AttachmentPartPanel.this.pathField.setText(file.getAbsolutePath());
+						AttachmentPartPanel.this.typeField.setText(AttachmentPartPanel.this.getContentType(file));
+						appSession.setLastSelectAttachDir(file.getParent());
+					}
 				}
 			}
-		}
-	};
+		};
+	}
 
 	private String getContentType(File file) {
 		return FileTypeMap.getDefaultFileTypeMap().getContentType(file);

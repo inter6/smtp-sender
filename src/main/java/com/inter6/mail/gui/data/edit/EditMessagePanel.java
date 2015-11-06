@@ -8,12 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -25,7 +21,7 @@ public class EditMessagePanel extends JPanel {
 	@Autowired
 	private LogPanel logPanel;
 
-	private final JComboBox rootTypeSelectBox = new JComboBox();
+	private final JComboBox<ContentType> rootTypeSelectBox = new JComboBox<>();
 	private ContentPartPanel rootPartPanel;
 
 	@PostConstruct
@@ -35,8 +31,8 @@ public class EditMessagePanel extends JPanel {
 		JPanel selectPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		{
 			selectPanel.add(new JLabel("Content-Type: "));
-			this.rootTypeSelectBox.setModel(new DefaultComboBoxModel(this.getAvailableRootTypes()));
-			this.rootTypeSelectBox.addActionListener(this.changeRootTypeEvent);
+			this.rootTypeSelectBox.setModel(new DefaultComboBoxModel<>(this.getAvailableRootTypes()));
+			this.rootTypeSelectBox.addActionListener(this.createChangeRootTypeEvent());
 			selectPanel.add(this.rootTypeSelectBox);
 		}
 		this.add(selectPanel, BorderLayout.NORTH);
@@ -50,7 +46,7 @@ public class EditMessagePanel extends JPanel {
 	}
 
 	private Vector<ContentType> getAvailableRootTypes() {
-		Vector<ContentType> childTypes = new Vector<ContentType>();
+		Vector<ContentType> childTypes = new Vector<>();
 		childTypes.add(ContentType.MULTIPART_MIXED);
 		childTypes.add(ContentType.MULTIPART_ALTERNATIVE);
 		childTypes.add(ContentType.MULTIPART_RELATED);
@@ -60,13 +56,15 @@ public class EditMessagePanel extends JPanel {
 		return childTypes;
 	}
 
-	private final ActionListener changeRootTypeEvent = new ActionListener() {
+	private ActionListener createChangeRootTypeEvent() {
+		return new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			EditMessagePanel.this.changeRootPartPanel();
-		}
-	};
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				EditMessagePanel.this.changeRootPartPanel();
+			}
+		};
+	}
 
 	private void changeRootPartPanel() {
 		ContentType currentType = this.rootPartPanel.getContentType();

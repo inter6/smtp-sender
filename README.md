@@ -5,14 +5,17 @@ SMTP로 메일을 전송하는 Java GUI 프로그램.
 
 본래는 SMTP 서버의 테스트 목적으로 간단하게 만들려고 했으나, 점점 테스트할 기능들이 많아지면서 본격 SMTP 테스팅 툴로 만들어지고 있다. 때문에 일반인보다는 SMTP 서버 개발자, 오퍼레이터가 사용 대상이다.
 
-![smtp-sender v1.1.0](http://www.inter6.com/lib/exe/fetch.php?media=mail:smtp:smtp-sender_v1.1.0.png)
+![smtp-sender v1.1.1](http://www.inter6.com/lib/exe/fetch.php?media=mail:smtp:smtp-sender_v1.1.1.png)
+
+v1.1.1
+- Bug fix
 
 v1.1.0
 - Support Source - Remote files by SCP
 - Combined EML and EML on Dir Panel
 
 v1.0.1
-- Change framework to Spring-Boot
+- Change framework to Spring-Boot (Required Java 7 or later)
 - UI Adjustment
 
 v1.0.0

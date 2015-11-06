@@ -5,14 +5,8 @@ import com.inter6.mail.model.component.content.PartData;
 import com.inter6.mail.model.component.content.TextPartData;
 
 import javax.mail.internet.MimeBodyPart;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Vector;
 
@@ -20,7 +14,7 @@ public class TextPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = -5641431122402910873L;
 
 	private final JTextField charsetField = new JTextField("UTF-8", 6);
-	private final JComboBox transferOptionBox = new JComboBox(new String[]{"quoted-printable", "8bit", "7bit", "base64", "binary"});
+	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[]{"quoted-printable", "8bit", "7bit", "base64", "binary"});
 	private final JTextArea textArea = new JTextArea(5, 30);
 
 	protected TextPartPanel(ContentType contentType, Integer nested) {
