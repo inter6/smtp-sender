@@ -5,7 +5,6 @@ import com.inter6.mail.model.component.AddressData;
 import com.inter6.mail.model.data.edit.EditAddressData;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Scope("prototype")
 public class EditAddressPanel extends JPanel {
 	private static final long serialVersionUID = -2074315658132902201L;
 

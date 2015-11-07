@@ -7,6 +7,7 @@ import com.inter6.mail.service.SmtpService;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ import java.util.Set;
  * @author inter6
  */
 @Component
-@Scope("prototype")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 
 	@Setter

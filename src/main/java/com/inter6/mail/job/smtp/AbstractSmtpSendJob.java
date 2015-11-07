@@ -11,13 +11,14 @@ import com.inter6.mail.model.setting.ServerData;
 import com.inter6.mail.module.ModuleService;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @Component
-@Scope("prototype")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 
 	@Autowired
