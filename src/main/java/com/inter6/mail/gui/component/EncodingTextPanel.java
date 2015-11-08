@@ -2,8 +2,11 @@ package com.inter6.mail.gui.component;
 
 import com.inter6.mail.model.component.EncodingTextData;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.FlowLayout;
 
 public class EncodingTextPanel extends JPanel {
 	private static final long serialVersionUID = -4355410559162938889L;

@@ -2,8 +2,12 @@ package com.inter6.mail.gui.component;
 
 import com.inter6.mail.model.component.AddressData;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.FlowLayout;
 
 public class AddressPanel extends JPanel {
 	private static final long serialVersionUID = -2074315658132902201L;

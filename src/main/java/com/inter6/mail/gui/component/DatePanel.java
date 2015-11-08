@@ -2,8 +2,10 @@ package com.inter6.mail.gui.component;
 
 import com.inter6.mail.model.component.DateData;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

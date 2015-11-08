@@ -10,8 +10,8 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import java.awt.BorderLayout;
 import java.util.List;
 import java.util.Vector;
 
