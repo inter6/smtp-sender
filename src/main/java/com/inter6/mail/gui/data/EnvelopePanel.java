@@ -16,7 +16,6 @@ import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.FlowLayout;
@@ -48,7 +47,7 @@ public class EnvelopePanel extends TabComponentPanel implements ConfigObserver {
 		JPanel toPanel = new JPanel(new FlowLayout());
 		{
 			toPanel.add(new JLabel("Rcpt To"));
-			toPanel.add(new JScrollPane(this.toArea));
+			toPanel.add(toArea);
 		}
 		this.add(toPanel);
 	}

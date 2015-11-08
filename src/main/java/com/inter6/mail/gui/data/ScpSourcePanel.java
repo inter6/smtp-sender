@@ -25,7 +25,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -98,7 +97,7 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
 			}
 			listPanel.add(addPanel, BorderLayout.NORTH);
 
-			listPanel.add(new JScrollPane(this.pathList), BorderLayout.CENTER);
+			listPanel.add(pathList, BorderLayout.CENTER);
 
 			JPanel actionPanel = new JPanel();
 			actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));

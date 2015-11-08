@@ -15,7 +15,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -42,7 +41,7 @@ public class MimeSourcePanel extends TabComponentPanel implements SendJobBuilder
 
 		this.setLayout(new BorderLayout());
 
-		this.add(new JScrollPane(this.mimeArea), BorderLayout.CENTER);
+		this.add(mimeArea, BorderLayout.CENTER);
 
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));

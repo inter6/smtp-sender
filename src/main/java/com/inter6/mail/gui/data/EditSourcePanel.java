@@ -43,7 +43,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -94,7 +93,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 			wrapPanel.add(this.editHeaderPanel);
 			wrapPanel.add(this.editMessagePanel);
 		}
-		this.add(new JScrollPane(wrapPanel), BorderLayout.CENTER);
+		this.add(wrapPanel, BorderLayout.CENTER);
 
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));

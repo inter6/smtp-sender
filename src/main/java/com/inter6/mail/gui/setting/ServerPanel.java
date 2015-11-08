@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +43,7 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 
 	@PostConstruct
 	private void init() {
-		this.setLayout(new BorderLayout());
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		JPanel hostPanel = new JPanel(new FlowLayout());
 		{
@@ -53,7 +53,7 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 			hostPanel.add(this.portField);
 			hostPanel.add(this.connectTypeOptionBox);
 		}
-		this.add(hostPanel, BorderLayout.NORTH);
+		this.add(hostPanel);
 
 		JPanel accountPanel = new JPanel(new FlowLayout());
 		{
@@ -66,7 +66,7 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 			this.authOptionBox.setSelectedIndex(0);
 			accountPanel.add(this.authOptionBox);
 		}
-		this.add(accountPanel, BorderLayout.CENTER);
+		this.add(accountPanel);
 	}
 
 	private ActionListener createAuthChangeEvent() {

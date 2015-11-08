@@ -25,7 +25,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -60,7 +59,7 @@ public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder,
 	private void init() {
 		this.setLayout(new BorderLayout());
 
-		this.add(new JScrollPane(this.fileList), BorderLayout.CENTER);
+		this.add(fileList, BorderLayout.CENTER);
 
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));

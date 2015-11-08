@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -44,8 +45,8 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
 	private void init() {
 		envelopePanel = tabComponentManager.getTabComponent(tabName, EnvelopePanel.class);
 
-		this.setLayout(new BorderLayout());
-		this.add(envelopePanel, BorderLayout.NORTH);
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.add(envelopePanel);
 
 		JPanel sourcePanel = new JPanel(new BorderLayout());
 		{
@@ -72,7 +73,7 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
 			sourcePanel.add(sourceSelectPanel, BorderLayout.NORTH);
 			sourcePanel.add(this.sourceInputPanel, BorderLayout.CENTER);
 		}
-		this.add(sourcePanel, BorderLayout.CENTER);
+		this.add(sourcePanel);
 	}
 
 	private ActionListener createSourceSelectChangeEvent() {
