@@ -21,7 +21,7 @@ public class AboutMenuItem extends JMenuItem implements ActionListener {
 	private TabComponentManager tabComponentManager = TabComponentManager.getInstance();
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setText("About smtp-sender");
 		this.addActionListener(this);
 	}

@@ -1,7 +1,7 @@
 package com.inter6.mail.gui.component.content;
 
-import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.component.content.PartData;
 import com.inter6.mail.module.ModuleService;

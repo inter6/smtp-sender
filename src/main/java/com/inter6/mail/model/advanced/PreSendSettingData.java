@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Data
 public class PreSendSettingData {
-	private EncodingTextData replaceSubjectData; // NOPMD
-	private DateData dateData; // NOPMD
+	private EncodingTextData replaceSubjectData;
+	private DateData dateData;
 }

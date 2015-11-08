@@ -2,8 +2,8 @@ package com.inter6.mail.gui.data;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.component.DatePanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.ScpSmtpSendJob;
@@ -59,7 +59,7 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setLayout(new BorderLayout());
 
 		JPanel settingPanel = new JPanel();

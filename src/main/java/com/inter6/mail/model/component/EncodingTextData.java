@@ -8,10 +8,10 @@ import java.io.UnsupportedEncodingException;
 
 @Data
 public class EncodingTextData {
-	private boolean isUse; // NOPMD
-	private String text; // NOPMD
-	private String charset; // NOPMD
-	private String encoding; // NOPMD
+	private boolean isUse;
+	private String text;
+	private String charset;
+	private String encoding;
 
 	public String encodeSubject() throws UnsupportedEncodingException {
 		return MimeUtility.encodeWord(StringUtils.defaultString(this.text, ""),

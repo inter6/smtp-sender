@@ -7,11 +7,11 @@ import java.util.Collection;
 
 @Data
 public class ScpSourceData {
-	private String host; // NOPMD
-	private int port; // NOPMD
-	private String username; // NOPMD
-	private String password; // NOPMD
+	private String host;
+	private int port;
+	private String username;
+	private String password;
 
-	private Collection<String> paths; // NOPMD
-	private DateData replaceDateData; // NOPMD
+	private Collection<String> paths;
+	private DateData replaceDateData;
 }

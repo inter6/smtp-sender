@@ -2,7 +2,7 @@ package com.inter6.mail.gui.setting;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.TabComponentPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.model.AuthOption;
 import com.inter6.mail.model.setting.ServerData;
 import com.inter6.mail.module.AppConfig;
@@ -42,7 +42,7 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setLayout(new BorderLayout());
 
 		JPanel hostPanel = new JPanel(new FlowLayout());

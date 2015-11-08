@@ -33,7 +33,7 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 	private DnsDialog dnsDialog;
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setText("DNS Query");
 		this.addActionListener(this);
 	}

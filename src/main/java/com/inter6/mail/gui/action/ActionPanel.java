@@ -2,8 +2,8 @@ package com.inter6.mail.gui.action;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.data.DataPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.model.action.ActionData;
 import com.inter6.mail.module.AppConfig;
@@ -52,7 +52,7 @@ public class ActionPanel extends TabComponentPanel implements ConfigObserver {
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 		dataPanel = tabComponentManager.getTabComponent(tabName, DataPanel.class);
 

@@ -27,7 +27,7 @@ public class LoadConfigMenuItem extends JMenuItem implements ActionListener {
 	private TabComponentManager tabComponentManager = TabComponentManager.getInstance();
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setText("Load Config");
 		this.addActionListener(this);
 	}

@@ -20,7 +20,7 @@ public class SaveConfigAsMenuItem extends JMenuItem implements ActionListener {
 	private TabComponentManager tabComponentManager = TabComponentManager.getInstance();
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setText("Save Config As...");
 		this.addActionListener(this);
 	}

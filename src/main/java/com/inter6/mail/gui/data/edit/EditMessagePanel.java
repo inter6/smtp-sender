@@ -1,8 +1,8 @@
 package com.inter6.mail.gui.data.edit;
 
-import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.content.ContentPartPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.data.edit.EditMessageData;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -35,7 +35,7 @@ public class EditMessagePanel extends TabComponentPanel {
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
 		this.setLayout(new BorderLayout());

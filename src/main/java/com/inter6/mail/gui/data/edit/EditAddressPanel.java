@@ -1,7 +1,7 @@
 package com.inter6.mail.gui.data.edit;
 
-import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.component.AddressPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.model.component.AddressData;
 import com.inter6.mail.model.data.edit.EditAddressData;
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,7 +37,7 @@ public class EditAddressPanel extends TabComponentPanel {
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBorder(new LineBorder(Color.BLUE));
 

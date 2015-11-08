@@ -1,4 +1,4 @@
-package com.inter6.mail.gui;
+package com.inter6.mail.gui.tab;
 
 import com.inter6.mail.module.TabComponentManager;
 

@@ -2,7 +2,7 @@ package com.inter6.mail.gui.data;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.TabComponentPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.model.data.EnvelopeData;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.util.StringUtil;
@@ -37,7 +37,7 @@ public class EnvelopePanel extends TabComponentPanel implements ConfigObserver {
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JPanel fromPanel = new JPanel(new FlowLayout());
 		{

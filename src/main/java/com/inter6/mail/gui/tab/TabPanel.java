@@ -1,4 +1,4 @@
-package com.inter6.mail.gui;
+package com.inter6.mail.gui.tab;
 
 import com.inter6.mail.gui.action.ActionPanel;
 import com.inter6.mail.gui.data.DataPanel;
@@ -21,6 +21,7 @@ public class TabPanel extends TabComponentPanel {
 	@PostConstruct
 	public void init() {
 		this.setLayout(new BorderLayout());
+
 		this.add(tabComponentManager.getTabComponent(tabName, ServerPanel.class), BorderLayout.NORTH);
 		this.add(tabComponentManager.getTabComponent(tabName, DataPanel.class), BorderLayout.CENTER);
 		this.add(tabComponentManager.getTabComponent(tabName, ActionPanel.class), BorderLayout.SOUTH);

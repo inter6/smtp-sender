@@ -1,7 +1,7 @@
 package com.inter6.mail.gui.data;
 
-import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.MimeSmtpSendJob;
@@ -37,7 +37,7 @@ public class MimeSourcePanel extends TabComponentPanel implements SendJobBuilder
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
 		this.setLayout(new BorderLayout());

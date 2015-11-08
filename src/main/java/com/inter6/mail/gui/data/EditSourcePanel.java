@@ -3,7 +3,6 @@ package com.inter6.mail.gui.data;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.DatePanel;
 import com.inter6.mail.gui.component.EncodingTextPanel;
@@ -11,6 +10,7 @@ import com.inter6.mail.gui.component.TextViewDialog;
 import com.inter6.mail.gui.data.edit.EditAddressPanel;
 import com.inter6.mail.gui.data.edit.EditHeaderPanel;
 import com.inter6.mail.gui.data.edit.EditMessagePanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.MimeSmtpSendJob;
@@ -77,7 +77,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		editAddressPanel = tabComponentManager.getTabComponent(tabName, EditAddressPanel.class);
 		editHeaderPanel = tabComponentManager.getTabComponent(tabName, EditHeaderPanel.class);
 		editMessagePanel = tabComponentManager.getTabComponent(tabName, EditMessagePanel.class);

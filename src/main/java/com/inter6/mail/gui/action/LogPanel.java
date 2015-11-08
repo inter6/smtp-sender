@@ -1,6 +1,6 @@
 package com.inter6.mail.gui.action;
 
-import com.inter6.mail.gui.TabComponentPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -38,7 +38,7 @@ public class LogPanel extends TabComponentPanel {
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setLayout(new BorderLayout());
 
 		this.logArea.setRows(5);

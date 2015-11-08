@@ -7,7 +7,7 @@ import java.util.Collection;
 
 @Data
 public class EmlSourceData {
-	private Collection<String> files; // NOPMD
-	private boolean isRecursive; // NOPMD
-	private DateData replaceDateData; // NOPMD
+	private Collection<String> files;
+	private boolean isRecursive;
+	private DateData replaceDateData;
 }

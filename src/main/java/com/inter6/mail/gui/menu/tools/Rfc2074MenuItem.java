@@ -28,7 +28,7 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 	private Rfc2074Dialog rfc2074Dialog;
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setText("RFC2047 Encoder/Decoder");
 		this.addActionListener(this);
 	}

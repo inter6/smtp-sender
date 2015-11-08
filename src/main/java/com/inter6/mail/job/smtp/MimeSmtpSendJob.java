@@ -29,10 +29,10 @@ import java.util.Set;
 public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 
 	@Setter
-	private InputStream messageStream; // NOPMD
+	private InputStream messageStream;
 
 	@Setter
-	private DateData replaceDateData; // NOPMD
+	private DateData replaceDateData;
 
 	public MimeSmtpSendJob(String tabName) {
 		super(tabName);

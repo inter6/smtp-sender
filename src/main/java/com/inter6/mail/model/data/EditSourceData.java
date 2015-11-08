@@ -9,9 +9,9 @@ import lombok.Data;
 
 @Data
 public class EditSourceData {
-	private EncodingTextData subjectData; // NOPMD
-	private DateData dateData; // NOPMD
-	private EditAddressData editAddressData; // NOPMD
-	private EditHeaderData editHeaderData; // NOPMD
-	private EditMessageData editMessageData; // NOPMD
+	private EncodingTextData subjectData;
+	private DateData dateData;
+	private EditAddressData editAddressData;
+	private EditHeaderData editHeaderData;
+	private EditMessageData editMessageData;
 }

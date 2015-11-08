@@ -27,7 +27,7 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 	private LogPanel logPanel;
 
 	@Setter
-	private ScpSourceData scpSourceData; // NOPMD
+	private ScpSourceData scpSourceData;
 
 	private float progressRate;
 

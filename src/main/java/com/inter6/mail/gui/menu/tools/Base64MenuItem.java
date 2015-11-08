@@ -27,7 +27,7 @@ public class Base64MenuItem extends JMenuItem implements ActionListener {
 	private Base64Dialog base64Dialog;
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setText("Base64 Encoder/Decoder");
 		this.addActionListener(this);
 	}

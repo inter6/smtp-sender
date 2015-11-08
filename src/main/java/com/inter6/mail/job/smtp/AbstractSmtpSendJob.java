@@ -1,10 +1,10 @@
 package com.inter6.mail.job.smtp;
 
-import com.inter6.mail.gui.TabComponent;
 import com.inter6.mail.gui.action.ActionPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.data.EnvelopePanel;
 import com.inter6.mail.gui.setting.ServerPanel;
+import com.inter6.mail.gui.tab.TabComponent;
 import com.inter6.mail.job.thread.ThreadSupportJob;
 import com.inter6.mail.model.action.ActionData;
 import com.inter6.mail.model.data.EnvelopeData;

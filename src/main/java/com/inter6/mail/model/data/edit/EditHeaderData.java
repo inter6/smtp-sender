@@ -7,5 +7,5 @@ import java.util.Collection;
 
 @Data
 public class EditHeaderData {
-	private Collection<HeaderData> headerDatas; // NOPMD
+	private Collection<HeaderData> headerDatas;
 }

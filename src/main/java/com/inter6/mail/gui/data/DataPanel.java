@@ -1,7 +1,7 @@
 package com.inter6.mail.gui.data;
 
 import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.TabComponentPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.module.AppConfig;
@@ -41,7 +41,7 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
 	}
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		envelopePanel = tabComponentManager.getTabComponent(tabName, EnvelopePanel.class);
 
 		this.setLayout(new BorderLayout());

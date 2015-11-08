@@ -1,7 +1,7 @@
 package com.inter6.mail.module;
 
-import com.inter6.mail.gui.RootTabPanel;
-import com.inter6.mail.gui.TabComponent;
+import com.inter6.mail.gui.tab.RootTabPanel;
+import com.inter6.mail.gui.tab.TabComponent;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
 import java.util.ArrayList;

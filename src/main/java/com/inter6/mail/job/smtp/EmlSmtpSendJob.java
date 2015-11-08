@@ -26,7 +26,7 @@ import java.util.List;
 public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 
 	@Setter
-	private EmlSourceData emlSourceData; // NOPMD
+	private EmlSourceData emlSourceData;
 
 	private float progressRate;
 

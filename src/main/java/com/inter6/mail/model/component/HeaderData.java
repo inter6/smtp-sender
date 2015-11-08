@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class HeaderData {
-	private boolean isUse; // NOPMD
-	private String key; // NOPMD
-	private String value; // NOPMD
+	private boolean isUse;
+	private String key;
+	private String value;
 }

@@ -29,7 +29,7 @@ public class SaveConfigMenuItem extends JMenuItem implements ActionListener {
 	private LogPanel logPanel;
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		logPanel = tabComponentManager.getActiveTabComponent(LogPanel.class);
 
 		this.setText("Save Config");
