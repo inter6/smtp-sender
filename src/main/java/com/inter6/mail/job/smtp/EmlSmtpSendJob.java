@@ -2,12 +2,11 @@ package com.inter6.mail.job.smtp;
 
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.model.data.EmlSourceData;
-import com.inter6.mail.module.ModuleService;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,25 +22,27 @@ import java.util.List;
  * @author inter6
  */
 @Component
-@Scope("prototype")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 
-	@Autowired
-	private LogPanel logPanel;
-
 	@Setter
-	private EmlSourceData emlSourceData; // NOPMD
+	private EmlSourceData emlSourceData;
 
 	private float progressRate;
+
+	public EmlSmtpSendJob(String tabName) {
+		super(tabName);
+	}
 
 	@Override
 	protected void doMasterJob() throws Throwable {
 		List<File> emlFiles = new ArrayList<>();
+		LogPanel logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
 		for (String path : this.emlSourceData.getFiles()) {
 			File file = new File(path);
 			if (!file.exists()) {
-				this.logPanel.info("not found file or directory - PATH:" + file);
+				logPanel.info("not found file or directory - PATH:" + file);
 				continue;
 			}
 
@@ -55,17 +56,17 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 				emlFiles.add(file);
 			}
 		}
-		this.logPanel.info("eml file count - COUNT:" + emlFiles.size());
+		logPanel.info("eml file count - COUNT:" + emlFiles.size());
 
 		for (int i = 0; i < emlFiles.size(); i++) {
 			File emlFile = emlFiles.get(i);
 			try {
-				MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
+				MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
 				mimeSmtpSendJob.setMessageStream(new FileInputStream(emlFile));
 				mimeSmtpSendJob.setReplaceDateData(emlSourceData.getReplaceDateData());
 				this.orderWorker(mimeSmtpSendJob);
 			} catch (Throwable e) {
-				this.logPanel.error("eml send order fail ! - EML:" + emlFile, e);
+				logPanel.error("eml send order fail ! - EML:" + emlFile, e);
 			}
 			this.progressRate = (float) (i + 1) / (float) emlFiles.size() * 100f;
 		}

@@ -22,6 +22,10 @@ public class ModuleService {
 		return context.getBean(name, type);
 	}
 
+	public static <T> T getBean(Class<T> type, Object... args) {
+		return context.getBean(type, args);
+	}
+
 	public static <T> Map<String, T> getBeans(Class<T> type) {
 		return context.getBeansOfType(type);
 	}

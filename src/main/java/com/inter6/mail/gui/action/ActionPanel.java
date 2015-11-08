@@ -3,35 +3,39 @@ package com.inter6.mail.gui.action;
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.data.DataPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
-import com.inter6.mail.job.smtp.SmtpSendJobObserver;
 import com.inter6.mail.model.action.ActionData;
 import com.inter6.mail.module.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @Component
-public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigObserver {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class ActionPanel extends TabComponentPanel implements ConfigObserver {
 	private static final long serialVersionUID = -1786161460680791823L;
 
 	@Autowired
 	private AppConfig appConfig;
 
-	/*@Autowired
-	private JobStatistics jobStatistics;*/
-
-	@Autowired
-	private DataPanel dataPanel;
-
-	@Autowired
 	private LogPanel logPanel;
+	private DataPanel dataPanel;
 
 	private final JButton startButton = new JButton("Start");
 	private final JButton stopButton = new JButton("Stop");
@@ -43,8 +47,15 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 
 	private AbstractSmtpSendJob currentJob;
 
+	public ActionPanel(String tabName) {
+		super(tabName);
+	}
+
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
+		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
+		dataPanel = tabComponentManager.getTabComponent(tabName, DataPanel.class);
+
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		JPanel sendPanel = new JPanel(new FlowLayout());
@@ -84,7 +95,7 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 			@Override
 			public void actionPerformed(ActionEvent ev) {
 				try {
-					ActionPanel.this.currentJob = ActionPanel.this.dataPanel.getSendJob();
+					ActionPanel.this.currentJob = dataPanel.getSendJob();
 					new Thread(ActionPanel.this.currentJob).start();
 				} catch (Throwable e) {
 					ActionPanel.this.logPanel.error("job build fail !", e);
@@ -111,7 +122,6 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 		};
 	}
 
-	@Override
 	public void onStart(long startTime) {
 		this.elapsedTimeLabel.setText("0:0:0");
 		this.progressBar.setValue(0);
@@ -122,7 +132,6 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 		ActionPanel.this.stopButton.setEnabled(true);
 	}
 
-	@Override
 	public void onDone(long startTime, long elapsedTime) {
 		this.currentJob = null;
 		this.elapsedTimeLabel.setText(this.formatElapsedTime(elapsedTime));
@@ -134,7 +143,6 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 		ActionPanel.this.stopButton.setEnabled(false);
 	}
 
-	@Override
 	public void onProgress(float progressRate, long startTime, long currentTime) {
 		this.elapsedTimeLabel.setText(this.formatElapsedTime(currentTime - startTime));
 
@@ -162,7 +170,7 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 
 	@Override
 	public void loadConfig() {
-		ActionData actionData = new Gson().fromJson(this.appConfig.getUnsplitString("action.data"), ActionData.class);
+		ActionData actionData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".action.data"), ActionData.class);
 		if (actionData == null) {
 			return;
 		}
@@ -172,6 +180,6 @@ public class ActionPanel extends JPanel implements SmtpSendJobObserver, ConfigOb
 
 	@Override
 	public void updateConfig() {
-		this.appConfig.setProperty("action.data", new Gson().toJson(this.getActionData()));
+		this.appConfig.setProperty(tabName + ".action.data", new Gson().toJson(this.getActionData()));
 	}
 }

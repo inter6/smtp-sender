@@ -9,12 +9,12 @@ import java.io.UnsupportedEncodingException;
 
 @Data
 public class AddressData {
-	private boolean isUse; // NOPMD
-	private String type; // NOPMD
-	private String personal; // NOPMD
-	private String personalCharset; // NOPMD
-	private String personalEncoding; // NOPMD
-	private String address; // NOPMD
+	private boolean isUse;
+	private String type;
+	private String personal;
+	private String personalCharset;
+	private String personalEncoding;
+	private String address;
 
 	public RecipientType getRecipientType() {
 		if ("To".equalsIgnoreCase(this.type)) {

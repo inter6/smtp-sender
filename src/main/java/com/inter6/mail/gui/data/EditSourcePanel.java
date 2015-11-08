@@ -10,6 +10,7 @@ import com.inter6.mail.gui.component.TextViewDialog;
 import com.inter6.mail.gui.data.edit.EditAddressPanel;
 import com.inter6.mail.gui.data.edit.EditHeaderPanel;
 import com.inter6.mail.gui.data.edit.EditMessagePanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.MimeSmtpSendJob;
@@ -22,10 +23,10 @@ import com.inter6.mail.model.component.content.PartDataJsonDeserializer;
 import com.inter6.mail.model.component.content.PartDataJsonSerializer;
 import com.inter6.mail.model.data.EditSourceData;
 import com.inter6.mail.module.AppConfig;
-import com.inter6.mail.module.ModuleService;
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -38,8 +39,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
@@ -52,30 +56,32 @@ import java.util.List;
 import java.util.Properties;
 
 @Component
-@Log4j
-public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder, ConfigObserver {
 	private static final long serialVersionUID = -4373325495997044386L;
-
-	private final EncodingTextPanel subjectPanel = new EncodingTextPanel("Subject", 30, true);
-	private final DatePanel datePanel = new DatePanel("Date", 30, true, true);
 
 	@Autowired
 	private AppConfig appConfig;
 
-	@Autowired
 	private EditAddressPanel editAddressPanel;
-
-	@Autowired
 	private EditHeaderPanel editHeaderPanel;
-
-	@Autowired
 	private EditMessagePanel editMessagePanel;
-
-	@Autowired
 	private LogPanel logPanel;
 
+	private final EncodingTextPanel subjectPanel = new EncodingTextPanel("Subject", 30, true);
+	private final DatePanel datePanel = new DatePanel("Date", 30, true, true);
+
+	public EditSourcePanel(String tabName) {
+		super(tabName);
+	}
+
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
+		editAddressPanel = tabComponentManager.getTabComponent(tabName, EditAddressPanel.class);
+		editHeaderPanel = tabComponentManager.getTabComponent(tabName, EditHeaderPanel.class);
+		editMessagePanel = tabComponentManager.getTabComponent(tabName, EditMessagePanel.class);
+		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
+
 		this.setLayout(new BorderLayout());
 
 		JPanel wrapPanel = new JPanel();
@@ -87,7 +93,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 			wrapPanel.add(this.editHeaderPanel);
 			wrapPanel.add(this.editMessagePanel);
 		}
-		this.add(new JScrollPane(wrapPanel), BorderLayout.CENTER);
+		this.add(wrapPanel, BorderLayout.CENTER);
 
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
@@ -203,7 +209,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
+		MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
 		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.buildMessage()));
 		return mimeSmtpSendJob;
 	}
@@ -221,7 +227,7 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 	@Override
 	public void loadConfig() {
 		Gson gson = new GsonBuilder().registerTypeAdapter(PartData.class, new PartDataJsonDeserializer()).create();
-		EditSourceData editSourceData = gson.fromJson(this.appConfig.getUnsplitString("edit.source.data"), EditSourceData.class);
+		EditSourceData editSourceData = gson.fromJson(this.appConfig.getUnsplitString(tabName + ".edit.source.data"), EditSourceData.class);
 		if (editSourceData == null) {
 			return;
 		}
@@ -236,6 +242,6 @@ public class EditSourcePanel extends JPanel implements SendJobBuilder, ConfigObs
 	@Override
 	public void updateConfig() {
 		Gson gson = new GsonBuilder().registerTypeAdapter(PartData.class, new PartDataJsonSerializer()).create();
-		this.appConfig.setProperty("edit.source.data", gson.toJson(this.getEditSourceData()));
+		this.appConfig.setProperty(tabName + ".edit.source.data", gson.toJson(this.getEditSourceData()));
 	}
 }

@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Data
 public class EditMessageData {
-	private ContentType rootContentType; // NOPMD
-	private PartData rootPartData; // NOPMD
+	private ContentType rootContentType;
+	private PartData rootPartData;
 }

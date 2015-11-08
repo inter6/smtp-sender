@@ -45,7 +45,7 @@ public class TopMenuBar extends JMenuBar {
 	private final JLabel configPathLabel = new JLabel("None");
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		JMenu fileMenu = new JMenu("File");
 		{
 			fileMenu.add(loadConfigMenuItem);

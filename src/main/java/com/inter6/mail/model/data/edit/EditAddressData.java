@@ -7,5 +7,5 @@ import java.util.Collection;
 
 @Data
 public class EditAddressData {
-	private Collection<AddressData> addressDatas; // NOPMD
+	private Collection<AddressData> addressDatas;
 }

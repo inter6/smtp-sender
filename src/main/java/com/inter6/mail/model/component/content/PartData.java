@@ -11,6 +11,6 @@ import java.util.Collection;
 @Setter
 @ToString
 public class PartData {
-	private ContentType contentType; // NOPMD
-	private Collection<PartData> childPartDatas; // NOPMD
+	private ContentType contentType;
+	private Collection<PartData> childPartDatas;
 }

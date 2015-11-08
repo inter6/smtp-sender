@@ -1,9 +1,13 @@
-smtp-sender v1.1.1 (released: 15/11/07)
+smtp-sender v1.2.0 (released: 15/11/08)
 
 Developer: inter6 <inter6@inter6.com>
 Repository: https://github.com/inter6/smtp-sender
 
 Release History
+
+v1.2.0
+- Add Tab Feature (Not compatible v1.1.1 config file)
+- UI Adjustment
 
 v1.1.1
 - Bug fix

@@ -6,6 +6,6 @@ import java.util.Set;
 
 @Data
 public class EnvelopeData {
-	private String mailFrom; // NOPMD
-	private Set<String> rcptTos; // NOPMD
+	private String mailFrom;
+	private Set<String> rcptTos;
 }

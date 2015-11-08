@@ -1,12 +1,22 @@
 package com.inter6.mail.gui.action;
 
+import com.inter6.mail.gui.tab.TabComponentPanel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -14,16 +24,21 @@ import java.awt.event.AdjustmentListener;
 import java.util.Date;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Slf4j
-public class LogPanel extends JPanel {
+public class LogPanel extends TabComponentPanel {
 	private static final long serialVersionUID = 752623058795917575L;
 
 	private final JTextArea logArea = new JTextArea();
 	private final Object appendLock = new Object();
 	private boolean isAutoScroll = false;
 
+	public LogPanel(String tabName) {
+		super(tabName);
+	}
+
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setLayout(new BorderLayout());
 
 		this.logArea.setRows(5);

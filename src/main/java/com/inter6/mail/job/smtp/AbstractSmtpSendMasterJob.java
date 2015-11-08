@@ -1,17 +1,19 @@
 package com.inter6.mail.job.smtp;
 
+import com.inter6.mail.gui.action.ActionPanel;
 import com.inter6.mail.job.thread.ThreadSupportJob;
 import com.inter6.mail.model.action.ActionData;
-import com.inter6.mail.module.ModuleService;
 import com.inter6.mail.module.Workers;
-
-import java.util.Map;
 
 public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 
 	private Workers workers;
 	private final Object workerLock = new Object();
 	private ActionData actionData;
+
+	public AbstractSmtpSendMasterJob(String tabName) {
+		super(tabName);
+	}
 
 	@Override
 	protected void doSend() throws Throwable {
@@ -73,12 +75,10 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 		public void run() {
 			this.isRun = true;
 			while (this.isRun) {
-				Map<String, SmtpSendJobObserver> observers = ModuleService.getBeans(SmtpSendJobObserver.class);
-				for (SmtpSendJobObserver observer : observers.values()) {
-					observer.onProgress(AbstractSmtpSendMasterJob.this.getProgressRate(),
-							AbstractSmtpSendMasterJob.this.getStartTime(),
-							System.currentTimeMillis());
-				}
+				ActionPanel actionPanel = tabComponentManager.getTabComponent(tabName, ActionPanel.class);
+				actionPanel.onProgress(AbstractSmtpSendMasterJob.this.getProgressRate(),
+						AbstractSmtpSendMasterJob.this.getStartTime(),
+						System.currentTimeMillis());
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {

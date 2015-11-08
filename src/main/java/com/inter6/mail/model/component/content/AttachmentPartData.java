@@ -9,13 +9,13 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 public class AttachmentPartData extends PartData {
-	private String contentTypeStr; // NOPMD
-	private boolean isContentIdUse; // NOPMD
-	private String contentId; // NOPMD
-	private String contentDisposition; // NOPMD
-	private String contentTransferEncoding; // NOPMD
+	private String contentTypeStr;
+	private boolean isContentIdUse;
+	private String contentId;
+	private String contentDisposition;
+	private String contentTransferEncoding;
 
-	private String filePath; // NOPMD
+	private String filePath;
 	private EncodingTextData typeNameData;
-	private EncodingTextData dispositionFilenameData; // NOPMD
+	private EncodingTextData dispositionFilenameData;
 }

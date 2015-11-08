@@ -2,7 +2,6 @@ package com.inter6.mail.job.smtp;
 
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.model.data.ScpSourceData;
-import com.inter6.mail.module.ModuleService;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -10,10 +9,11 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,16 +21,24 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 @Component
-@Scope("prototype")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 
-	@Autowired
 	private LogPanel logPanel;
 
 	@Setter
-	private ScpSourceData scpSourceData; // NOPMD
+	private ScpSourceData scpSourceData;
 
 	private float progressRate;
+
+	public ScpSmtpSendJob(String tabName) {
+		super(tabName);
+	}
+
+	@PostConstruct
+	private void init() {
+		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
+	}
 
 	@Override
 	protected void doMasterJob() throws Throwable {
@@ -143,7 +151,7 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 					}
 
 					try {
-						MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
+						MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
 						mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(fos.toByteArray()));
 						mimeSmtpSendJob.setReplaceDateData(scpSourceData.getReplaceDateData());
 						this.orderWorker(mimeSmtpSendJob);

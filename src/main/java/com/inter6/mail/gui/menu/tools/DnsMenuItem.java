@@ -9,8 +9,19 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.SimpleResolver;
 
 import javax.annotation.PostConstruct;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetSocketAddress;
@@ -22,7 +33,7 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 	private DnsDialog dnsDialog;
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setText("DNS Query");
 		this.addActionListener(this);
 	}

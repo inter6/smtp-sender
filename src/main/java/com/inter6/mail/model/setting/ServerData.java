@@ -6,12 +6,12 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 @Data
 public class ServerData {
-	private String host; // NOPMD
-	private int port; // NOPMD
-	private String connectType; // NOPMD
-	private String id; // NOPMD
-	private String password; // NOPMD
-	private AuthOption authOption; // NOPMD
+	private String host;
+	private int port;
+	private String connectType;
+	private String id;
+	private String password;
+	private AuthOption authOption;
 
 	public void setPort(String port) {
 		if (!NumberUtils.isDigits(port)) {

@@ -7,8 +7,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,7 +27,7 @@ public class Base64MenuItem extends JMenuItem implements ActionListener {
 	private Base64Dialog base64Dialog;
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setText("Base64 Encoder/Decoder");
 		this.addActionListener(this);
 	}

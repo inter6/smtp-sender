@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ActionData {
-	private boolean isUseMultiThread; // NOPMD
-	private int maxThreadCount; // NOPMD
+	private boolean isUseMultiThread;
+	private int maxThreadCount;
 }

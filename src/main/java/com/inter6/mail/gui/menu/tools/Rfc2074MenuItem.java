@@ -7,8 +7,17 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.mail.internet.MimeUtility;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,7 +28,7 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 	private Rfc2074Dialog rfc2074Dialog;
 
 	@PostConstruct
-	private void init() { // NOPMD
+	private void init() {
 		this.setText("RFC2047 Encoder/Decoder");
 		this.addActionListener(this);
 	}

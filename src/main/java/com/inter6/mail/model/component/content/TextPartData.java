@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 public class TextPartData extends PartData {
-	private String textCharset; // NOPMD
-	private String contentTransferEncoding; // NOPMD
-	private String text; // NOPMD
+	private String textCharset;
+	private String contentTransferEncoding;
+	private String text;
 }

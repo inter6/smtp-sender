@@ -4,38 +4,30 @@ import com.inter6.mail.gui.action.ActionPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.data.EnvelopePanel;
 import com.inter6.mail.gui.setting.ServerPanel;
+import com.inter6.mail.gui.tab.TabComponent;
 import com.inter6.mail.job.thread.ThreadSupportJob;
 import com.inter6.mail.model.action.ActionData;
 import com.inter6.mail.model.data.EnvelopeData;
 import com.inter6.mail.model.setting.ServerData;
-import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.module.TabComponentManager;
 import org.apache.commons.lang3.time.StopWatch;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Component
-@Scope("prototype")
-public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public abstract class AbstractSmtpSendJob implements TabComponent, ThreadSupportJob {
 
-	@Autowired
-	private ServerPanel serverPanel;
+	protected String tabName;
 
-	@Autowired
-	private EnvelopePanel envelopePanel;
-
-	@Autowired
-	private ActionPanel actionPanel;
-
-	@Autowired
-	private LogPanel logPanel;
+	protected TabComponentManager tabComponentManager = TabComponentManager.getInstance();
 
 	private StopWatch stopWatch;
 
-	/*@Autowired
-	private JobStatistics jobStatistics;*/
+	public AbstractSmtpSendJob(String tabName) {
+		this.tabName = tabName;
+	}
 
 	@Override
 	public void run() {
@@ -44,26 +36,20 @@ public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 
 	@Override
 	public void execute() {
-		Map<String, SmtpSendJobObserver> observers = ModuleService.getBeans(SmtpSendJobObserver.class);
-		//		this.jobStatistics.clear();
+		ActionPanel actionPanel = this.tabComponentManager.getTabComponent(tabName, ActionPanel.class);
+		LogPanel logPanel = this.tabComponentManager.getTabComponent(tabName, LogPanel.class);
 		try {
 			this.stopWatch = new StopWatch();
 			this.stopWatch.start();
-			for (SmtpSendJobObserver observer : observers.values()) {
-				observer.onStart(this.stopWatch.getStartTime());
-			}
+			actionPanel.onStart(this.stopWatch.getStartTime());
 
 			this.doSend();
-			this.logPanel.info("smtp send done - JOB:" + this);
-			//			this.jobStatistics.addCount(this, "success");
+			logPanel.info("smtp send done - JOB:" + this);
 		} catch (Throwable e) {
-			this.logPanel.error("smtp send fail ! - JOB:" + this, e);
-			//			this.jobStatistics.addCount(this, "fail");
+			logPanel.error("smtp send fail ! - JOB:" + this, e);
 		} finally {
 			this.stopWatch.stop();
-			for (SmtpSendJobObserver observer : observers.values()) {
-				observer.onDone(this.stopWatch.getStartTime(), this.stopWatch.getTime());
-			}
+			actionPanel.onDone(this.stopWatch.getStartTime(), this.stopWatch.getTime());
 		}
 	}
 
@@ -72,15 +58,15 @@ public abstract class AbstractSmtpSendJob implements ThreadSupportJob {
 	public abstract void terminate() throws InterruptedException;
 
 	protected ServerData getServerData() {
-		return this.serverPanel.getServerData();
+		return this.tabComponentManager.getTabComponent(tabName, ServerPanel.class).getServerData();
 	}
 
 	protected EnvelopeData getEnvelopeData() {
-		return this.envelopePanel.getEnvelopeData();
+		return this.tabComponentManager.getTabComponent(tabName, EnvelopePanel.class).getEnvelopeData();
 	}
 
 	protected ActionData getActionData() {
-		return this.actionPanel.getActionData();
+		return this.tabComponentManager.getTabComponent(tabName, ActionPanel.class).getActionData();
 	}
 
 	protected long getStartTime() {
