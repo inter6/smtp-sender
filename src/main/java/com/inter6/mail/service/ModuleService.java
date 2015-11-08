@@ -1,4 +1,4 @@
-package com.inter6.mail.module;
+package com.inter6.mail.service;
 
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
@@ -20,6 +20,10 @@ public class ModuleService {
 
 	public static <T> T getBean(String name, Class<T> type) {
 		return context.getBean(name, type);
+	}
+
+	public static <T> T getBean(Class<T> type, Object... args) {
+		return context.getBean(type, args);
 	}
 
 	public static <T> Map<String, T> getBeans(Class<T> type) {

@@ -6,7 +6,7 @@ import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.component.EncodingTextData;
 import com.inter6.mail.model.component.content.AttachmentPartData;
 import com.inter6.mail.model.component.content.PartData;
-import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.service.ModuleService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -42,8 +42,8 @@ public class AttachmentPartPanel extends ContentPartPanel {
 	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[]{"base64", "quoted-printable", "8bit", "7bit", "binary"});
 	private final JTextField pathField = new JTextField(40);
 
-	protected AttachmentPartPanel(ContentType contentType, Integer nested) {
-		super(contentType, nested);
+	protected AttachmentPartPanel(String tabName, ContentType contentType, Integer nested) {
+		super(tabName, contentType, nested);
 	}
 
 	@Override

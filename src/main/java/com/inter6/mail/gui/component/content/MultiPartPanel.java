@@ -18,8 +18,8 @@ import java.util.Vector;
 public class MultiPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = -4555796509776825034L;
 
-	protected MultiPartPanel(ContentType contentType, Integer nested) {
-		super(contentType, nested);
+	protected MultiPartPanel(String tabName, ContentType contentType, Integer nested) {
+		super(tabName, contentType, nested);
 	}
 
 	@Override

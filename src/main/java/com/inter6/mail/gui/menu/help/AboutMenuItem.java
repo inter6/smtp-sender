@@ -2,7 +2,8 @@ package com.inter6.mail.gui.menu.help;
 
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.TextViewDialog;
-import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.service.ModuleService;
+import com.inter6.mail.service.TabComponentService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class AboutMenuItem extends JMenuItem implements ActionListener {
 	private static final long serialVersionUID = -567473046293341703L;
 
 	@Autowired
-	private LogPanel logPanel;
+	private TabComponentService tabComponentService;
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -38,7 +39,8 @@ public class AboutMenuItem extends JMenuItem implements ActionListener {
 					.setSize(400, 600)
 					.show();
 		} catch (IOException e) {
-			AboutMenuItem.this.logPanel.error("read about message fail !", e);
+			LogPanel logPanel = tabComponentService.getActiveTabComponent(LogPanel.class);
+			logPanel.error("read about message fail !", e);
 		} finally {
 			IOUtils.closeQuietly(msgStream);
 		}

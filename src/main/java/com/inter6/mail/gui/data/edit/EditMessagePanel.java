@@ -1,10 +1,12 @@
 package com.inter6.mail.gui.data.edit;
 
+import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.content.ContentPartPanel;
 import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.data.edit.EditMessageData;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -19,17 +21,23 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 @Component
-public class EditMessagePanel extends JPanel {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class EditMessagePanel extends TabComponentPanel {
 	private static final long serialVersionUID = 3155803701798638117L;
 
-	@Autowired
 	private LogPanel logPanel;
 
 	private final JComboBox<ContentType> rootTypeSelectBox = new JComboBox<>();
 	private ContentPartPanel rootPartPanel;
 
+	public EditMessagePanel(String tabName) {
+		super(tabName);
+	}
+
 	@PostConstruct
 	private void init() { // NOPMD
+		logPanel = tabComponentService.getTabComponent(tabName, LogPanel.class);
+
 		this.setLayout(new BorderLayout());
 
 		JPanel selectPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -42,7 +50,7 @@ public class EditMessagePanel extends JPanel {
 		this.add(selectPanel, BorderLayout.NORTH);
 
 		try {
-			this.rootPartPanel = ContentPartPanel.createPanelByRoot(ContentType.MULTIPART_MIXED);
+			this.rootPartPanel = ContentPartPanel.createPanelByRoot(tabName, ContentType.MULTIPART_MIXED);
 			this.add(this.rootPartPanel, BorderLayout.CENTER);
 		} catch (Exception e) {
 			this.logPanel.error("create content panel fail ! - TYPE:" + ContentType.MULTIPART_MIXED, e);
@@ -78,7 +86,7 @@ public class EditMessagePanel extends JPanel {
 		}
 
 		try {
-			ContentPartPanel newPartPanel = ContentPartPanel.createPanelByRoot(selectType);
+			ContentPartPanel newPartPanel = ContentPartPanel.createPanelByRoot(tabName, selectType);
 			this.remove(this.rootPartPanel);
 			this.rootPartPanel = newPartPanel;
 			this.add(this.rootPartPanel, BorderLayout.CENTER);

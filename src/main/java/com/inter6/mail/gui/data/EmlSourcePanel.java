@@ -2,6 +2,7 @@ package com.inter6.mail.gui.data;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.component.DatePanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
@@ -10,9 +11,10 @@ import com.inter6.mail.model.AppSession;
 import com.inter6.mail.model.component.DateData;
 import com.inter6.mail.model.data.EmlSourceData;
 import com.inter6.mail.module.AppConfig;
-import com.inter6.mail.module.ModuleService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -35,7 +37,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Component
-public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder, ConfigObserver {
 	private static final long serialVersionUID = -3388480705076640191L;
 
 	@Autowired
@@ -48,6 +51,10 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	private final JList<String> fileList = new JList<>(this.fileListModel);
 	private final JCheckBox recursiveCheckButton = new JCheckBox("Recursive");
 	private final DatePanel replaceDatePanel = new DatePanel("Replace Date", 20, false, true);
+
+	public EmlSourcePanel(String tabName) {
+		super(tabName);
+	}
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -129,7 +136,7 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		EmlSmtpSendJob emlSmtpSendJob = ModuleService.getBean(EmlSmtpSendJob.class);
+		EmlSmtpSendJob emlSmtpSendJob = tabComponentService.getTabComponent(tabName, EmlSmtpSendJob.class);
 		emlSmtpSendJob.setEmlSourceData(this.getEmlSourceData());
 		return emlSmtpSendJob;
 	}
@@ -149,7 +156,7 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	@Override
 	public void loadConfig() {
 		this.fileListModel.clear();
-		EmlSourceData emlSourceData = new Gson().fromJson(this.appConfig.getUnsplitString("eml.source.data"), EmlSourceData.class);
+		EmlSourceData emlSourceData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".eml.source.data"), EmlSourceData.class);
 		if (emlSourceData == null) {
 			return;
 		}
@@ -170,6 +177,6 @@ public class EmlSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	@Override
 	public void updateConfig() {
-		this.appConfig.setProperty("eml.source.data", new Gson().toJson(this.getEmlSourceData()));
+		this.appConfig.setProperty(tabName + ".eml.source.data", new Gson().toJson(this.getEmlSourceData()));
 	}
 }

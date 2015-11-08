@@ -2,6 +2,7 @@ package com.inter6.mail.gui.data;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.component.DatePanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
@@ -9,10 +10,11 @@ import com.inter6.mail.job.smtp.ScpSmtpSendJob;
 import com.inter6.mail.model.component.DateData;
 import com.inter6.mail.model.data.ScpSourceData;
 import com.inter6.mail.module.AppConfig;
-import com.inter6.mail.module.ModuleService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -36,7 +38,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Component
-public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObserver {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder, ConfigObserver {
 
 	@Autowired
 	private AppConfig appConfig;
@@ -50,6 +53,10 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	private final DefaultListModel<String> pathListModel = new DefaultListModel<>();
 	private final JList<String> pathList = new JList<>(this.pathListModel);
 	private final DatePanel replaceDatePanel = new DatePanel("Replace Date", 20, false, true);
+
+	public ScpSourcePanel(String tabName) {
+		super(tabName);
+	}
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -154,7 +161,7 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		ScpSmtpSendJob scpSmtpSendJob = ModuleService.getBean(ScpSmtpSendJob.class);
+		ScpSmtpSendJob scpSmtpSendJob = tabComponentService.getTabComponent(tabName, ScpSmtpSendJob.class);
 		scpSmtpSendJob.setScpSourceData(this.getScpSourceData());
 		return scpSmtpSendJob;
 	}
@@ -184,7 +191,7 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 	@Override
 	public void loadConfig() {
 		this.pathListModel.clear();
-		ScpSourceData scpSourceData = new Gson().fromJson(this.appConfig.getUnsplitString("scp.source.data"), ScpSourceData.class);
+		ScpSourceData scpSourceData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".scp.source.data"), ScpSourceData.class);
 		if (scpSourceData == null) {
 			return;
 		}
@@ -209,6 +216,6 @@ public class ScpSourcePanel extends JPanel implements SendJobBuilder, ConfigObse
 
 	@Override
 	public void updateConfig() {
-		this.appConfig.setProperty("scp.source.data", new Gson().toJson(this.getScpSourceData()));
+		this.appConfig.setProperty(tabName + ".scp.source.data", new Gson().toJson(this.getScpSourceData()));
 	}
 }

@@ -1,10 +1,13 @@
 package com.inter6.mail.gui.data;
 
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.module.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -17,26 +20,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @Component
-public class DataPanel extends JPanel implements ConfigObserver {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class DataPanel extends TabComponentPanel implements ConfigObserver {
 	private static final long serialVersionUID = 1398719678774376633L;
 
 	@Autowired
 	private AppConfig appConfig;
 
-	@Autowired
 	private EnvelopePanel envelopePanel;
-
-	@Autowired
-	private EditSourcePanel editSourcePanel;
-
-	@Autowired
-	private MimeSourcePanel mimeSourcePanel;
-
-	@Autowired
-	private EmlSourcePanel emlSourcePanel;
-
-	@Autowired
-	private ScpSourcePanel scpSourcePanel;
 
 	private final JRadioButton editSourceButton = new JRadioButton("Editor");
 	private final JRadioButton mimeSourceButton = new JRadioButton("MIME");
@@ -45,11 +36,16 @@ public class DataPanel extends JPanel implements ConfigObserver {
 	private final JPanel sourceInputPanel = new JPanel(new BorderLayout());
 	private SendJobBuilder selectedJobBuilder;
 
+	public DataPanel(String tabName) {
+		super(tabName);
+	}
+
 	@PostConstruct
 	private void init() { // NOPMD
-		this.setLayout(new BorderLayout());
+		envelopePanel = tabComponentService.getTabComponent(tabName, EnvelopePanel.class);
 
-		this.add(this.envelopePanel, BorderLayout.NORTH);
+		this.setLayout(new BorderLayout());
+		this.add(envelopePanel, BorderLayout.NORTH);
 
 		JPanel sourcePanel = new JPanel(new BorderLayout());
 		{
@@ -86,13 +82,13 @@ public class DataPanel extends JPanel implements ConfigObserver {
 			public void actionPerformed(ActionEvent e) {
 				Object sourceButton = e.getSource();
 				if (sourceButton == DataPanel.this.editSourceButton) {
-					DataPanel.this.setSourcePanel(DataPanel.this.editSourcePanel);
+					DataPanel.this.setSourcePanel(tabComponentService.getTabComponent(tabName, EditSourcePanel.class));
 				} else if (sourceButton == DataPanel.this.mimeSourceButton) {
-					DataPanel.this.setSourcePanel(DataPanel.this.mimeSourcePanel);
+					DataPanel.this.setSourcePanel(tabComponentService.getTabComponent(tabName, MimeSourcePanel.class));
 				} else if (sourceButton == DataPanel.this.emlSourceButton) {
-					DataPanel.this.setSourcePanel(DataPanel.this.emlSourcePanel);
+					DataPanel.this.setSourcePanel(tabComponentService.getTabComponent(tabName, EmlSourcePanel.class));
 				} else if (sourceButton == DataPanel.this.scpSourceButton) {
-					DataPanel.this.setSourcePanel(DataPanel.this.scpSourcePanel);
+					DataPanel.this.setSourcePanel(tabComponentService.getTabComponent(tabName, ScpSourcePanel.class));
 				}
 			}
 		};
@@ -111,7 +107,7 @@ public class DataPanel extends JPanel implements ConfigObserver {
 
 	@Override
 	public void loadConfig() {
-		String sourcePanel = this.appConfig.getString("source.type");
+		String sourcePanel = this.appConfig.getString(tabName + ".source.type");
 		if ("edit".equals(sourcePanel)) {
 			this.editSourceButton.doClick();
 		} else if ("mime".equals(sourcePanel)) {
@@ -127,14 +123,18 @@ public class DataPanel extends JPanel implements ConfigObserver {
 
 	@Override
 	public void updateConfig() {
+		String selectType;
 		if (this.editSourceButton.isSelected()) {
-			this.appConfig.setProperty("source.type", "edit");
+			selectType = "edit";
 		} else if (this.mimeSourceButton.isSelected()) {
-			this.appConfig.setProperty("source.type", "mime");
+			selectType = "mime";
 		} else if (this.emlSourceButton.isSelected()) {
-			this.appConfig.setProperty("source.type", "eml");
+			selectType = "eml";
 		} else if (this.scpSourceButton.isSelected()) {
-			this.appConfig.setProperty("source.type", "scp");
+			selectType = "scp";
+		} else {
+			selectType = "edit";
 		}
+		this.appConfig.setProperty(tabName + ".source.type", selectType);
 	}
 }

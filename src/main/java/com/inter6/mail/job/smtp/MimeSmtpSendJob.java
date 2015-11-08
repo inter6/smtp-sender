@@ -34,6 +34,10 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 	@Setter
 	private DateData replaceDateData; // NOPMD
 
+	public MimeSmtpSendJob(String tabName) {
+		super(tabName);
+	}
+
 	@Override
 	protected void doSend() throws Throwable {
 		try {

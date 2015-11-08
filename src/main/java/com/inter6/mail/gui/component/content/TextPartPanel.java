@@ -23,8 +23,8 @@ public class TextPartPanel extends ContentPartPanel {
 	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[]{"quoted-printable", "8bit", "7bit", "base64", "binary"});
 	private final JTextArea textArea = new JTextArea(5, 30);
 
-	protected TextPartPanel(ContentType contentType, Integer nested) {
-		super(contentType, nested);
+	protected TextPartPanel(String tabName, ContentType contentType, Integer nested) {
+		super(tabName, contentType, nested);
 	}
 
 	@Override

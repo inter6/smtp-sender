@@ -1,7 +1,7 @@
 package com.inter6.mail.gui.component;
 
 import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.service.ModuleService;
 
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;

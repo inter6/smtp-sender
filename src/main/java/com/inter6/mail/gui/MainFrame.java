@@ -1,11 +1,8 @@
 package com.inter6.mail.gui;
 
-import com.inter6.mail.gui.action.ActionPanel;
-import com.inter6.mail.gui.data.DataPanel;
 import com.inter6.mail.gui.menu.TopMenuBar;
 import com.inter6.mail.gui.menu.file.LoadConfigMenuItem;
-import com.inter6.mail.gui.setting.ServerPanel;
-import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.service.ModuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +24,7 @@ public class MainFrame extends JFrame {
 	private TopMenuBar topMenuBar;
 
 	@Autowired
-	private ServerPanel serverPanel;
-
-	@Autowired
-	private DataPanel dataPanel;
-
-	@Autowired
-	private ActionPanel actionPanel;
+	private RootTabPanel rootTabPanel;
 
 	@Autowired
 	private LoadConfigMenuItem loadConfigMenuItem;
@@ -53,9 +44,7 @@ public class MainFrame extends JFrame {
 	private void initLayout() {
 		this.setLayout(new BorderLayout());
 		this.setJMenuBar(this.topMenuBar);
-		this.add(this.serverPanel, BorderLayout.NORTH);
-		this.add(this.dataPanel, BorderLayout.CENTER);
-		this.add(this.actionPanel, BorderLayout.SOUTH);
+		this.add(this.rootTabPanel, BorderLayout.CENTER);
 	}
 
 	public void loadDefaultConfig() {

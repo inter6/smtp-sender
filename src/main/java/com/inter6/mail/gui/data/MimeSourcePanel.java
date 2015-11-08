@@ -1,12 +1,13 @@
 package com.inter6.mail.gui.data;
 
+import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.job.SendJobBuilder;
 import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
 import com.inter6.mail.job.smtp.MimeSmtpSendJob;
-import com.inter6.mail.module.ModuleService;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,16 +24,22 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 
 @Component
-public class MimeSourcePanel extends JPanel implements SendJobBuilder {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class MimeSourcePanel extends TabComponentPanel implements SendJobBuilder {
 	private static final long serialVersionUID = -3278717924684919247L;
+
+	private LogPanel logPanel;
 
 	private final JTextArea mimeArea = new JTextArea();
 
-	@Autowired
-	private LogPanel logPanel;
+	public MimeSourcePanel(String tabName) {
+		super(tabName);
+	}
 
 	@PostConstruct
 	private void init() { // NOPMD
+		logPanel = tabComponentService.getTabComponent(tabName, LogPanel.class);
+
 		this.setLayout(new BorderLayout());
 
 		this.add(new JScrollPane(this.mimeArea), BorderLayout.CENTER);
@@ -71,7 +78,7 @@ public class MimeSourcePanel extends JPanel implements SendJobBuilder {
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
+		MimeSmtpSendJob mimeSmtpSendJob = tabComponentService.getTabComponent(tabName, MimeSmtpSendJob.class);
 		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.mimeArea.getText().getBytes("UTF-8")));
 		return mimeSmtpSendJob;
 	}

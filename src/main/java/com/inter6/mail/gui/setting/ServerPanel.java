@@ -2,10 +2,13 @@ package com.inter6.mail.gui.setting;
 
 import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.model.AuthOption;
 import com.inter6.mail.model.setting.ServerData;
 import com.inter6.mail.module.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -20,7 +23,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @Component
-public class ServerPanel extends JPanel implements ConfigObserver {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 	private static final long serialVersionUID = -7540651743867028995L;
 
 	@Autowired
@@ -32,6 +36,10 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 	private final JTextField idField = new JTextField(15);
 	private final JPasswordField passwordField = new JPasswordField(15);
 	private final JComboBox<AuthOption> authOptionBox = new JComboBox<>(AuthOption.allItems());
+
+	public ServerPanel(String tabName) {
+		super(tabName);
+	}
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -96,7 +104,7 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 
 	@Override
 	public void loadConfig() {
-		ServerData serverData = new Gson().fromJson(this.appConfig.getUnsplitString("server.data"), ServerData.class);
+		ServerData serverData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".server.data"), ServerData.class);
 		if (serverData == null) {
 			return;
 		}
@@ -110,6 +118,6 @@ public class ServerPanel extends JPanel implements ConfigObserver {
 
 	@Override
 	public void updateConfig() {
-		this.appConfig.setProperty("server.data", new Gson().toJson(this.getServerData()));
+		this.appConfig.setProperty(tabName + ".server.data", new Gson().toJson(this.getServerData()));
 	}
 }

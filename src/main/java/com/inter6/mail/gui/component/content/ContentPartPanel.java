@@ -1,9 +1,11 @@
 package com.inter6.mail.gui.component.content;
 
+import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.component.content.PartData;
-import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.service.ModuleService;
+import com.inter6.mail.service.TabComponentService;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -25,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-public abstract class ContentPartPanel extends JPanel {
+public abstract class ContentPartPanel extends TabComponentPanel {
 	private static final long serialVersionUID = -3928978805796944620L;
 
 	@Getter
@@ -40,19 +42,19 @@ public abstract class ContentPartPanel extends JPanel {
 	private final JComboBox<ContentType> childTypeSelectBox = new JComboBox<>();
 	private final JButton addChildButton = new JButton("Add Child");
 
-	public static ContentPartPanel createPanel(ContentType contentType, int nested) throws Exception {
+	public static ContentPartPanel createPanel(String tabName, ContentType contentType, int nested) throws Exception {
 		Class<? extends ContentPartPanel> panelClass = contentType.getPanelClass();
-		ContentPartPanel contentPanel = panelClass.getDeclaredConstructor(ContentType.class, Integer.class).newInstance(contentType, nested);
+		ContentPartPanel contentPanel = panelClass.getDeclaredConstructor(String.class, ContentType.class, Integer.class).newInstance(tabName, contentType, nested);
 		contentPanel.initLayout();
 		return contentPanel;
 	}
 
-	public static ContentPartPanel createPanelByRoot(ContentType contentType) throws Exception {
-		return createPanel(contentType, 0);
+	public static ContentPartPanel createPanelByRoot(String tabName, ContentType contentType) throws Exception {
+		return createPanel(tabName, contentType, 0);
 	}
 
-	protected ContentPartPanel(ContentType contentType, Integer nested) {
-		super();
+	protected ContentPartPanel(String tabName, ContentType contentType, Integer nested) {
+		super(tabName);
 		this.contentType = contentType;
 		this.nested = nested;
 
@@ -101,14 +103,15 @@ public abstract class ContentPartPanel extends JPanel {
 
 	private ContentPartPanel addChildPanel(ContentType childType) {
 		try {
-			ContentPartPanel childPanel = createPanel(childType, this.nested + 1);
+			ContentPartPanel childPanel = createPanel(this.tabName, childType, this.nested + 1);
 			ChildWrapPanel childWrapPanel = new ChildWrapPanel(childPanel);
 			this.childWrapPanels.add(childWrapPanel);
 			this.childContainerPanel.add(childWrapPanel);
 			this.setActionComponents();
 			return childPanel;
 		} catch (Exception e) {
-			ModuleService.getBean(LogPanel.class).error("create content panel fail ! - TYPE:" + childType, e);
+			LogPanel logPanel = ModuleService.getBean(TabComponentService.class).getTabComponent(tabName, LogPanel.class);
+			logPanel.error("create content panel fail ! - TYPE:" + childType, e);
 			return null;
 		}
 	}

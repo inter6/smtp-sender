@@ -1,7 +1,7 @@
 package com.inter6.mail.gui.menu.tools;
 
 import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.service.ModuleService;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Lookup;
