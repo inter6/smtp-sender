@@ -1,8 +1,7 @@
 package com.inter6.mail.gui;
 
-import com.inter6.mail.service.TabComponentService;
+import com.inter6.mail.module.TabComponentManager;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -11,14 +10,13 @@ import javax.swing.JTabbedPane;
 @Component
 public class RootTabPanel extends JTabbedPane {
 
-	@Autowired
-	private TabComponentService tabComponentService;
+	private TabComponentManager tabComponentManager = TabComponentManager.getInstance();
 
 	@Getter
 	private String activeTabName = "Default";
 
 	@PostConstruct
 	private void init() {
-		this.addTab("Default", tabComponentService.getTabComponent("Default", TabPanel.class));
+		this.addTab("Default", tabComponentManager.getTabComponent("Default", TabPanel.class));
 	}
 }

@@ -1,7 +1,7 @@
 package com.inter6.mail;
 
 import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.service.ModuleService;
+import com.inter6.mail.module.ModuleService;
 import com.inter6.mail.service.XTrustProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;

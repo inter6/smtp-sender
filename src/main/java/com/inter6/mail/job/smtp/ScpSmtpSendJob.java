@@ -37,7 +37,7 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 
 	@PostConstruct
 	private void init() {
-		logPanel = tabComponentService.getTabComponent(tabName, LogPanel.class);
+		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 	}
 
 	@Override
@@ -151,7 +151,7 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 					}
 
 					try {
-						MimeSmtpSendJob mimeSmtpSendJob = tabComponentService.getTabComponent(tabName, MimeSmtpSendJob.class);
+						MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
 						mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(fos.toByteArray()));
 						mimeSmtpSendJob.setReplaceDateData(scpSourceData.getReplaceDateData());
 						this.orderWorker(mimeSmtpSendJob);

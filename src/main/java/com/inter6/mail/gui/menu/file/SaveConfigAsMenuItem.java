@@ -1,7 +1,7 @@
 package com.inter6.mail.gui.menu.file;
 
 import com.inter6.mail.gui.action.LogPanel;
-import com.inter6.mail.service.TabComponentService;
+import com.inter6.mail.module.TabComponentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,7 @@ public class SaveConfigAsMenuItem extends JMenuItem implements ActionListener {
 	@Autowired
 	private SaveConfigMenuItem saveConfigMenuItem;
 
-	@Autowired
-	private TabComponentService tabComponentService;
+	private TabComponentManager tabComponentManager = TabComponentManager.getInstance();
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -30,7 +29,7 @@ public class SaveConfigAsMenuItem extends JMenuItem implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JFileChooser fileChooser = new JFileChooser();
 		if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
-			LogPanel logPanel = tabComponentService.getActiveTabComponent(LogPanel.class);
+			LogPanel logPanel = tabComponentManager.getActiveTabComponent(LogPanel.class);
 			logPanel.info("save config cancel.");
 			return;
 		}

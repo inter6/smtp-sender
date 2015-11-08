@@ -53,8 +53,8 @@ public class ActionPanel extends TabComponentPanel implements ConfigObserver {
 
 	@PostConstruct
 	private void init() { // NOPMD
-		logPanel = tabComponentService.getTabComponent(tabName, LogPanel.class);
-		dataPanel = tabComponentService.getTabComponent(tabName, DataPanel.class);
+		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
+		dataPanel = tabComponentManager.getTabComponent(tabName, DataPanel.class);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 

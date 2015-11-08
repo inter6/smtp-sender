@@ -4,7 +4,7 @@ import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.menu.TopMenuBar;
 import com.inter6.mail.module.AppConfig;
-import com.inter6.mail.service.TabComponentService;
+import com.inter6.mail.module.TabComponentManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +24,7 @@ public class LoadConfigMenuItem extends JMenuItem implements ActionListener {
 	@Autowired
 	private TopMenuBar topMenuBar;
 
-	@Autowired
-	private TabComponentService tabComponentService;
+	private TabComponentManager tabComponentManager = TabComponentManager.getInstance();
 
 	@PostConstruct
 	private void init() { // NOPMD
@@ -47,12 +46,12 @@ public class LoadConfigMenuItem extends JMenuItem implements ActionListener {
 	}
 
 	public void loadConfig(File configFile) {
-		LogPanel logPanel = tabComponentService.getActiveTabComponent(LogPanel.class);
+		LogPanel logPanel = tabComponentManager.getActiveTabComponent(LogPanel.class);
 		try {
 			this.appConfig.clear();
 			this.appConfig.load(configFile, "UTF-8");
 
-			for (ConfigObserver observer : tabComponentService.getTabComponents(ConfigObserver.class)) {
+			for (ConfigObserver observer : tabComponentManager.getTabComponents(ConfigObserver.class)) {
 				observer.loadConfig();
 			}
 

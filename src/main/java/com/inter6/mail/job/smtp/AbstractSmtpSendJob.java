@@ -9,9 +9,8 @@ import com.inter6.mail.job.thread.ThreadSupportJob;
 import com.inter6.mail.model.action.ActionData;
 import com.inter6.mail.model.data.EnvelopeData;
 import com.inter6.mail.model.setting.ServerData;
-import com.inter6.mail.service.TabComponentService;
+import com.inter6.mail.module.TabComponentManager;
 import org.apache.commons.lang3.time.StopWatch;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -22,8 +21,7 @@ public abstract class AbstractSmtpSendJob implements TabComponent, ThreadSupport
 
 	protected String tabName;
 
-	@Autowired
-	protected TabComponentService tabComponentService;
+	protected TabComponentManager tabComponentManager = TabComponentManager.getInstance();
 
 	private StopWatch stopWatch;
 
@@ -38,8 +36,8 @@ public abstract class AbstractSmtpSendJob implements TabComponent, ThreadSupport
 
 	@Override
 	public void execute() {
-		ActionPanel actionPanel = this.tabComponentService.getTabComponent(tabName, ActionPanel.class);
-		LogPanel logPanel = this.tabComponentService.getTabComponent(tabName, LogPanel.class);
+		ActionPanel actionPanel = this.tabComponentManager.getTabComponent(tabName, ActionPanel.class);
+		LogPanel logPanel = this.tabComponentManager.getTabComponent(tabName, LogPanel.class);
 		try {
 			this.stopWatch = new StopWatch();
 			this.stopWatch.start();
@@ -60,15 +58,15 @@ public abstract class AbstractSmtpSendJob implements TabComponent, ThreadSupport
 	public abstract void terminate() throws InterruptedException;
 
 	protected ServerData getServerData() {
-		return this.tabComponentService.getTabComponent(tabName, ServerPanel.class).getServerData();
+		return this.tabComponentManager.getTabComponent(tabName, ServerPanel.class).getServerData();
 	}
 
 	protected EnvelopeData getEnvelopeData() {
-		return this.tabComponentService.getTabComponent(tabName, EnvelopePanel.class).getEnvelopeData();
+		return this.tabComponentManager.getTabComponent(tabName, EnvelopePanel.class).getEnvelopeData();
 	}
 
 	protected ActionData getActionData() {
-		return this.tabComponentService.getTabComponent(tabName, ActionPanel.class).getActionData();
+		return this.tabComponentManager.getTabComponent(tabName, ActionPanel.class).getActionData();
 	}
 
 	protected long getStartTime() {

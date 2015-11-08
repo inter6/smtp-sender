@@ -4,8 +4,8 @@ import com.inter6.mail.gui.TabComponentPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.component.content.PartData;
-import com.inter6.mail.service.ModuleService;
-import com.inter6.mail.service.TabComponentService;
+import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.module.TabComponentManager;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -110,7 +110,7 @@ public abstract class ContentPartPanel extends TabComponentPanel {
 			this.setActionComponents();
 			return childPanel;
 		} catch (Exception e) {
-			LogPanel logPanel = ModuleService.getBean(TabComponentService.class).getTabComponent(tabName, LogPanel.class);
+			LogPanel logPanel = ModuleService.getBean(TabComponentManager.class).getTabComponent(tabName, LogPanel.class);
 			logPanel.error("create content panel fail ! - TYPE:" + childType, e);
 			return null;
 		}

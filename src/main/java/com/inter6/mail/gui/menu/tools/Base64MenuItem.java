@@ -1,7 +1,7 @@
 package com.inter6.mail.gui.menu.tools;
 
 import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.service.ModuleService;
+import com.inter6.mail.module.ModuleService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

@@ -75,7 +75,7 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 		public void run() {
 			this.isRun = true;
 			while (this.isRun) {
-				ActionPanel actionPanel = tabComponentService.getTabComponent(tabName, ActionPanel.class);
+				ActionPanel actionPanel = tabComponentManager.getTabComponent(tabName, ActionPanel.class);
 				actionPanel.onProgress(AbstractSmtpSendMasterJob.this.getProgressRate(),
 						AbstractSmtpSendMasterJob.this.getStartTime(),
 						System.currentTimeMillis());

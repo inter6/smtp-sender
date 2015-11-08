@@ -38,7 +38,7 @@ public class MimeSourcePanel extends TabComponentPanel implements SendJobBuilder
 
 	@PostConstruct
 	private void init() { // NOPMD
-		logPanel = tabComponentService.getTabComponent(tabName, LogPanel.class);
+		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
 		this.setLayout(new BorderLayout());
 
@@ -78,7 +78,7 @@ public class MimeSourcePanel extends TabComponentPanel implements SendJobBuilder
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		MimeSmtpSendJob mimeSmtpSendJob = tabComponentService.getTabComponent(tabName, MimeSmtpSendJob.class);
+		MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
 		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.mimeArea.getText().getBytes("UTF-8")));
 		return mimeSmtpSendJob;
 	}

@@ -42,7 +42,7 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
 
 	@PostConstruct
 	private void init() { // NOPMD
-		envelopePanel = tabComponentService.getTabComponent(tabName, EnvelopePanel.class);
+		envelopePanel = tabComponentManager.getTabComponent(tabName, EnvelopePanel.class);
 
 		this.setLayout(new BorderLayout());
 		this.add(envelopePanel, BorderLayout.NORTH);
@@ -82,13 +82,13 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
 			public void actionPerformed(ActionEvent e) {
 				Object sourceButton = e.getSource();
 				if (sourceButton == DataPanel.this.editSourceButton) {
-					DataPanel.this.setSourcePanel(tabComponentService.getTabComponent(tabName, EditSourcePanel.class));
+					DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, EditSourcePanel.class));
 				} else if (sourceButton == DataPanel.this.mimeSourceButton) {
-					DataPanel.this.setSourcePanel(tabComponentService.getTabComponent(tabName, MimeSourcePanel.class));
+					DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, MimeSourcePanel.class));
 				} else if (sourceButton == DataPanel.this.emlSourceButton) {
-					DataPanel.this.setSourcePanel(tabComponentService.getTabComponent(tabName, EmlSourcePanel.class));
+					DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, EmlSourcePanel.class));
 				} else if (sourceButton == DataPanel.this.scpSourceButton) {
-					DataPanel.this.setSourcePanel(tabComponentService.getTabComponent(tabName, ScpSourcePanel.class));
+					DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, ScpSourcePanel.class));
 				}
 			}
 		};

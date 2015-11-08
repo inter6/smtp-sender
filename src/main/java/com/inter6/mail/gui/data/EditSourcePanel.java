@@ -78,10 +78,10 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 
 	@PostConstruct
 	private void init() { // NOPMD
-		editAddressPanel = tabComponentService.getTabComponent(tabName, EditAddressPanel.class);
-		editHeaderPanel = tabComponentService.getTabComponent(tabName, EditHeaderPanel.class);
-		editMessagePanel = tabComponentService.getTabComponent(tabName, EditMessagePanel.class);
-		logPanel = tabComponentService.getTabComponent(tabName, LogPanel.class);
+		editAddressPanel = tabComponentManager.getTabComponent(tabName, EditAddressPanel.class);
+		editHeaderPanel = tabComponentManager.getTabComponent(tabName, EditHeaderPanel.class);
+		editMessagePanel = tabComponentManager.getTabComponent(tabName, EditMessagePanel.class);
+		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
 		this.setLayout(new BorderLayout());
 
@@ -210,7 +210,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		MimeSmtpSendJob mimeSmtpSendJob = tabComponentService.getTabComponent(tabName, MimeSmtpSendJob.class);
+		MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
 		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.buildMessage()));
 		return mimeSmtpSendJob;
 	}

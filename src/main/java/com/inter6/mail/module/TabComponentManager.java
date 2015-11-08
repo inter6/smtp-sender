@@ -1,19 +1,13 @@
-package com.inter6.mail.service;
+package com.inter6.mail.module;
 
 import com.inter6.mail.gui.RootTabPanel;
 import com.inter6.mail.gui.TabComponent;
 import org.apache.commons.collections4.map.MultiKeyMap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-public class TabComponentService {
-
-	@Autowired
-	private RootTabPanel rootTabPanel;
+public class TabComponentManager {
 
 	private MultiKeyMap tabComponents = new MultiKeyMap();
 
@@ -27,6 +21,7 @@ public class TabComponentService {
 	}
 
 	public <T extends TabComponent> T getActiveTabComponent(Class<T> type) {
+		RootTabPanel rootTabPanel = ModuleService.getBean(RootTabPanel.class);
 		return getTabComponent(rootTabPanel.getActiveTabName(), type);
 	}
 
@@ -38,5 +33,13 @@ public class TabComponentService {
 			}
 		}
 		return components;
+	}
+
+	public static TabComponentManager getInstance() {
+		return HOLDER._instance;
+	}
+
+	private static class HOLDER {
+		private static TabComponentManager _instance = new TabComponentManager();
 	}
 }

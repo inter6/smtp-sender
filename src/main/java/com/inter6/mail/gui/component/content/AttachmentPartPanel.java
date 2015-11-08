@@ -6,7 +6,7 @@ import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.component.EncodingTextData;
 import com.inter6.mail.model.component.content.AttachmentPartData;
 import com.inter6.mail.model.component.content.PartData;
-import com.inter6.mail.service.ModuleService;
+import com.inter6.mail.module.ModuleService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 

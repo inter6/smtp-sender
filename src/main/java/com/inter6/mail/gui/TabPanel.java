@@ -21,8 +21,8 @@ public class TabPanel extends TabComponentPanel {
 	@PostConstruct
 	public void init() {
 		this.setLayout(new BorderLayout());
-		this.add(tabComponentService.getTabComponent(tabName, ServerPanel.class), BorderLayout.NORTH);
-		this.add(tabComponentService.getTabComponent(tabName, DataPanel.class), BorderLayout.CENTER);
-		this.add(tabComponentService.getTabComponent(tabName, ActionPanel.class), BorderLayout.SOUTH);
+		this.add(tabComponentManager.getTabComponent(tabName, ServerPanel.class), BorderLayout.NORTH);
+		this.add(tabComponentManager.getTabComponent(tabName, DataPanel.class), BorderLayout.CENTER);
+		this.add(tabComponentManager.getTabComponent(tabName, ActionPanel.class), BorderLayout.SOUTH);
 	}
 }

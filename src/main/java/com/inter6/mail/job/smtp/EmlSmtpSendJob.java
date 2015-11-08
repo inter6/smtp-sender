@@ -37,7 +37,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 	@Override
 	protected void doMasterJob() throws Throwable {
 		List<File> emlFiles = new ArrayList<>();
-		LogPanel logPanel = tabComponentService.getTabComponent(tabName, LogPanel.class);
+		LogPanel logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
 		for (String path : this.emlSourceData.getFiles()) {
 			File file = new File(path);
@@ -61,7 +61,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 		for (int i = 0; i < emlFiles.size(); i++) {
 			File emlFile = emlFiles.get(i);
 			try {
-				MimeSmtpSendJob mimeSmtpSendJob = tabComponentService.getTabComponent(tabName, MimeSmtpSendJob.class);
+				MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
 				mimeSmtpSendJob.setMessageStream(new FileInputStream(emlFile));
 				mimeSmtpSendJob.setReplaceDateData(emlSourceData.getReplaceDateData());
 				this.orderWorker(mimeSmtpSendJob);

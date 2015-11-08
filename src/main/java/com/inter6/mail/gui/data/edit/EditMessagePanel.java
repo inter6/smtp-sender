@@ -36,7 +36,7 @@ public class EditMessagePanel extends TabComponentPanel {
 
 	@PostConstruct
 	private void init() { // NOPMD
-		logPanel = tabComponentService.getTabComponent(tabName, LogPanel.class);
+		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
 		this.setLayout(new BorderLayout());
 

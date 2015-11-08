@@ -136,7 +136,7 @@ public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder,
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		EmlSmtpSendJob emlSmtpSendJob = tabComponentService.getTabComponent(tabName, EmlSmtpSendJob.class);
+		EmlSmtpSendJob emlSmtpSendJob = tabComponentManager.getTabComponent(tabName, EmlSmtpSendJob.class);
 		emlSmtpSendJob.setEmlSourceData(this.getEmlSourceData());
 		return emlSmtpSendJob;
 	}

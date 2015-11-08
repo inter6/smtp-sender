@@ -2,7 +2,7 @@ package com.inter6.mail.gui;
 
 import com.inter6.mail.gui.menu.TopMenuBar;
 import com.inter6.mail.gui.menu.file.LoadConfigMenuItem;
-import com.inter6.mail.service.ModuleService;
+import com.inter6.mail.module.ModuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

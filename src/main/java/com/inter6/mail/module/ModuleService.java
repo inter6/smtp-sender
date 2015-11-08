@@ -1,4 +1,4 @@
-package com.inter6.mail.service;
+package com.inter6.mail.module;
 
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;

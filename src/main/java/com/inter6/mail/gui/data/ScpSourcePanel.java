@@ -161,7 +161,7 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		ScpSmtpSendJob scpSmtpSendJob = tabComponentService.getTabComponent(tabName, ScpSmtpSendJob.class);
+		ScpSmtpSendJob scpSmtpSendJob = tabComponentManager.getTabComponent(tabName, ScpSmtpSendJob.class);
 		scpSmtpSendJob.setScpSourceData(this.getScpSourceData());
 		return scpSmtpSendJob;
 	}
