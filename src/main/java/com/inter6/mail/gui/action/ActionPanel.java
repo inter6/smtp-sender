@@ -184,7 +184,7 @@ public class ActionPanel extends TabComponentPanel implements ConfigObserver {
 
 	@Override
 	public void loadConfig() {
-		ActionData actionData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".action.data"), ActionData.class);
+		ActionData actionData = new Gson().fromJson(this.appConfig.getString(tabName + ".action.data"), ActionData.class);
 		if (actionData == null) {
 			return;
 		}

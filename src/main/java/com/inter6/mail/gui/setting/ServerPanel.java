@@ -104,7 +104,7 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 
 	@Override
 	public void loadConfig() {
-		ServerData serverData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".server.data"), ServerData.class);
+		ServerData serverData = new Gson().fromJson(this.appConfig.getString(tabName + ".server.data"), ServerData.class);
 		if (serverData == null) {
 			return;
 		}

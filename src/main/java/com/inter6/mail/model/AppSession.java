@@ -24,11 +24,11 @@ public class AppSession implements ConfigObserver {
 
 	@Override
 	public void loadConfig() {
-		this.lastSelectSourceDir = this.appConfig.getUnsplitString("lastSelectSourceDir");
+		this.lastSelectSourceDir = this.appConfig.getString("lastSelectSourceDir");
 		if (StringUtils.isEmpty(this.lastSelectSourceDir)) {
 			this.lastSelectSourceDir = "/";
 		}
-		this.lastSelectAttachDir = this.appConfig.getUnsplitString("lastSelectAttachDir");
+		this.lastSelectAttachDir = this.appConfig.getString("lastSelectAttachDir");
 		if (StringUtils.isEmpty(this.lastSelectAttachDir)) {
 			this.lastSelectAttachDir = "/";
 		}

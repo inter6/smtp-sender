@@ -155,7 +155,7 @@ public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder,
 	@Override
 	public void loadConfig() {
 		this.fileListModel.clear();
-		EmlSourceData emlSourceData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".eml.source.data"), EmlSourceData.class);
+		EmlSourceData emlSourceData = new Gson().fromJson(this.appConfig.getString(tabName + ".eml.source.data"), EmlSourceData.class);
 		if (emlSourceData == null) {
 			return;
 		}
