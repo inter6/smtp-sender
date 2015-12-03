@@ -49,7 +49,7 @@ public class EditAddressPanel extends TabComponentPanel {
 			this.typeOptionBox.setSelectedItem("To");
 			actionPanel.add(this.typeOptionBox);
 
-			JButton addButton = new JButton("Add");
+			JButton addButton = new JButton("Add Address");
 			addButton.addActionListener(this.createAddEvent());
 			actionPanel.add(addButton);
 		}
