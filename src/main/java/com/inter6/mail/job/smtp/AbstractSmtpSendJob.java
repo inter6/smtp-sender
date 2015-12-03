@@ -1,5 +1,10 @@
 package com.inter6.mail.job.smtp;
 
+import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.inter6.mail.gui.action.ActionPanel;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.data.EnvelopePanel;
@@ -10,10 +15,6 @@ import com.inter6.mail.model.action.ActionData;
 import com.inter6.mail.model.data.EnvelopeData;
 import com.inter6.mail.model.setting.ServerData;
 import com.inter6.mail.module.TabComponentManager;
-import org.apache.commons.lang3.time.StopWatch;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -41,7 +42,7 @@ public abstract class AbstractSmtpSendJob implements TabComponent, ThreadSupport
 		try {
 			this.stopWatch = new StopWatch();
 			this.stopWatch.start();
-			actionPanel.onStart(this.stopWatch.getStartTime());
+			actionPanel.onStart(this, this.stopWatch.getStartTime());
 
 			this.doSend();
 			logPanel.info("smtp send done - JOB:" + this);
@@ -49,7 +50,7 @@ public abstract class AbstractSmtpSendJob implements TabComponent, ThreadSupport
 			logPanel.error("smtp send fail ! - JOB:" + this, e);
 		} finally {
 			this.stopWatch.stop();
-			actionPanel.onDone(this.stopWatch.getStartTime(), this.stopWatch.getTime());
+			actionPanel.onDone(this, this.stopWatch.getStartTime(), this.stopWatch.getTime());
 		}
 	}
 
