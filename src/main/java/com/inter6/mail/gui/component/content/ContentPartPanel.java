@@ -40,7 +40,7 @@ public abstract class ContentPartPanel extends TabComponentPanel {
 	private final JPanel childContainerPanel = new JPanel();
 	private final JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	private final JComboBox<ContentType> childTypeSelectBox = new JComboBox<>();
-	private final JButton addChildButton = new JButton("Add Child");
+	private final JButton addChildButton = new JButton("Add Child Part");
 
 	public static ContentPartPanel createPanel(String tabName, ContentType contentType, int nested) throws Exception {
 		Class<? extends ContentPartPanel> panelClass = contentType.getPanelClass();

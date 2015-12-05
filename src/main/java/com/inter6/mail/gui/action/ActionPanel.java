@@ -1,16 +1,9 @@
 package com.inter6.mail.gui.action;
 
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.data.DataPanel;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
-import com.inter6.mail.model.action.ActionData;
-import com.inter6.mail.module.AppConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -21,10 +14,19 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.data.DataPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
+import com.inter6.mail.model.action.ActionData;
+import com.inter6.mail.module.AppConfig;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -122,7 +124,11 @@ public class ActionPanel extends TabComponentPanel implements ConfigObserver {
 		};
 	}
 
-	public void onStart(long startTime) {
+	public void onStart(AbstractSmtpSendJob abstractSmtpSendJob, long startTime) {
+		if (currentJob != abstractSmtpSendJob) {
+			return;
+		}
+
 		this.elapsedTimeLabel.setText("0:0:0");
 		this.progressBar.setValue(0);
 		this.progressLabel.setText("0.00 %");
@@ -132,7 +138,11 @@ public class ActionPanel extends TabComponentPanel implements ConfigObserver {
 		ActionPanel.this.stopButton.setEnabled(true);
 	}
 
-	public void onDone(long startTime, long elapsedTime) {
+	public void onDone(AbstractSmtpSendJob abstractSmtpSendJob, long startTime, long elapsedTime) {
+		if (currentJob != abstractSmtpSendJob) {
+			return;
+		}
+
 		this.currentJob = null;
 		this.elapsedTimeLabel.setText(this.formatElapsedTime(elapsedTime));
 		this.progressBar.setValue(100);
@@ -143,7 +153,11 @@ public class ActionPanel extends TabComponentPanel implements ConfigObserver {
 		ActionPanel.this.stopButton.setEnabled(false);
 	}
 
-	public void onProgress(float progressRate, long startTime, long currentTime) {
+	public void onProgress(AbstractSmtpSendJob abstractSmtpSendJob, float progressRate, long startTime, long currentTime) {
+		if (currentJob != abstractSmtpSendJob) {
+			return;
+		}
+
 		this.elapsedTimeLabel.setText(this.formatElapsedTime(currentTime - startTime));
 
 		// 끝나기 전까지는 99%로 보여준다.
@@ -170,7 +184,7 @@ public class ActionPanel extends TabComponentPanel implements ConfigObserver {
 
 	@Override
 	public void loadConfig() {
-		ActionData actionData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".action.data"), ActionData.class);
+		ActionData actionData = new Gson().fromJson(this.appConfig.getString(tabName + ".action.data"), ActionData.class);
 		if (actionData == null) {
 			return;
 		}

@@ -20,6 +20,7 @@ public class AppConfig extends PropertiesConfiguration {
 	@Autowired
 	public void init() {
 		this.setAutoSave(false);
+		this.setDelimiterParsingDisabled(true);
 	}
 
 	public void load(File file, String encoding) throws IOException, ConfigurationException {
@@ -40,10 +41,5 @@ public class AppConfig extends PropertiesConfiguration {
 		} finally {
 			IOUtils.closeQuietly(out);
 		}
-	}
-
-	public String getUnsplitString(String key) {
-		String[] values = this.getStringArray(key);
-		return StringUtils.join(values, ",");
 	}
 }

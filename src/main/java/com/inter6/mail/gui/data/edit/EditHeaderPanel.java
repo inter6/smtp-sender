@@ -43,7 +43,7 @@ public class EditHeaderPanel extends TabComponentPanel {
 
 		JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		{
-			JButton addButton = new JButton("Add");
+			JButton addButton = new JButton("Add Header");
 			addButton.addActionListener(this.createAddEvent());
 			actionPanel.add(addButton);
 		}

@@ -227,7 +227,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 	@Override
 	public void loadConfig() {
 		Gson gson = new GsonBuilder().registerTypeAdapter(PartData.class, new PartDataJsonDeserializer()).create();
-		EditSourceData editSourceData = gson.fromJson(this.appConfig.getUnsplitString(tabName + ".edit.source.data"), EditSourceData.class);
+		EditSourceData editSourceData = gson.fromJson(this.appConfig.getString(tabName + ".edit.source.data"), EditSourceData.class);
 		if (editSourceData == null) {
 			return;
 		}

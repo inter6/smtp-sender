@@ -61,7 +61,7 @@ public class EnvelopePanel extends TabComponentPanel implements ConfigObserver {
 
 	@Override
 	public void loadConfig() {
-		EnvelopeData envelopeData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".envelope.data"), EnvelopeData.class);
+		EnvelopeData envelopeData = new Gson().fromJson(this.appConfig.getString(tabName + ".envelope.data"), EnvelopeData.class);
 		if (envelopeData == null) {
 			return;
 		}

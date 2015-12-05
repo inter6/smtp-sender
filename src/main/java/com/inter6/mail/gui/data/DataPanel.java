@@ -44,6 +44,10 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
 	@PostConstruct
 	private void init() {
 		envelopePanel = tabComponentManager.getTabComponent(tabName, EnvelopePanel.class);
+		tabComponentManager.getTabComponent(tabName, EditSourcePanel.class);
+		tabComponentManager.getTabComponent(tabName, MimeSourcePanel.class);
+		tabComponentManager.getTabComponent(tabName, EmlSourcePanel.class);
+		tabComponentManager.getTabComponent(tabName, ScpSourcePanel.class);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(envelopePanel);

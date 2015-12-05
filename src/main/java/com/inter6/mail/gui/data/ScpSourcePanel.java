@@ -190,7 +190,7 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
 	@Override
 	public void loadConfig() {
 		this.pathListModel.clear();
-		ScpSourceData scpSourceData = new Gson().fromJson(this.appConfig.getUnsplitString(tabName + ".scp.source.data"), ScpSourceData.class);
+		ScpSourceData scpSourceData = new Gson().fromJson(this.appConfig.getString(tabName + ".scp.source.data"), ScpSourceData.class);
 		if (scpSourceData == null) {
 			return;
 		}
