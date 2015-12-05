@@ -1,9 +1,13 @@
-smtp-sender v1.2.0 (released: 15/11/08)
+smtp-sender v1.2.1 (released: 15/12/05)
 
 Developer: inter6 <inter6@inter6.com>
 Repository: https://github.com/inter6/smtp-sender
 
 Release History
+
+v1.2.1
+- Convert Maven to Gradle
+- Bug fix
 
 v1.2.0
 - Add Tab Feature (Not compatible v1.1.1 config file)
