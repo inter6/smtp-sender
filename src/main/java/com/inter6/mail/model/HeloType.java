@@ -10,7 +10,7 @@ public enum HeloType {
 	}
 
 	public static HeloType[] allItems() {
-		return new HeloType[]{NONE, HELO, EHLO};
+		return new HeloType[] { NONE, HELO, EHLO };
 	}
 
 	@Override

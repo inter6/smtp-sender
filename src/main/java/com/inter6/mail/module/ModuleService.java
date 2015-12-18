@@ -1,9 +1,10 @@
 package com.inter6.mail.module;
 
-import lombok.Setter;
-import org.springframework.context.ApplicationContext;
-
 import java.util.Map;
+
+import lombok.Setter;
+
+import org.springframework.context.ApplicationContext;
 
 public class ModuleService {
 

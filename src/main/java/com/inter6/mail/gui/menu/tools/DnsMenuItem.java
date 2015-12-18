@@ -1,12 +1,10 @@
 package com.inter6.mail.gui.menu.tools;
 
-import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.stereotype.Component;
-import org.xbill.DNS.Lookup;
-import org.xbill.DNS.Record;
-import org.xbill.DNS.SimpleResolver;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.InetSocketAddress;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -20,11 +18,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.InetSocketAddress;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.stereotype.Component;
+import org.xbill.DNS.Lookup;
+import org.xbill.DNS.Record;
+import org.xbill.DNS.SimpleResolver;
+
+import com.inter6.mail.gui.MainFrame;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 public class DnsMenuItem extends JMenuItem implements ActionListener {
@@ -102,17 +104,12 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 						String searchHost = DnsDialog.this.searchHostField.getText();
 						SimpleResolver resolver = new SimpleResolver();
 						if (DnsDialog.this.serverUseCheckBox.isSelected()) {
-							resolver.setAddress(new InetSocketAddress(
-									DnsDialog.this.serverIpField.getText(),
-									Integer.parseInt(DnsDialog.this.serverPortField.getText())));
+							resolver.setAddress(new InetSocketAddress(DnsDialog.this.serverIpField.getText(), Integer.parseInt(DnsDialog.this.serverPortField.getText())));
 						}
 						this.queryDns(searchHost, "A", resolver);
 						this.queryDns(searchHost, "MX", resolver);
 					} catch (Throwable e) {
-						JOptionPane.showMessageDialog(DnsDialog.this,
-								e.getClass().getSimpleName() + " - " + e.getMessage(),
-								"DNS Query fail !",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(DnsDialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "DNS Query fail !", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 
@@ -129,10 +126,7 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
 							DnsDialog.this.resultArea.append(record.toString() + "\n");
 						}
 					} catch (Throwable e) {
-						JOptionPane.showMessageDialog(DnsDialog.this,
-								e.getClass().getSimpleName() + " - " + e.getMessage(),
-								"DNS Query fail !",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(DnsDialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "DNS Query fail !", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			};

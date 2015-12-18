@@ -1,24 +1,27 @@
 package com.inter6.mail.job.smtp;
 
-import com.inter6.mail.model.AdvancedMimeMessage;
-import com.inter6.mail.model.AuthOption;
-import com.inter6.mail.model.HeloType;
-import com.inter6.mail.model.component.DateData;
-import com.inter6.mail.service.SmtpService;
-import lombok.Setter;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import javax.mail.MessagingException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Set;
+
+import javax.mail.MessagingException;
+
+import lombok.Setter;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.model.AdvancedMimeMessage;
+import com.inter6.mail.model.AuthOption;
+import com.inter6.mail.model.HeloType;
+import com.inter6.mail.model.component.DateData;
+import com.inter6.mail.service.SmtpService;
 
 /**
  * messageStream : InputStream
@@ -34,10 +37,6 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 
 	@Setter
 	private DateData replaceDateData;
-
-	public MimeSmtpSendJob(String tabName) {
-		super(tabName);
-	}
 
 	@Override
 	protected void doSend() throws Throwable {
@@ -58,8 +57,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 			InputStream convertStream = null;
 			try {
 				convertStream = this.convertMessageStream(this.messageStream);
-				Set<String> failReceivers = SmtpService
-						.createInstance(host, port, connectType)
+				Set<String> failReceivers = SmtpService.createInstance(host, port, connectType)
 						.setHelo(heloType, heloDomain)
 						.setAuth(authOption.getMethod(), id, password)
 						.setEnvelope(mailFrom, rcptTos)
@@ -79,7 +77,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 		ByteArrayOutputStream copyStream = new ByteArrayOutputStream();
 		if (this.isParseMimeCondition()) {
 			AdvancedMimeMessage mimeMessage = new AdvancedMimeMessage(messageStream);
-//			this.replaceSubject(mimeMessage);
+			//			this.replaceSubject(mimeMessage);
 			this.replaceDate(mimeMessage);
 			mimeMessage.saveChanges();
 			mimeMessage.writeTo(copyStream);
@@ -88,7 +86,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 			IOUtils.copy(messageStream, copyStream);
 		}
 
-//		this.saveToEml(copyStream);
+		//		this.saveToEml(copyStream);
 		return new ByteArrayInputStream(copyStream.toByteArray());
 	}
 

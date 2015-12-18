@@ -1,10 +1,11 @@
 package com.inter6.mail.model;
 
-import org.apache.commons.lang3.ArrayUtils;
+import java.io.InputStream;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.InputStream;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 public class AdvancedMimeMessage extends MimeMessage {
 

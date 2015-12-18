@@ -1,16 +1,8 @@
 package com.inter6.mail.gui.setting;
 
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.model.AuthOption;
-import com.inter6.mail.model.HeloType;
-import com.inter6.mail.model.setting.ServerData;
-import com.inter6.mail.module.AppConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -19,9 +11,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.model.AuthOption;
+import com.inter6.mail.model.HeloType;
+import com.inter6.mail.model.setting.ServerData;
+import com.inter6.mail.module.AppConfig;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -33,7 +35,7 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 
 	private final JTextField hostField = new JTextField(25);
 	private final JTextField portField = new JTextField("25", 5);
-	private final JComboBox<String> connectTypeOptionBox = new JComboBox<>(new String[]{"NONE", "SSL", "TLS"});
+	private final JComboBox<String> connectTypeOptionBox = new JComboBox<>(new String[] { "NONE", "SSL", "TLS" });
 	private final JComboBox<HeloType> heloTypeBox = new JComboBox<>(HeloType.allItems());
 	private final JTextField heloDomainField = new JTextField(25);
 	private final JTextField idField = new JTextField(15);

@@ -1,15 +1,5 @@
 package com.inter6.mail.service;
 
-import com.inter6.mail.model.HeloType;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
-import org.apache.commons.net.smtp.AuthenticatingSMTPClient.AUTH_METHOD;
-import org.apache.commons.net.smtp.SMTPClient;
-import org.apache.commons.net.smtp.SMTPReply;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -23,6 +13,17 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
+import org.apache.commons.net.smtp.AuthenticatingSMTPClient.AUTH_METHOD;
+import org.apache.commons.net.smtp.SMTPClient;
+import org.apache.commons.net.smtp.SMTPReply;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.inter6.mail.model.HeloType;
 
 public class SmtpService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

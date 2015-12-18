@@ -117,6 +117,7 @@ public class ActionPanel extends TabComponentPanel implements ConfigObserver {
 
 				try {
 					ActionPanel.this.currentJob.terminate();
+					ActionPanel.this.logPanel.info("request job terminate. wating...");
 				} catch (Throwable e) {
 					ActionPanel.this.logPanel.error("job terminate fail !", e);
 				}

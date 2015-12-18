@@ -1,5 +1,38 @@
 package com.inter6.mail.gui.data;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Properties;
+
+import javax.annotation.PostConstruct;
+import javax.mail.Address;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.inter6.mail.gui.ConfigObserver;
@@ -23,37 +56,7 @@ import com.inter6.mail.model.component.content.PartDataJsonDeserializer;
 import com.inter6.mail.model.component.content.PartDataJsonSerializer;
 import com.inter6.mail.model.data.EditSourceData;
 import com.inter6.mail.module.AppConfig;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.mail.Address;
-import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -116,8 +119,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 			public void actionPerformed(ActionEvent event) {
 				try {
 					byte[] message = EditSourcePanel.this.buildMessage();
-					TextViewDialog.createDialog(new String(message, "UTF-8"))
-							.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
+					TextViewDialog.createDialog(new String(message, "UTF-8")).setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
 				} catch (Throwable e) {
 					EditSourcePanel.this.logPanel.error("build mime fail !", e);
 				}
@@ -192,7 +194,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 			RecipientType type = addressData.getRecipientType();
 			InternetAddress internetAddress = addressData.toInternetAddress();
 			if (type == null) {
-				mimeMessage.addFrom(new Address[]{internetAddress});
+				mimeMessage.addFrom(new Address[] { internetAddress });
 			} else {
 				mimeMessage.addRecipient(type, internetAddress);
 			}
@@ -209,7 +211,8 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
+		MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
+		mimeSmtpSendJob.setTabName(tabName);
 		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.buildMessage()));
 		return mimeSmtpSendJob;
 	}

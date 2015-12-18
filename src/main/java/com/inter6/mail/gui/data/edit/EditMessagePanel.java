@@ -1,24 +1,26 @@
 package com.inter6.mail.gui.data.edit;
 
-import com.inter6.mail.gui.action.LogPanel;
-import com.inter6.mail.gui.component.content.ContentPartPanel;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.model.ContentType;
-import com.inter6.mail.model.data.edit.EditMessageData;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.annotation.PostConstruct;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Vector;
+
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.gui.component.content.ContentPartPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.data.edit.EditMessageData;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

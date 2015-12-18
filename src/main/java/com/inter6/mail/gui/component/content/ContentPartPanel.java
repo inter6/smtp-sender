@@ -1,22 +1,5 @@
 package com.inter6.mail.gui.component.content;
 
-import com.inter6.mail.gui.action.LogPanel;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.model.ContentType;
-import com.inter6.mail.model.component.content.PartData;
-import com.inter6.mail.module.ModuleService;
-import com.inter6.mail.module.TabComponentManager;
-import lombok.Getter;
-import org.apache.commons.collections4.CollectionUtils;
-
-import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -26,6 +9,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
+
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+import lombok.Getter;
+
+import org.apache.commons.collections4.CollectionUtils;
+
+import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.content.PartData;
+import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.module.TabComponentManager;
 
 public abstract class ContentPartPanel extends TabComponentPanel {
 	private static final long serialVersionUID = -3928978805796944620L;

@@ -1,9 +1,11 @@
 package com.inter6.mail.model.setting;
 
+import lombok.Data;
+
+import org.apache.commons.lang3.math.NumberUtils;
+
 import com.inter6.mail.model.AuthOption;
 import com.inter6.mail.model.HeloType;
-import lombok.Data;
-import org.apache.commons.lang3.math.NumberUtils;
 
 @Data
 public class ServerData {

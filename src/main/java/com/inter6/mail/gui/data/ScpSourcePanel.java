@@ -1,21 +1,14 @@
 package com.inter6.mail.gui.data;
 
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.component.DatePanel;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.job.SendJobBuilder;
-import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
-import com.inter6.mail.job.smtp.ScpSmtpSendJob;
-import com.inter6.mail.model.component.DateData;
-import com.inter6.mail.model.data.ScpSourceData;
-import com.inter6.mail.module.AppConfig;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -26,15 +19,27 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.component.DatePanel;
+import com.inter6.mail.gui.component.SendDelayPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
+import com.inter6.mail.job.smtp.ScpSmtpSendJob;
+import com.inter6.mail.model.component.DateData;
+import com.inter6.mail.model.component.SendDelayData;
+import com.inter6.mail.model.data.ScpSourceData;
+import com.inter6.mail.module.AppConfig;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -52,6 +57,7 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
 	private final DefaultListModel<String> pathListModel = new DefaultListModel<>();
 	private final JList<String> pathList = new JList<>(this.pathListModel);
 	private final DatePanel replaceDatePanel = new DatePanel("Replace Date", 20, false, true);
+	private final SendDelayPanel sendDelayPanel = new SendDelayPanel();
 
 	public ScpSourcePanel(String tabName) {
 		super(tabName);
@@ -113,7 +119,13 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
 		}
 		this.add(listPanel, BorderLayout.CENTER);
 
-		this.add(replaceDatePanel, BorderLayout.SOUTH);
+		JPanel subActionPanel = new JPanel();
+		subActionPanel.setLayout(new BoxLayout(subActionPanel, BoxLayout.Y_AXIS));
+		{
+			subActionPanel.add(replaceDatePanel);
+			subActionPanel.add(sendDelayPanel);
+		}
+		this.add(subActionPanel, BorderLayout.SOUTH);
 	}
 
 	private ActionListener createAddEvent() {
@@ -160,7 +172,8 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		ScpSmtpSendJob scpSmtpSendJob = tabComponentManager.getTabComponent(tabName, ScpSmtpSendJob.class);
+		ScpSmtpSendJob scpSmtpSendJob = ModuleService.getBean(ScpSmtpSendJob.class);
+		scpSmtpSendJob.setTabName(tabName);
 		scpSmtpSendJob.setScpSourceData(this.getScpSourceData());
 		return scpSmtpSendJob;
 	}
@@ -184,6 +197,7 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
 		}
 		scpSourceData.setPaths(paths);
 		scpSourceData.setReplaceDateData(this.replaceDatePanel.getDateData());
+		scpSourceData.setSendDelayData(this.sendDelayPanel.getSendDelayData());
 		return scpSourceData;
 	}
 
@@ -210,6 +224,11 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
 		DateData replaceDateData = scpSourceData.getReplaceDateData();
 		if (replaceDateData != null) {
 			this.replaceDatePanel.setDateData(replaceDateData);
+		}
+
+		SendDelayData sendDelayData = scpSourceData.getSendDelayData();
+		if (sendDelayData != null) {
+			this.sendDelayPanel.setSendDelayData(sendDelayData);
 		}
 	}
 

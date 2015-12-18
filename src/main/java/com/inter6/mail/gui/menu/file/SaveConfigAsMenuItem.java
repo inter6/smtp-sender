@@ -1,15 +1,17 @@
 package com.inter6.mail.gui.menu.file;
 
-import com.inter6.mail.gui.action.LogPanel;
-import com.inter6.mail.module.TabComponentManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.module.TabComponentManager;
 
 @Component
 public class SaveConfigAsMenuItem extends JMenuItem implements ActionListener {

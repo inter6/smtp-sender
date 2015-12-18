@@ -1,9 +1,9 @@
 package com.inter6.mail.gui.menu.tools;
 
-import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.annotation.PostConstruct;
 import javax.mail.internet.MimeUtility;
@@ -16,10 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.MainFrame;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
@@ -47,7 +49,7 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 		private final JTextArea decodeTextArea = new JTextArea(9, 30);
 		private final JTextArea encodeTextArea = new JTextArea(9, 30);
 		private final JTextField charsetField = new JTextField("UTF-8", 8);
-		private final JComboBox<String> encodingOptionBox = new JComboBox<>(new String[]{"B", "Q"});
+		private final JComboBox<String> encodingOptionBox = new JComboBox<>(new String[] { "B", "Q" });
 
 		private Rfc2074Dialog() {
 			super(ModuleService.getBean(MainFrame.class));
@@ -83,16 +85,10 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 				@Override
 				public void actionPerformed(ActionEvent event) {
 					try {
-						String encodeText = MimeUtility.encodeWord(
-								StringUtils.defaultIfEmpty(Rfc2074Dialog.this.decodeTextArea.getText(), ""),
-								StringUtils.defaultIfBlank(Rfc2074Dialog.this.charsetField.getText(), "UTF-8"),
-								(String) Rfc2074Dialog.this.encodingOptionBox.getSelectedItem());
+						String encodeText = MimeUtility.encodeWord(StringUtils.defaultIfEmpty(Rfc2074Dialog.this.decodeTextArea.getText(), ""), StringUtils.defaultIfBlank(Rfc2074Dialog.this.charsetField.getText(), "UTF-8"), (String) Rfc2074Dialog.this.encodingOptionBox.getSelectedItem());
 						Rfc2074Dialog.this.encodeTextArea.setText(encodeText);
 					} catch (Throwable e) {
-						JOptionPane.showMessageDialog(Rfc2074Dialog.this,
-								e.getClass().getSimpleName() + " - " + e.getMessage(),
-								"Encoding fail !",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(Rfc2074Dialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "Encoding fail !", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			};
@@ -111,10 +107,7 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
 						}
 						Rfc2074Dialog.this.decodeTextArea.setText(decodeText);
 					} catch (Throwable e) {
-						JOptionPane.showMessageDialog(Rfc2074Dialog.this,
-								e.getClass().getSimpleName() + " - " + e.getMessage(),
-								"Decoding fail !",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(Rfc2074Dialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "Decoding fail !", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			};

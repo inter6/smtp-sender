@@ -1,20 +1,23 @@
 package com.inter6.mail.gui;
 
-import com.inter6.mail.gui.menu.TopMenuBar;
-import com.inter6.mail.gui.menu.file.LoadConfigMenuItem;
-import com.inter6.mail.gui.tab.RootTabPanel;
-import com.inter6.mail.module.ModuleService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.menu.TopMenuBar;
+import com.inter6.mail.gui.menu.file.LoadConfigMenuItem;
+import com.inter6.mail.gui.tab.RootTabPanel;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 @Slf4j

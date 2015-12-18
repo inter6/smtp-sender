@@ -1,8 +1,8 @@
 package com.inter6.mail.gui.tab;
 
-import com.inter6.mail.module.TabComponentManager;
-
 import javax.swing.JPanel;
+
+import com.inter6.mail.module.TabComponentManager;
 
 public class TabComponentPanel extends JPanel implements TabComponent {
 

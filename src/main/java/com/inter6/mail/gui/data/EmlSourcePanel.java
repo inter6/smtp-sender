@@ -1,30 +1,5 @@
 package com.inter6.mail.gui.data;
 
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.component.DatePanel;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.job.SendJobBuilder;
-import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
-import com.inter6.mail.job.smtp.EmlSmtpSendJob;
-import com.inter6.mail.model.AppSession;
-import com.inter6.mail.model.component.DateData;
-import com.inter6.mail.model.data.EmlSourceData;
-import com.inter6.mail.module.AppConfig;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +9,36 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.annotation.PostConstruct;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JList;
+import javax.swing.JPanel;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.component.DatePanel;
+import com.inter6.mail.gui.component.SendDelayPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
+import com.inter6.mail.job.smtp.EmlSmtpSendJob;
+import com.inter6.mail.model.AppSession;
+import com.inter6.mail.model.component.DateData;
+import com.inter6.mail.model.component.SendDelayData;
+import com.inter6.mail.model.data.EmlSourceData;
+import com.inter6.mail.module.AppConfig;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -50,6 +55,7 @@ public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder,
 	private final JList<String> fileList = new JList<>(this.fileListModel);
 	private final JCheckBox recursiveCheckButton = new JCheckBox("Recursive");
 	private final DatePanel replaceDatePanel = new DatePanel("Replace Date", 20, false, true);
+	private final SendDelayPanel sendDelayPanel = new SendDelayPanel();
 
 	public EmlSourcePanel(String tabName) {
 		super(tabName);
@@ -77,7 +83,13 @@ public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder,
 		}
 		this.add(actionPanel, BorderLayout.EAST);
 
-		this.add(replaceDatePanel, BorderLayout.SOUTH);
+		JPanel subActionPanel = new JPanel();
+		subActionPanel.setLayout(new BoxLayout(subActionPanel, BoxLayout.Y_AXIS));
+		{
+			subActionPanel.add(replaceDatePanel);
+			subActionPanel.add(sendDelayPanel);
+		}
+		this.add(subActionPanel, BorderLayout.SOUTH);
 	}
 
 	private ActionListener createAddEvent() {
@@ -135,7 +147,8 @@ public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder,
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		EmlSmtpSendJob emlSmtpSendJob = tabComponentManager.getTabComponent(tabName, EmlSmtpSendJob.class);
+		EmlSmtpSendJob emlSmtpSendJob = ModuleService.getBean(EmlSmtpSendJob.class);
+		emlSmtpSendJob.setTabName(tabName);
 		emlSmtpSendJob.setEmlSourceData(this.getEmlSourceData());
 		return emlSmtpSendJob;
 	}
@@ -149,6 +162,7 @@ public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder,
 		emlSourceData.setFiles(files);
 		emlSourceData.setRecursive(this.recursiveCheckButton.isSelected());
 		emlSourceData.setReplaceDateData(this.replaceDatePanel.getDateData());
+		emlSourceData.setSendDelayData(this.sendDelayPanel.getSendDelayData());
 		return emlSourceData;
 	}
 
@@ -171,6 +185,11 @@ public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder,
 		DateData replaceDateData = emlSourceData.getReplaceDateData();
 		if (replaceDateData != null) {
 			this.replaceDatePanel.setDateData(replaceDateData);
+		}
+
+		SendDelayData sendDelayData = emlSourceData.getSendDelayData();
+		if (sendDelayData != null) {
+			this.sendDelayPanel.setSendDelayData(sendDelayData);
 		}
 	}
 

@@ -1,8 +1,9 @@
 package com.inter6.mail.gui.component.content;
 
-import com.inter6.mail.model.ContentType;
-import com.inter6.mail.model.component.content.PartData;
-import com.inter6.mail.model.component.content.TextPartData;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.util.List;
+import java.util.Vector;
 
 import javax.mail.internet.MimeBodyPart;
 import javax.swing.BoxLayout;
@@ -11,16 +12,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.util.List;
-import java.util.Vector;
+
+import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.content.PartData;
+import com.inter6.mail.model.component.content.TextPartData;
 
 public class TextPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = -5641431122402910873L;
 
 	private final JTextField charsetField = new JTextField("UTF-8", 6);
-	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[]{"quoted-printable", "8bit", "7bit", "base64", "binary"});
+	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[] { "quoted-printable", "8bit", "7bit", "base64", "binary" });
 	private final JTextArea textArea = new JTextArea(5, 30);
 
 	protected TextPartPanel(String tabName, ContentType contentType, Integer nested) {

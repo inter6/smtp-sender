@@ -1,10 +1,9 @@
 package com.inter6.mail.gui.menu.tools;
 
-import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.annotation.PostConstruct;
 import javax.swing.JButton;
@@ -15,10 +14,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.MainFrame;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 public class Base64MenuItem extends JMenuItem implements ActionListener {
@@ -85,10 +87,7 @@ public class Base64MenuItem extends JMenuItem implements ActionListener {
 						String encodeText = Base64.encodeBase64String(decodeText.getBytes(charset));
 						Base64Dialog.this.encodeTextArea.setText(encodeText);
 					} catch (Throwable e) {
-						JOptionPane.showMessageDialog(Base64Dialog.this,
-								e.getClass().getSimpleName() + " - " + e.getMessage(),
-								"Encoding fail !",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(Base64Dialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "Encoding fail !", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			};
@@ -105,10 +104,7 @@ public class Base64MenuItem extends JMenuItem implements ActionListener {
 						byte[] decodeBytes = Base64.decodeBase64(encodeText);
 						Base64Dialog.this.decodeTextArea.setText(new String(decodeBytes, charset));
 					} catch (Throwable e) {
-						JOptionPane.showMessageDialog(Base64Dialog.this,
-								e.getClass().getSimpleName() + " - " + e.getMessage(),
-								"Decoding fail !",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(Base64Dialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "Decoding fail !", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			};

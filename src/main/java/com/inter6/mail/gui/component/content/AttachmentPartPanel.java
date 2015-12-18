@@ -1,14 +1,13 @@
 package com.inter6.mail.gui.component.content;
 
-import com.inter6.mail.gui.component.EncodingTextPanel;
-import com.inter6.mail.model.AppSession;
-import com.inter6.mail.model.ContentType;
-import com.inter6.mail.model.component.EncodingTextData;
-import com.inter6.mail.model.component.content.AttachmentPartData;
-import com.inter6.mail.model.component.content.PartData;
-import com.inter6.mail.module.ModuleService;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 import javax.activation.FileTypeMap;
 import javax.mail.internet.MimeBodyPart;
@@ -21,14 +20,17 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Vector;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+
+import com.inter6.mail.gui.component.EncodingTextPanel;
+import com.inter6.mail.model.AppSession;
+import com.inter6.mail.model.ContentType;
+import com.inter6.mail.model.component.EncodingTextData;
+import com.inter6.mail.model.component.content.AttachmentPartData;
+import com.inter6.mail.model.component.content.PartData;
+import com.inter6.mail.module.ModuleService;
 
 public class AttachmentPartPanel extends ContentPartPanel {
 	private static final long serialVersionUID = 7919255590937843181L;
@@ -37,9 +39,9 @@ public class AttachmentPartPanel extends ContentPartPanel {
 	private final EncodingTextPanel typeNamePanel = new EncodingTextPanel("; name=", 15, true);
 	private final JCheckBox contentIdUseCheckBox = new JCheckBox();
 	private final JTextField contentIdField = new JTextField(25);
-	private final JComboBox<String> dispositionOptionBox = new JComboBox<>(new String[]{"attachment", "inline"});
+	private final JComboBox<String> dispositionOptionBox = new JComboBox<>(new String[] { "attachment", "inline" });
 	private final EncodingTextPanel dispositionFilenamePanel = new EncodingTextPanel("; filename=", 15, true);
-	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[]{"base64", "quoted-printable", "8bit", "7bit", "binary"});
+	private final JComboBox<String> transferOptionBox = new JComboBox<>(new String[] { "base64", "quoted-printable", "8bit", "7bit", "binary" });
 	private final JTextField pathField = new JTextField(40);
 
 	protected AttachmentPartPanel(String tabName, ContentType contentType, Integer nested) {
@@ -168,16 +170,14 @@ public class AttachmentPartPanel extends ContentPartPanel {
 		String typeAppendText = "";
 		EncodingTextData typeNameData = dispositionFilenamePanel.getEncodingTextData();
 		if (typeNameData.isUse()) {
-			String encodedTypeName = MimeUtility.encodeWord(StringUtils.defaultString(typeNameData.getText(), file.getName()),
-					StringUtils.defaultString(typeNameData.getCharset(), "UTF-8"), typeNameData.getEncoding());
+			String encodedTypeName = MimeUtility.encodeWord(StringUtils.defaultString(typeNameData.getText(), file.getName()), StringUtils.defaultString(typeNameData.getCharset(), "UTF-8"), typeNameData.getEncoding());
 			typeAppendText += "; name=\"" + encodedTypeName + "\"";
 		}
 
 		String dispositionAppendText = "";
 		EncodingTextData dispositionFilenameData = dispositionFilenamePanel.getEncodingTextData();
 		if (dispositionFilenameData.isUse()) {
-			String encodedDispositionFilename = MimeUtility.encodeWord(StringUtils.defaultString(dispositionFilenameData.getText(), file.getName()),
-					StringUtils.defaultString(dispositionFilenameData.getCharset(), "UTF-8"), dispositionFilenameData.getEncoding());
+			String encodedDispositionFilename = MimeUtility.encodeWord(StringUtils.defaultString(dispositionFilenameData.getText(), file.getName()), StringUtils.defaultString(dispositionFilenameData.getCharset(), "UTF-8"), dispositionFilenameData.getEncoding());
 			dispositionAppendText += "; filename=\"" + encodedDispositionFilename + "\"";
 		}
 
