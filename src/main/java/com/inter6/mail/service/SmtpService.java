@@ -1,14 +1,5 @@
 package com.inter6.mail.service;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
-import org.apache.commons.net.smtp.AuthenticatingSMTPClient.AUTH_METHOD;
-import org.apache.commons.net.smtp.SMTPClient;
-import org.apache.commons.net.smtp.SMTPReply;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -23,6 +14,17 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
+import org.apache.commons.net.smtp.AuthenticatingSMTPClient.AUTH_METHOD;
+import org.apache.commons.net.smtp.SMTPClient;
+import org.apache.commons.net.smtp.SMTPReply;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.inter6.mail.model.HeloType;
+
 public class SmtpService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -30,6 +32,8 @@ public class SmtpService {
 	private int port;
 	private String connectType;
 	private String encoding = "UTF-8";
+	private HeloType heloType;
+	private String heloDomain;
 
 	private AUTH_METHOD authMethod;
 	private String username;
@@ -56,6 +60,12 @@ public class SmtpService {
 
 	public SmtpService setEncoding(String encoding) {
 		this.encoding = encoding;
+		return this;
+	}
+
+	public SmtpService setHelo(HeloType heloType, String heloDomain) {
+		this.heloType = heloType;
+		this.heloDomain = heloDomain;
 		return this;
 	}
 
@@ -106,8 +116,21 @@ public class SmtpService {
 		smtpClient.connect(this.host, this.port);
 		this.debug(smtpClient);
 
-		smtpClient.helo(this.host);
-		this.debug(smtpClient);
+		if (heloType != null) {
+			switch (heloType) {
+				case HELO:
+					smtpClient.helo(heloDomain);
+					this.debug(smtpClient);
+					break;
+				case EHLO:
+					smtpClient.ehlo(heloDomain);
+					this.debug(smtpClient);
+					break;
+				case NONE:
+				default:
+					// do nothing
+			}
+		}
 
 		if ("tls".equalsIgnoreCase(this.connectType)) {
 			smtpClient.execTLS();

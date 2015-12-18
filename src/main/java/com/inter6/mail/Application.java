@@ -1,15 +1,18 @@
 package com.inter6.mail;
 
-import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
-import com.inter6.mail.service.XTrustProvider;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import com.inter6.mail.gui.MainFrame;
+import com.inter6.mail.module.ModuleService;
+import com.inter6.mail.service.XTrustProvider;
 
 @SpringBootApplication
 @Slf4j
@@ -22,7 +25,7 @@ public class Application {
 			context = new SpringApplicationBuilder(Application.class)
 					.registerShutdownHook(true)
 					.headless(false)
-					.showBanner(false)
+					.bannerMode(Banner.Mode.OFF)
 					.run(args);
 			log.debug("load beans list - " + ArrayUtils.toString(context.getBeanDefinitionNames()));
 

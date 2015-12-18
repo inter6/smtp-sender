@@ -1,19 +1,21 @@
 package com.inter6.mail.gui.menu.file;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+import javax.annotation.PostConstruct;
+import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.menu.TopMenuBar;
 import com.inter6.mail.module.AppConfig;
 import com.inter6.mail.module.TabComponentManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.swing.JFileChooser;
-import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 
 @Component
 public class LoadConfigMenuItem extends JMenuItem implements ActionListener {

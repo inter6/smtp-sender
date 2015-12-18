@@ -1,10 +1,12 @@
 package com.inter6.mail.model.component;
 
-import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
+import java.io.UnsupportedEncodingException;
 
 import javax.mail.internet.MimeUtility;
-import java.io.UnsupportedEncodingException;
+
+import lombok.Data;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class EncodingTextData {
@@ -14,8 +16,6 @@ public class EncodingTextData {
 	private String encoding;
 
 	public String encodeSubject() throws UnsupportedEncodingException {
-		return MimeUtility.encodeWord(StringUtils.defaultString(this.text, ""),
-				StringUtils.defaultString(this.charset, "UTF-8"),
-				StringUtils.defaultString(this.encoding, "B"));
+		return MimeUtility.encodeWord(StringUtils.defaultString(this.text, ""), StringUtils.defaultString(this.charset, "UTF-8"), StringUtils.defaultString(this.encoding, "B"));
 	}
 }

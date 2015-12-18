@@ -1,13 +1,14 @@
 package com.inter6.mail.gui.component;
 
-import com.inter6.mail.gui.MainFrame;
-import com.inter6.mail.module.ModuleService;
+import java.awt.BorderLayout;
+import java.awt.Window;
 
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import java.awt.BorderLayout;
-import java.awt.Window;
+
+import com.inter6.mail.gui.MainFrame;
+import com.inter6.mail.module.ModuleService;
 
 public class TextViewDialog {
 	private final JDialog dialog;

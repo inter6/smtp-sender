@@ -1,17 +1,19 @@
 package com.inter6.mail.gui.tab;
 
-import com.inter6.mail.gui.action.ActionPanel;
-import com.inter6.mail.gui.data.DataPanel;
-import com.inter6.mail.gui.setting.ServerPanel;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
+
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.action.ActionPanel;
+import com.inter6.mail.gui.data.DataPanel;
+import com.inter6.mail.gui.setting.ServerPanel;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

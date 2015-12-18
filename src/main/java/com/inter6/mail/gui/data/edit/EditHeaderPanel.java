@@ -1,20 +1,5 @@
 package com.inter6.mail.gui.data.edit;
 
-import com.inter6.mail.gui.component.HeaderPanel;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.model.component.HeaderData;
-import com.inter6.mail.model.data.edit.EditHeaderData;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -22,6 +7,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.component.HeaderPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.model.component.HeaderData;
+import com.inter6.mail.model.data.edit.EditHeaderData;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

@@ -1,9 +1,11 @@
 package com.inter6.mail.model.data;
 
-import com.inter6.mail.model.component.DateData;
+import java.util.Collection;
+
 import lombok.Data;
 
-import java.util.Collection;
+import com.inter6.mail.model.component.DateData;
+import com.inter6.mail.model.component.SendDelayData;
 
 @Data
 public class ScpSourceData {
@@ -14,4 +16,5 @@ public class ScpSourceData {
 
 	private Collection<String> paths;
 	private DateData replaceDateData;
+	private SendDelayData sendDelayData;
 }

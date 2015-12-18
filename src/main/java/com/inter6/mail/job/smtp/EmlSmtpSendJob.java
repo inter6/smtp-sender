@@ -1,8 +1,13 @@
 package com.inter6.mail.job.smtp;
 
-import com.inter6.mail.gui.action.LogPanel;
-import com.inter6.mail.model.data.EmlSourceData;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import lombok.Setter;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,11 +15,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.model.data.EmlSourceData;
+import com.inter6.mail.module.ModuleService;
 
 /**
  * files : List<File>
@@ -29,10 +32,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 	private EmlSourceData emlSourceData;
 
 	private float progressRate;
-
-	public EmlSmtpSendJob(String tabName) {
-		super(tabName);
-	}
+	private boolean isTerminated;
 
 	@Override
 	protected void doMasterJob() throws Throwable {
@@ -47,7 +47,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 			}
 
 			if (file.isDirectory()) {
-				Collection<File> childEmls = FileUtils.listFiles(file, new String[]{"eml"}, this.emlSourceData.isRecursive());
+				Collection<File> childEmls = FileUtils.listFiles(file, new String[] { "eml" }, this.emlSourceData.isRecursive());
 				if (CollectionUtils.isEmpty(childEmls)) {
 					continue;
 				}
@@ -59,12 +59,23 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 		logPanel.info("eml file count - COUNT:" + emlFiles.size());
 
 		for (int i = 0; i < emlFiles.size(); i++) {
+			if (isTerminated) {
+				return;
+			}
+
 			File emlFile = emlFiles.get(i);
 			try {
-				MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
+				MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
+				mimeSmtpSendJob.setTabName(tabName);
 				mimeSmtpSendJob.setMessageStream(new FileInputStream(emlFile));
 				mimeSmtpSendJob.setReplaceDateData(emlSourceData.getReplaceDateData());
-				this.orderWorker(mimeSmtpSendJob);
+
+				if (emlSourceData.getSendDelayData().isUse()) {
+					mimeSmtpSendJob.execute();
+					Thread.sleep(emlSourceData.getSendDelayData().getDelaySecond() * 1000);
+				} else {
+					this.orderWorker(mimeSmtpSendJob);
+				}
 			} catch (Throwable e) {
 				logPanel.error("eml send order fail ! - EML:" + emlFile, e);
 			}
@@ -75,6 +86,12 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 	@Override
 	protected float getProgressRate() {
 		return this.progressRate;
+	}
+
+	@Override
+	public void terminate() throws InterruptedException {
+		super.terminate();
+		isTerminated = true;
 	}
 
 	@Override

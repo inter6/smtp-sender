@@ -1,8 +1,8 @@
 package com.inter6.mail.model.data;
 
-import lombok.Data;
-
 import java.util.Set;
+
+import lombok.Data;
 
 @Data
 public class EnvelopeData {

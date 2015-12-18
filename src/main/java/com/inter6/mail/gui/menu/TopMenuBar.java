@@ -1,5 +1,16 @@
 package com.inter6.mail.gui.menu;
 
+import java.awt.FlowLayout;
+
+import javax.annotation.PostConstruct;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.inter6.mail.gui.menu.file.LoadConfigMenuItem;
 import com.inter6.mail.gui.menu.file.SaveConfigAsMenuItem;
 import com.inter6.mail.gui.menu.file.SaveConfigMenuItem;
@@ -7,15 +18,6 @@ import com.inter6.mail.gui.menu.help.AboutMenuItem;
 import com.inter6.mail.gui.menu.tools.Base64MenuItem;
 import com.inter6.mail.gui.menu.tools.DnsMenuItem;
 import com.inter6.mail.gui.menu.tools.Rfc2074MenuItem;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-import java.awt.FlowLayout;
 
 @Component
 public class TopMenuBar extends JMenuBar {

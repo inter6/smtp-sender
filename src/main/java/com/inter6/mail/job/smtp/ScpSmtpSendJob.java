@@ -1,24 +1,28 @@
 package com.inter6.mail.job.smtp;
 
-import com.inter6.mail.gui.action.LogPanel;
-import com.inter6.mail.model.data.ScpSourceData;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.UserInfo;
-import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import javax.annotation.PostConstruct;
+
+import lombok.Setter;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.model.data.ScpSourceData;
+import com.inter6.mail.module.ModuleService;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -30,10 +34,7 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 	private ScpSourceData scpSourceData;
 
 	private float progressRate;
-
-	public ScpSmtpSendJob(String tabName) {
-		super(tabName);
-	}
+	private boolean isTerminated;
 
 	@PostConstruct
 	private void init() {
@@ -51,6 +52,10 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 
 			int i = 0;
 			for (String path : scpSourceData.getPaths()) {
+				if (isTerminated) {
+					return;
+				}
+
 				try {
 					orderRemoteFile(session, path);
 				} catch (Throwable e) {
@@ -71,7 +76,7 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 		try {
 			channel = (ChannelExec) session.openChannel("exec");
 			channel.setCommand("find " + path + " -name \"*.eml\" -type f");
-
+	
 			InputStream in = channel.getInputStream();
 			channel.connect(60 * 1000);
 			return IOUtils.readLines(in);
@@ -114,12 +119,13 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 						// error
 						break;
 					}
-					if (buf[0] == ' ') break;
+					if (buf[0] == ' ')
+						break;
 					filesize = filesize * 10L + (long) (buf[0] - '0');
 				}
 
 				String file;
-				for (int i = 0; ; i++) {
+				for (int i = 0;; i++) {
 					in.read(buf, i, 1);
 					if (buf[i] == (byte) 0x0a) {
 						file = new String(buf, 0, i);
@@ -138,8 +144,10 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 				try (ByteArrayOutputStream fos = new ByteArrayOutputStream()) {
 					int foo;
 					while (true) {
-						if (buf.length < filesize) foo = buf.length;
-						else foo = (int) filesize;
+						if (buf.length < filesize)
+							foo = buf.length;
+						else
+							foo = (int) filesize;
 						foo = in.read(buf, 0, foo);
 						if (foo < 0) {
 							// error
@@ -147,14 +155,22 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 						}
 						fos.write(buf, 0, foo);
 						filesize -= foo;
-						if (filesize == 0L) break;
+						if (filesize == 0L)
+							break;
 					}
 
 					try {
-						MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
+						MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
+						mimeSmtpSendJob.setTabName(tabName);
 						mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(fos.toByteArray()));
 						mimeSmtpSendJob.setReplaceDateData(scpSourceData.getReplaceDateData());
-						this.orderWorker(mimeSmtpSendJob);
+
+						if (scpSourceData.getSendDelayData().isUse()) {
+							mimeSmtpSendJob.execute();
+							Thread.sleep(scpSourceData.getSendDelayData().getDelaySecond() * 1000);
+						} else {
+							this.orderWorker(mimeSmtpSendJob);
+						}
 					} catch (Throwable e) {
 						this.logPanel.error("eml send order fail ! - PATH:" + path, e);
 					}
@@ -182,8 +198,10 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 		//          1 for error,
 		//          2 for fatal error,
 		//          -1
-		if (b == 0) return b;
-		if (b == -1) return b;
+		if (b == 0)
+			return b;
+		if (b == -1)
+			return b;
 
 		if (b == 1 || b == 2) {
 			StringBuilder sb = new StringBuilder();
@@ -191,8 +209,7 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 			do {
 				c = in.read();
 				sb.append((char) c);
-			}
-			while (c != '\n');
+			} while (c != '\n');
 			if (b == 1) { // error
 				logPanel.error("access remote file fail ! - " + sb.toString(), null);
 			}
@@ -206,6 +223,12 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 	@Override
 	protected float getProgressRate() {
 		return this.progressRate;
+	}
+
+	@Override
+	public void terminate() throws InterruptedException {
+		super.terminate();
+		isTerminated = true;
 	}
 
 	@Override

@@ -1,16 +1,6 @@
 package com.inter6.mail.gui.data;
 
-import com.google.gson.Gson;
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.model.data.EnvelopeData;
-import com.inter6.mail.module.AppConfig;
-import com.inter6.mail.util.StringUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.awt.FlowLayout;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -18,7 +8,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.awt.FlowLayout;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.model.data.EnvelopeData;
+import com.inter6.mail.module.AppConfig;
+import com.inter6.mail.util.StringUtil;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

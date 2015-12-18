@@ -1,11 +1,12 @@
 package com.inter6.mail.model.component.content;
 
-import com.inter6.mail.model.ContentType;
+import java.util.Collection;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Collection;
+import com.inter6.mail.model.ContentType;
 
 @Getter
 @Setter

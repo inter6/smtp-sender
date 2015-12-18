@@ -1,14 +1,17 @@
 package com.inter6.mail.gui.tab;
 
-import com.inter6.mail.module.TabComponentManager;
-import lombok.Getter;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.swing.JTabbedPane;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.IOException;
+
+import javax.annotation.PostConstruct;
+import javax.swing.JTabbedPane;
+
+import lombok.Getter;
+
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.module.TabComponentManager;
 
 @Component
 public class RootTabPanel extends JTabbedPane {

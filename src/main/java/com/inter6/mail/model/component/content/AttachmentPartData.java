@@ -1,9 +1,10 @@
 package com.inter6.mail.model.component.content;
 
-import com.inter6.mail.model.component.EncodingTextData;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import com.inter6.mail.model.component.EncodingTextData;
 
 @Getter
 @Setter

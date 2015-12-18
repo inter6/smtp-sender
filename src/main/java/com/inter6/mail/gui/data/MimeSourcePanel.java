@@ -1,14 +1,10 @@
 package com.inter6.mail.gui.data;
 
-import com.inter6.mail.gui.action.LogPanel;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.job.SendJobBuilder;
-import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
-import com.inter6.mail.job.smtp.MimeSmtpSendJob;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
@@ -16,11 +12,18 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
-import java.io.File;
+
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.action.LogPanel;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
+import com.inter6.mail.job.smtp.MimeSmtpSendJob;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -69,7 +72,7 @@ public class MimeSourcePanel extends TabComponentPanel implements SendJobBuilder
 					FileUtils.writeByteArrayToFile(saveFile, message);
 					MimeSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
 				} catch (Throwable e) {
-					MimeSourcePanel.this.logPanel.error("save to eml fail ! - ", e);
+					MimeSourcePanel.this.logPanel.error("save to eml fail !", e);
 				}
 			}
 		};
@@ -77,7 +80,8 @@ public class MimeSourcePanel extends TabComponentPanel implements SendJobBuilder
 
 	@Override
 	public AbstractSmtpSendJob buildSendJob() throws Throwable {
-		MimeSmtpSendJob mimeSmtpSendJob = tabComponentManager.getTabComponent(tabName, MimeSmtpSendJob.class);
+		MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
+		mimeSmtpSendJob.setTabName(tabName);
 		mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.mimeArea.getText().getBytes("UTF-8")));
 		return mimeSmtpSendJob;
 	}

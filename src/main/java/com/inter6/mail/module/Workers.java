@@ -1,9 +1,5 @@
 package com.inter6.mail.module;
 
-import com.inter6.mail.job.thread.ThreadSupportJob;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -11,6 +7,11 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.inter6.mail.job.thread.ThreadSupportJob;
 
 /**
  * Worker 패턴의 ThreadPool 구현체<br>
@@ -129,12 +130,7 @@ public class Workers {
 		if (this.workerPoolExecutor == null) {
 			return "this workers did not yet initialized !";
 		}
-		return "\nWorkers name:" + this.workersName +
-				"\nComplete task count:" + this.workerPoolExecutor.getCompletedTaskCount() +
-				"\nCore worker count:" + this.workerPoolExecutor.getCorePoolSize() +
-				"\nActive worker count:" + this.workerPoolExecutor.getActiveCount() +
-				"\nMax worker count:" + this.workerPoolExecutor.getMaximumPoolSize() +
-				"\nWorker keep alive time:" + this.workerPoolExecutor.getKeepAliveTime(TimeUnit.SECONDS) + "sec";
+		return "\nWorkers name:" + this.workersName + "\nComplete task count:" + this.workerPoolExecutor.getCompletedTaskCount() + "\nCore worker count:" + this.workerPoolExecutor.getCorePoolSize() + "\nActive worker count:" + this.workerPoolExecutor.getActiveCount() + "\nMax worker count:" + this.workerPoolExecutor.getMaximumPoolSize() + "\nWorker keep alive time:" + this.workerPoolExecutor.getKeepAliveTime(TimeUnit.SECONDS) + "sec";
 	}
 
 	/**

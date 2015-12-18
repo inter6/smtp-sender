@@ -4,11 +4,11 @@ package com.inter6.mail.model;
 public class JobStatistics {
 
 	/*private final MultiKeyMap<String, AtomicInteger> countMap = new MultiKeyMap<String, AtomicInteger>();
-
+	
 	public void addCount(Job job, String category) {
 		this.addCount(job.getClass().getSimpleName(), category);
 	}
-
+	
 	public void addCount(String jobName, String category) {
 		AtomicInteger count = this.countMap.get(jobName, category);
 		if (count == null) {
@@ -17,7 +17,7 @@ public class JobStatistics {
 		}
 		count.incrementAndGet();
 	}
-
+	
 	public int getCount(String jobName, String category) {
 		AtomicInteger count = this.countMap.get(jobName, category);
 		if (count == null) {
@@ -25,7 +25,7 @@ public class JobStatistics {
 		}
 		return count.get();
 	}
-
+	
 	public void clear() {
 		this.countMap.clear();
 	}*/

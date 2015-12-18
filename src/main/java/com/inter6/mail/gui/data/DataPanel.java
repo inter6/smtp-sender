@@ -1,24 +1,26 @@
 package com.inter6.mail.gui.data;
 
-import com.inter6.mail.gui.ConfigObserver;
-import com.inter6.mail.gui.tab.TabComponentPanel;
-import com.inter6.mail.job.SendJobBuilder;
-import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
-import com.inter6.mail.module.AppConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.annotation.PostConstruct;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.ConfigObserver;
+import com.inter6.mail.gui.tab.TabComponentPanel;
+import com.inter6.mail.job.SendJobBuilder;
+import com.inter6.mail.job.smtp.AbstractSmtpSendJob;
+import com.inter6.mail.module.AppConfig;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)

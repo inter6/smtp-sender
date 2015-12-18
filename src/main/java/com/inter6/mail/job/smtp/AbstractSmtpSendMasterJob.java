@@ -11,10 +11,6 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 	private final Object workerLock = new Object();
 	private ActionData actionData;
 
-	public AbstractSmtpSendMasterJob(String tabName) {
-		super(tabName);
-	}
-
 	@Override
 	protected void doSend() throws Throwable {
 		this.actionData = this.getActionData();
@@ -30,16 +26,9 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 			}
 			monitor.start();
 			this.doMasterJob();
-			if (this.actionData.isUseMultiThread()) {
-				while (this.workers.isRun()) {
-					Thread.sleep(1000);
-				}
-			}
 		} finally {
-			if (this.actionData.isUseMultiThread() && this.workers != null) {
-				synchronized (this.workerLock) {
-					this.workers.terminate();
-				}
+			if (this.actionData.isUseMultiThread()) {
+				terminateWorkers();
 			}
 			monitor.terminate();
 		}
@@ -57,11 +46,19 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 
 	@Override
 	public void terminate() throws InterruptedException {
+		terminateWorkers();
+	}
+
+	private void terminateWorkers() throws InterruptedException {
 		synchronized (this.workerLock) {
 			if (this.workers == null || !this.workers.isRun()) {
 				return;
 			}
 			this.workers.terminate();
+			while (this.workers.isRun()) {
+				Thread.sleep(1000);
+			}
+			workers = null;
 		}
 	}
 
@@ -76,9 +73,7 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
 			this.isRun = true;
 			while (this.isRun) {
 				ActionPanel actionPanel = tabComponentManager.getTabComponent(tabName, ActionPanel.class);
-				actionPanel.onProgress(AbstractSmtpSendMasterJob.this, AbstractSmtpSendMasterJob.this.getProgressRate(),
-						AbstractSmtpSendMasterJob.this.getStartTime(),
-						System.currentTimeMillis());
+				actionPanel.onProgress(AbstractSmtpSendMasterJob.this, AbstractSmtpSendMasterJob.this.getProgressRate(), AbstractSmtpSendMasterJob.this.getStartTime(), System.currentTimeMillis());
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {

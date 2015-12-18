@@ -1,20 +1,23 @@
 package com.inter6.mail.gui;
 
-import com.inter6.mail.gui.menu.TopMenuBar;
-import com.inter6.mail.gui.menu.file.LoadConfigMenuItem;
-import com.inter6.mail.gui.tab.RootTabPanel;
-import com.inter6.mail.module.ModuleService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.inter6.mail.gui.menu.TopMenuBar;
+import com.inter6.mail.gui.menu.file.LoadConfigMenuItem;
+import com.inter6.mail.gui.tab.RootTabPanel;
+import com.inter6.mail.module.ModuleService;
 
 @Component
 @Slf4j
@@ -33,7 +36,7 @@ public class MainFrame extends JFrame {
 	public void execute() {
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		this.setTitle("smtp-sender v1.2.1 (released: 15/12/05) - inter6.com");
+		this.setTitle("smtp-sender v1.2.2 (released: 15/12/18) - inter6.com");
 		this.setSize(1000, 800);
 		this.setMinimumSize(new Dimension(600, 400));
 		this.initLayout();

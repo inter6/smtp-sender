@@ -1,13 +1,14 @@
 package com.inter6.mail.gui.component;
 
-import com.inter6.mail.model.component.HeaderData;
+import java.awt.FlowLayout;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.awt.FlowLayout;
+
+import com.inter6.mail.model.component.HeaderData;
 
 public class HeaderPanel extends JPanel {
 	private static final long serialVersionUID = -4451634940694824064L;

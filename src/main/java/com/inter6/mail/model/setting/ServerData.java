@@ -1,8 +1,11 @@
 package com.inter6.mail.model.setting;
 
-import com.inter6.mail.model.AuthOption;
 import lombok.Data;
+
 import org.apache.commons.lang3.math.NumberUtils;
+
+import com.inter6.mail.model.AuthOption;
+import com.inter6.mail.model.HeloType;
 
 @Data
 public class ServerData {
@@ -12,6 +15,8 @@ public class ServerData {
 	private String id;
 	private String password;
 	private AuthOption authOption;
+	private HeloType heloType;
+	private String heloDomain;
 
 	public void setPort(String port) {
 		if (!NumberUtils.isDigits(port)) {
