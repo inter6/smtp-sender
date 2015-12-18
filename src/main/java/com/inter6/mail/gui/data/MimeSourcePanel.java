@@ -69,7 +69,7 @@ public class MimeSourcePanel extends TabComponentPanel implements SendJobBuilder
 					FileUtils.writeByteArrayToFile(saveFile, message);
 					MimeSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
 				} catch (Throwable e) {
-					MimeSourcePanel.this.logPanel.error("save to eml fail ! - ", e);
+					MimeSourcePanel.this.logPanel.error("save to eml fail !", e);
 				}
 			}
 		};

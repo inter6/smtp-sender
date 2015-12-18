@@ -119,7 +119,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 					TextViewDialog.createDialog(new String(message, "UTF-8"))
 							.setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
 				} catch (Throwable e) {
-					EditSourcePanel.this.logPanel.error("build mime fail ! - ", e);
+					EditSourcePanel.this.logPanel.error("build mime fail !", e);
 				}
 			}
 		};
@@ -141,7 +141,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 					FileUtils.writeByteArrayToFile(saveFile, message);
 					EditSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
 				} catch (Throwable e) {
-					EditSourcePanel.this.logPanel.error("save to eml fail ! - ", e);
+					EditSourcePanel.this.logPanel.error("save to eml fail !", e);
 				}
 			}
 		};

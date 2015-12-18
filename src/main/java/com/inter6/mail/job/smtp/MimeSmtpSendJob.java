@@ -2,6 +2,7 @@ package com.inter6.mail.job.smtp;
 
 import com.inter6.mail.model.AdvancedMimeMessage;
 import com.inter6.mail.model.AuthOption;
+import com.inter6.mail.model.HeloType;
 import com.inter6.mail.model.component.DateData;
 import com.inter6.mail.service.SmtpService;
 import lombok.Setter;
@@ -44,6 +45,8 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 			String host = this.getServerData().getHost();
 			int port = this.getServerData().getPort();
 			String connectType = this.getServerData().getConnectType();
+			HeloType heloType = this.getServerData().getHeloType();
+			String heloDomain = this.getServerData().getHeloDomain();
 
 			String id = this.getServerData().getId();
 			String password = this.getServerData().getPassword();
@@ -57,6 +60,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 				convertStream = this.convertMessageStream(this.messageStream);
 				Set<String> failReceivers = SmtpService
 						.createInstance(host, port, connectType)
+						.setHelo(heloType, heloDomain)
 						.setAuth(authOption.getMethod(), id, password)
 						.setEnvelope(mailFrom, rcptTos)
 						.send(convertStream);
@@ -89,10 +93,7 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 	}
 
 	private boolean isParseMimeCondition() {
-		if (replaceDateData != null) {
-			return replaceDateData.isUse();
-		}
-		return false;
+		return replaceDateData != null && replaceDateData.isUse();
 	}
 
 	/*private boolean replaceSubject(AdvancedMimeMessage mimeMessage) throws UnsupportedEncodingException, MessagingException {

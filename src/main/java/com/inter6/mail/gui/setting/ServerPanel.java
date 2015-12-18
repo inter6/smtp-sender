@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.inter6.mail.gui.ConfigObserver;
 import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.model.AuthOption;
+import com.inter6.mail.model.HeloType;
 import com.inter6.mail.model.setting.ServerData;
 import com.inter6.mail.module.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 	private final JTextField hostField = new JTextField(25);
 	private final JTextField portField = new JTextField("25", 5);
 	private final JComboBox<String> connectTypeOptionBox = new JComboBox<>(new String[]{"NONE", "SSL", "TLS"});
+	private final JComboBox<HeloType> heloTypeBox = new JComboBox<>(HeloType.allItems());
+	private final JTextField heloDomainField = new JTextField(25);
 	private final JTextField idField = new JTextField(15);
 	private final JPasswordField passwordField = new JPasswordField(15);
 	private final JComboBox<AuthOption> authOptionBox = new JComboBox<>(AuthOption.allItems());
@@ -55,6 +58,17 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 		}
 		this.add(hostPanel);
 
+		JPanel heloPanel = new JPanel(new FlowLayout());
+		{
+			heloPanel.add(new JLabel("HELO"));
+			heloPanel.add(this.heloDomainField);
+
+			this.heloTypeBox.addActionListener(this.createHeloChangeEvent());
+			this.heloTypeBox.setSelectedIndex(0);
+			heloPanel.add(this.heloTypeBox);
+		}
+		this.add(heloPanel);
+
 		JPanel accountPanel = new JPanel(new FlowLayout());
 		{
 			accountPanel.add(new JLabel("ID"));
@@ -67,6 +81,17 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 			accountPanel.add(this.authOptionBox);
 		}
 		this.add(accountPanel);
+	}
+
+	private ActionListener createHeloChangeEvent() {
+		return new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				HeloType heloType = (HeloType) ServerPanel.this.heloTypeBox.getSelectedItem();
+				ServerPanel.this.heloDomainField.setEnabled(heloType != HeloType.NONE);
+			}
+		};
 	}
 
 	private ActionListener createAuthChangeEvent() {
@@ -96,6 +121,8 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 		serverData.setHost(this.hostField.getText());
 		serverData.setPort(this.portField.getText());
 		serverData.setConnectType((String) this.connectTypeOptionBox.getSelectedItem());
+		serverData.setHeloType((HeloType) this.heloTypeBox.getSelectedItem());
+		serverData.setHeloDomain(this.heloDomainField.getText());
 		serverData.setId(this.idField.getText());
 		serverData.setPassword(this.passwordField.getText());
 		serverData.setAuthOption((AuthOption) this.authOptionBox.getSelectedItem());
@@ -111,6 +138,13 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
 		this.hostField.setText(serverData.getHost());
 		this.portField.setText(Integer.toString(serverData.getPort()));
 		this.connectTypeOptionBox.setSelectedItem(serverData.getConnectType());
+
+		HeloType heloType = serverData.getHeloType();
+		if (heloType != null) {
+			this.heloTypeBox.setSelectedIndex(heloType.ordinal());
+		}
+
+		this.heloDomainField.setText(serverData.getHeloDomain());
 		this.idField.setText(serverData.getId());
 		this.passwordField.setText(serverData.getPassword());
 		this.authOptionBox.setSelectedIndex(serverData.getAuthOption().ordinal());
