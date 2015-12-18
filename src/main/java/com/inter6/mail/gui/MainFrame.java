@@ -36,7 +36,7 @@ public class MainFrame extends JFrame {
 	public void execute() {
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		this.setTitle("smtp-sender v1.2.1 (released: 15/12/05) - inter6.com");
+		this.setTitle("smtp-sender v1.2.2 (released: 15/12/18) - inter6.com");
 		this.setSize(1000, 800);
 		this.setMinimumSize(new Dimension(600, 400));
 		this.initLayout();
