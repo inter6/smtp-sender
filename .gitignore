@@ -13,10 +13,7 @@
 
 # Gradle
 /build
-/gradle
 /.gradle
-/gradlew
-/gradlew.bat
 
 # Others
 hs_err_pid*
