@@ -1,12 +1,11 @@
 package com.inter6.mail.model.data.edit;
 
-import java.util.Collection;
-
+import com.inter6.mail.model.component.AddressData;
 import lombok.Data;
 
-import com.inter6.mail.model.component.AddressData;
+import java.util.Collection;
 
 @Data
 public class EditAddressData {
-	private Collection<AddressData> addressDatas;
+    private Collection<AddressData> addressDatas;
 }

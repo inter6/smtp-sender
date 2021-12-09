@@ -15,36 +15,36 @@ import java.util.Date;
  */
 public class AdvancedMimeMessageTest {
 
-	@Test
-	public void testUpdateMessageID_case1() throws Exception {
-		InputStream emlStream = null;
-		try {
-			emlStream = new FileInputStream(ResourceUtils.getFile("classpath:eml/test1_normal.eml"));
-			AdvancedMimeMessage mime = new AdvancedMimeMessage(emlStream);
-			String messageID = mime.getMessageID();
-			Assert.assertTrue(StringUtils.isNotEmpty(messageID));
+    @Test
+    public void testUpdateMessageID_case1() throws Exception {
+        InputStream emlStream = null;
+        try {
+            emlStream = new FileInputStream(ResourceUtils.getFile("classpath:eml/test1_normal.eml"));
+            AdvancedMimeMessage mime = new AdvancedMimeMessage(emlStream);
+            String messageID = mime.getMessageID();
+            Assert.assertTrue(StringUtils.isNotEmpty(messageID));
 
-			mime.setSentDate(new Date());
-			mime.saveChanges();
-			Assert.assertTrue(messageID.equals(mime.getMessageID()));
-		} finally {
-			IOUtils.closeQuietly(emlStream);
-		}
-	}
+            mime.setSentDate(new Date());
+            mime.saveChanges();
+            Assert.assertTrue(messageID.equals(mime.getMessageID()));
+        } finally {
+            IOUtils.closeQuietly(emlStream);
+        }
+    }
 
-	@Test
-	public void testUpdateMessageID_case2() throws Exception {
-		InputStream emlStream = null;
-		try {
-			emlStream = new FileInputStream(ResourceUtils.getFile("classpath:eml/test1_no_message_id.eml"));
-			AdvancedMimeMessage mime = new AdvancedMimeMessage(emlStream);
-			Assert.assertTrue(StringUtils.isEmpty(mime.getMessageID()));
+    @Test
+    public void testUpdateMessageID_case2() throws Exception {
+        InputStream emlStream = null;
+        try {
+            emlStream = new FileInputStream(ResourceUtils.getFile("classpath:eml/test1_no_message_id.eml"));
+            AdvancedMimeMessage mime = new AdvancedMimeMessage(emlStream);
+            Assert.assertTrue(StringUtils.isEmpty(mime.getMessageID()));
 
-			mime.setSentDate(new Date());
-			mime.saveChanges();
-			Assert.assertTrue(StringUtils.isNotEmpty(mime.getMessageID()));
-		} finally {
-			IOUtils.closeQuietly(emlStream);
-		}
-	}
+            mime.setSentDate(new Date());
+            mime.saveChanges();
+            Assert.assertTrue(StringUtils.isNotEmpty(mime.getMessageID()));
+        } finally {
+            IOUtils.closeQuietly(emlStream);
+        }
+    }
 }
