@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SendDelayData {
-	private boolean isUse;
-	private int delaySecond;
+    private boolean isUse;
+    private int delaySecond;
 }

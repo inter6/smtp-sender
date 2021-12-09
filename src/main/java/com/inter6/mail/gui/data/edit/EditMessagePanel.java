@@ -1,124 +1,118 @@
 package com.inter6.mail.gui.data.edit;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Vector;
-
-import javax.annotation.PostConstruct;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.inter6.mail.gui.action.LogPanel;
 import com.inter6.mail.gui.component.content.ContentPartPanel;
 import com.inter6.mail.gui.tab.TabComponentPanel;
 import com.inter6.mail.model.ContentType;
 import com.inter6.mail.model.data.edit.EditMessageData;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EditMessagePanel extends TabComponentPanel {
-	private static final long serialVersionUID = 3155803701798638117L;
+    private static final long serialVersionUID = 3155803701798638117L;
 
-	private LogPanel logPanel;
+    private LogPanel logPanel;
 
-	private final JComboBox<ContentType> rootTypeSelectBox = new JComboBox<>();
-	private ContentPartPanel rootPartPanel;
+    private final JComboBox<ContentType> rootTypeSelectBox = new JComboBox<>();
+    private ContentPartPanel rootPartPanel;
 
-	public EditMessagePanel(String tabName) {
-		super(tabName);
-	}
+    public EditMessagePanel(String tabName) {
+        super(tabName);
+    }
 
-	@PostConstruct
-	private void init() {
-		logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
+    @PostConstruct
+    private void init() {
+        logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
-		this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
-		JPanel selectPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		{
-			selectPanel.add(new JLabel("Content-Type: "));
-			this.rootTypeSelectBox.setModel(new DefaultComboBoxModel<>(this.getAvailableRootTypes()));
-			this.rootTypeSelectBox.addActionListener(this.createChangeRootTypeEvent());
-			selectPanel.add(this.rootTypeSelectBox);
-		}
-		this.add(selectPanel, BorderLayout.NORTH);
+        JPanel selectPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        {
+            selectPanel.add(new JLabel("Content-Type: "));
+            this.rootTypeSelectBox.setModel(new DefaultComboBoxModel<>(this.getAvailableRootTypes()));
+            this.rootTypeSelectBox.addActionListener(this.createChangeRootTypeEvent());
+            selectPanel.add(this.rootTypeSelectBox);
+        }
+        this.add(selectPanel, BorderLayout.NORTH);
 
-		try {
-			this.rootPartPanel = ContentPartPanel.createPanelByRoot(tabName, ContentType.MULTIPART_MIXED);
-			this.add(this.rootPartPanel, BorderLayout.CENTER);
-		} catch (Exception e) {
-			this.logPanel.error("create content panel fail ! - TYPE:" + ContentType.MULTIPART_MIXED, e);
-		}
-	}
+        try {
+            this.rootPartPanel = ContentPartPanel.createPanelByRoot(tabName, ContentType.MULTIPART_MIXED);
+            this.add(this.rootPartPanel, BorderLayout.CENTER);
+        } catch (Exception e) {
+            this.logPanel.error("create content panel fail ! - TYPE:" + ContentType.MULTIPART_MIXED, e);
+        }
+    }
 
-	private Vector<ContentType> getAvailableRootTypes() {
-		Vector<ContentType> childTypes = new Vector<>();
-		childTypes.add(ContentType.MULTIPART_MIXED);
-		childTypes.add(ContentType.MULTIPART_ALTERNATIVE);
-		childTypes.add(ContentType.MULTIPART_RELATED);
-		childTypes.add(ContentType.TEXT_PLAIN);
-		childTypes.add(ContentType.TEXT_HTML);
-		childTypes.add(ContentType.ATTACHMENT);
-		return childTypes;
-	}
+    private Vector<ContentType> getAvailableRootTypes() {
+        Vector<ContentType> childTypes = new Vector<>();
+        childTypes.add(ContentType.MULTIPART_MIXED);
+        childTypes.add(ContentType.MULTIPART_ALTERNATIVE);
+        childTypes.add(ContentType.MULTIPART_RELATED);
+        childTypes.add(ContentType.TEXT_PLAIN);
+        childTypes.add(ContentType.TEXT_HTML);
+        childTypes.add(ContentType.ATTACHMENT);
+        return childTypes;
+    }
 
-	private ActionListener createChangeRootTypeEvent() {
-		return new ActionListener() {
+    private ActionListener createChangeRootTypeEvent() {
+        return new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				EditMessagePanel.this.changeRootPartPanel();
-			}
-		};
-	}
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                EditMessagePanel.this.changeRootPartPanel();
+            }
+        };
+    }
 
-	private void changeRootPartPanel() {
-		ContentType currentType = this.rootPartPanel.getContentType();
-		ContentType selectType = (ContentType) this.rootTypeSelectBox.getSelectedItem();
-		if (currentType == selectType) {
-			return;
-		}
+    private void changeRootPartPanel() {
+        ContentType currentType = this.rootPartPanel.getContentType();
+        ContentType selectType = (ContentType) this.rootTypeSelectBox.getSelectedItem();
+        if (currentType == selectType) {
+            return;
+        }
 
-		try {
-			ContentPartPanel newPartPanel = ContentPartPanel.createPanelByRoot(tabName, selectType);
-			this.remove(this.rootPartPanel);
-			this.rootPartPanel = newPartPanel;
-			this.add(this.rootPartPanel, BorderLayout.CENTER);
-			this.getParent().getParent().validate();
-		} catch (Exception e) {
-			this.logPanel.error("create content panel fail ! - TYPE:" + selectType, e);
-		}
-	}
+        try {
+            ContentPartPanel newPartPanel = ContentPartPanel.createPanelByRoot(tabName, selectType);
+            this.remove(this.rootPartPanel);
+            this.rootPartPanel = newPartPanel;
+            this.add(this.rootPartPanel, BorderLayout.CENTER);
+            this.getParent().getParent().validate();
+        } catch (Exception e) {
+            this.logPanel.error("create content panel fail ! - TYPE:" + selectType, e);
+        }
+    }
 
-	public Object buildContentPart() throws Throwable {
-		return this.rootPartPanel.buildContentPart();
-	}
+    public Object buildContentPart() throws Throwable {
+        return this.rootPartPanel.buildContentPart();
+    }
 
-	public EditMessageData getEditMessageData() {
-		EditMessageData editMessageData = new EditMessageData();
-		editMessageData.setRootContentType((ContentType) this.rootTypeSelectBox.getSelectedItem());
-		editMessageData.setRootPartData(this.rootPartPanel.getPartData());
-		return editMessageData;
-	}
+    public EditMessageData getEditMessageData() {
+        EditMessageData editMessageData = new EditMessageData();
+        editMessageData.setRootContentType((ContentType) this.rootTypeSelectBox.getSelectedItem());
+        editMessageData.setRootPartData(this.rootPartPanel.getPartData());
+        return editMessageData;
+    }
 
-	public void setEditMessageData(EditMessageData editMessageData) {
-		if (editMessageData == null) {
-			return;
-		}
+    public void setEditMessageData(EditMessageData editMessageData) {
+        if (editMessageData == null) {
+            return;
+        }
 
-		// MARK 이전 버전 config 파일 호환
-		if (editMessageData.getRootContentType() != null) {
-			this.rootTypeSelectBox.setSelectedItem(editMessageData.getRootContentType());
-		}
-		this.changeRootPartPanel();
-		this.rootPartPanel.setPartData(editMessageData.getRootPartData());
-	}
+        // MARK 이전 버전 config 파일 호환
+        if (editMessageData.getRootContentType() != null) {
+            this.rootTypeSelectBox.setSelectedItem(editMessageData.getRootContentType());
+        }
+        this.changeRootPartPanel();
+        this.rootPartPanel.setPartData(editMessageData.getRootPartData());
+    }
 }

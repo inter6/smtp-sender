@@ -10,26 +10,26 @@ import java.util.Set;
  */
 public class StringUtilTest {
 
-	@Test
-	public void testSplitToSet_case1() throws Exception {
-		String input = "";
-		Set<String> result = StringUtil.splitToSet(input, ",");
-		Assert.assertTrue(result.isEmpty());
-	}
+    @Test
+    public void testSplitToSet_case1() throws Exception {
+        String input = "";
+        Set<String> result = StringUtil.splitToSet(input, ",");
+        Assert.assertTrue(result.isEmpty());
+    }
 
-	@Test
-	public void testSplitToSet_case2() throws Exception {
-		String input = ",";
-		Set<String> result = StringUtil.splitToSet(input, ",");
-		Assert.assertTrue(result.isEmpty());
-	}
+    @Test
+    public void testSplitToSet_case2() throws Exception {
+        String input = ",";
+        Set<String> result = StringUtil.splitToSet(input, ",");
+        Assert.assertTrue(result.isEmpty());
+    }
 
-	@Test
-	public void testSplitToSet_case3() throws Exception {
-		String input = "a,b,c";
-		Set<String> result = StringUtil.splitToSet(input, ",");
-		Assert.assertTrue(result.contains("a"));
-		Assert.assertTrue(result.contains("b"));
-		Assert.assertTrue(result.contains("c"));
-	}
+    @Test
+    public void testSplitToSet_case3() throws Exception {
+        String input = "a,b,c";
+        Set<String> result = StringUtil.splitToSet(input, ",");
+        Assert.assertTrue(result.contains("a"));
+        Assert.assertTrue(result.contains("b"));
+        Assert.assertTrue(result.contains("c"));
+    }
 }

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class DateData {
-	private boolean isUse;
-	private String text;
-	private boolean isNow;
+    private boolean isUse;
+    private String text;
+    private boolean isNow;
 }

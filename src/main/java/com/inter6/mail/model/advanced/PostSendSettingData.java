@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class PostSendSettingData {
-	private boolean isSaveEml;
-	private String saveEmlDir;
+    private boolean isSaveEml;
+    private String saveEmlDir;
 }

@@ -1,17 +1,16 @@
 package com.inter6.mail.model.component.content;
 
-import java.util.Collection;
-
+import com.inter6.mail.model.ContentType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import com.inter6.mail.model.ContentType;
+import java.util.Collection;
 
 @Getter
 @Setter
 @ToString
 public class PartData {
-	private ContentType contentType;
-	private Collection<PartData> childPartDatas;
+    private ContentType contentType;
+    private Collection<PartData> childPartDatas;
 }

@@ -1,14 +1,11 @@
 package com.inter6.mail.gui.component;
 
-import java.awt.FlowLayout;
+import com.inter6.mail.model.component.DateData;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import com.inter6.mail.model.component.DateData;
 
 public class DatePanel extends JPanel {
 	private static final long serialVersionUID = 4260562530907366011L;
