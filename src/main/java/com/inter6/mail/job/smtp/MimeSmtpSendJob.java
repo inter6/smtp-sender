@@ -133,8 +133,8 @@ public class MimeSmtpSendJob extends AbstractSmtpSendJob {
 	}*/
 
     @Override
-    public void terminate() throws InterruptedException {
-        // unsupport
+    public void terminate() {
+        // unsupported
     }
 
     @Override

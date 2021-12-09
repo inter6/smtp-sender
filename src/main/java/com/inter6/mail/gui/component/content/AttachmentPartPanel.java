@@ -15,7 +15,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Date;
@@ -98,26 +97,16 @@ public class AttachmentPartPanel extends ContentPartPanel {
     }
 
     private ActionListener createChangeDispositionEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                boolean isInline = "inline".equalsIgnoreCase((String) AttachmentPartPanel.this.dispositionOptionBox.getSelectedItem());
-                AttachmentPartPanel.this.typeNamePanel.setUse(!isInline);
-                AttachmentPartPanel.this.dispositionFilenamePanel.setUse(!isInline);
-                AttachmentPartPanel.this.contentIdUseCheckBox.setSelected(isInline);
-            }
+        return event -> {
+            boolean isInline = "inline".equalsIgnoreCase((String) AttachmentPartPanel.this.dispositionOptionBox.getSelectedItem());
+            AttachmentPartPanel.this.typeNamePanel.setUse(!isInline);
+            AttachmentPartPanel.this.dispositionFilenamePanel.setUse(!isInline);
+            AttachmentPartPanel.this.contentIdUseCheckBox.setSelected(isInline);
         };
     }
 
     private ActionListener createGenerateCidEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AttachmentPartPanel.this.setGenerateCid();
-            }
-        };
+        return event -> AttachmentPartPanel.this.setGenerateCid();
     }
 
     private void setGenerateCid() {
@@ -126,22 +115,18 @@ public class AttachmentPartPanel extends ContentPartPanel {
     }
 
     private ActionListener createAttachEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AppSession appSession = ModuleService.getBean(AppSession.class);
-                JFileChooser fileChooser = new JFileChooser(appSession.getLastSelectAttachDir());
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                if (fileChooser.showOpenDialog(AttachmentPartPanel.this) == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-                    if (file.isFile()) {
-                        AttachmentPartPanel.this.typeNamePanel.setText(file.getName());
-                        AttachmentPartPanel.this.dispositionFilenamePanel.setText(file.getName());
-                        AttachmentPartPanel.this.pathField.setText(file.getAbsolutePath());
-                        AttachmentPartPanel.this.typeField.setText(AttachmentPartPanel.this.getContentType(file));
-                        appSession.setLastSelectAttachDir(file.getParent());
-                    }
+        return event -> {
+            AppSession appSession = ModuleService.getBean(AppSession.class);
+            JFileChooser fileChooser = new JFileChooser(appSession.getLastSelectAttachDir());
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            if (fileChooser.showOpenDialog(AttachmentPartPanel.this) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                if (file.isFile()) {
+                    AttachmentPartPanel.this.typeNamePanel.setText(file.getName());
+                    AttachmentPartPanel.this.dispositionFilenamePanel.setText(file.getName());
+                    AttachmentPartPanel.this.pathField.setText(file.getAbsolutePath());
+                    AttachmentPartPanel.this.typeField.setText(AttachmentPartPanel.this.getContentType(file));
+                    appSession.setLastSelectAttachDir(file.getParent());
                 }
             }
         };
@@ -223,7 +208,7 @@ public class AttachmentPartPanel extends ContentPartPanel {
 
     @Override
     protected Vector<ContentType> getAvailableChildTypes(List<ContentPartPanel> addedChildPanels) {
-        // attach part can not hava childs.
+        // attach part can not have childs.
         return null;
     }
 }

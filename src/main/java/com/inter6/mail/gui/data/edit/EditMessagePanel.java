@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
@@ -65,13 +64,7 @@ public class EditMessagePanel extends TabComponentPanel {
     }
 
     private ActionListener createChangeRootTypeEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                EditMessagePanel.this.changeRootPartPanel();
-            }
-        };
+        return event -> EditMessagePanel.this.changeRootPartPanel();
     }
 
     private void changeRootPartPanel() {

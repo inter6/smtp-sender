@@ -16,7 +16,6 @@ import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @Component
@@ -83,35 +82,27 @@ public class ActionPanel extends TabComponentPanel implements ConfigObserver {
     }
 
     private ActionListener createStartEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-                try {
-                    ActionPanel.this.currentJob = dataPanel.getSendJob();
-                    new Thread(ActionPanel.this.currentJob).start();
-                } catch (Throwable e) {
-                    ActionPanel.this.logPanel.error("job build fail !", e);
-                }
+        return event -> {
+            try {
+                ActionPanel.this.currentJob = dataPanel.getSendJob();
+                new Thread(ActionPanel.this.currentJob).start();
+            } catch (Throwable e) {
+                ActionPanel.this.logPanel.error("job build fail !", e);
             }
         };
     }
 
     private ActionListener createStopEvent() {
-        return new ActionListener() {
+        return event -> {
+            if (ActionPanel.this.currentJob == null) {
+                return;
+            }
 
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-                if (ActionPanel.this.currentJob == null) {
-                    return;
-                }
-
-                try {
-                    ActionPanel.this.currentJob.terminate();
-                    ActionPanel.this.logPanel.info("request job terminate. wating...");
-                } catch (Throwable e) {
-                    ActionPanel.this.logPanel.error("job terminate fail !", e);
-                }
+            try {
+                ActionPanel.this.currentJob.terminate();
+                ActionPanel.this.logPanel.info("request job terminate. waiting...");
+            } catch (Throwable e) {
+                ActionPanel.this.logPanel.error("job terminate fail !", e);
             }
         };
     }

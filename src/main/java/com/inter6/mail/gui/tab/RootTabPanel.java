@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.io.IOException;
 
 @Component
 public class RootTabPanel extends JTabbedPane {
@@ -19,7 +18,7 @@ public class RootTabPanel extends JTabbedPane {
     private String activeTabName;
 
     @PostConstruct
-    private void init() throws IOException {
+    private void init() {
         for (int i = 0; i < 10; i++) {
             addTabPanel("tab" + i);
         }

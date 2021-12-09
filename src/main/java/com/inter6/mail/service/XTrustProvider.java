@@ -41,25 +41,22 @@ public class XTrustProvider extends Provider {
     private final static String NAME = "XTrustJSSE";
     private final static String INFO = "XTrust JSSE Provider (implements trust factory with truststore validation disabled)";
     private final static double VERSION = 1.0D;
+    private final static String ALGORITHM = "XTrust509";
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public XTrustProvider() {
         super(NAME, VERSION, INFO);
 
-        AccessController.doPrivileged(new PrivilegedAction() {
-
-            @Override
-            public Object run() {
-                XTrustProvider.this.put("TrustManagerFactory." + TrustManagerFactoryImpl.getAlgorithm(), TrustManagerFactoryImpl.class.getName());
-                return null;
-            }
+        AccessController.doPrivileged((PrivilegedAction) () -> {
+            XTrustProvider.this.put("TrustManagerFactory." + ALGORITHM, TrustManagerFactoryImpl.class.getName());
+            return null;
         });
     }
 
     public static void install() {
         if (Security.getProvider(NAME) == null) {
             Security.insertProviderAt(new XTrustProvider(), 2);
-            Security.setProperty("ssl.TrustManagerFactory.algorithm", TrustManagerFactoryImpl.getAlgorithm());
+            Security.setProperty("ssl.TrustManagerFactory.algorithm", ALGORITHM);
         }
     }
 
@@ -67,17 +64,13 @@ public class XTrustProvider extends Provider {
         public TrustManagerFactoryImpl() {
         }
 
-        public static String getAlgorithm() {
-            return "XTrust509";
-        }
-
         @Override
-        protected void engineInit(KeyStore keystore) throws KeyStoreException {
+        protected void engineInit(KeyStore keystore) {
             // do nothing !
         }
 
         @Override
-        protected void engineInit(ManagerFactoryParameters mgrparams) throws InvalidAlgorithmParameterException {
+        protected void engineInit(ManagerFactoryParameters params) throws InvalidAlgorithmParameterException {
             throw new InvalidAlgorithmParameterException(XTrustProvider.NAME + " does not use ManagerFactoryParameters");
         }
 

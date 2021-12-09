@@ -21,7 +21,7 @@ public abstract class AbstractSmtpSendMasterJob extends AbstractSmtpSendJob {
                 synchronized (this.workerLock) {
                     this.workers = new Workers();
                     this.workers.setPoolSize(this.actionData.getMaxThreadCount() / 2, this.actionData.getMaxThreadCount());
-                    this.workers.initailize(this.getClass().getName());
+                    this.workers.initialize(this.getClass().getName());
                 }
             }
             monitor.start();

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -38,9 +39,7 @@ public class SmtpService {
     }
 
     public static SmtpService createInstance(String host, int port, String connectType) {
-        SmtpService smtpService = new SmtpService();
-        smtpService.setHost(host, port, connectType);
-        return smtpService;
+        return new SmtpService().setHost(host, port, connectType);
     }
 
     public SmtpService setHost(String host, int port, String connectType) {
@@ -184,7 +183,7 @@ public class SmtpService {
     }
 
     private void writeMessage(Writer smtpWriter, InputStream messageStream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(messageStream, "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(messageStream, StandardCharsets.UTF_8));
         BufferedWriter bw = new BufferedWriter(smtpWriter);
         this.processHeader(br, bw);
         this.processBody(br, bw);

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @Component
@@ -79,28 +78,16 @@ public class ServerPanel extends TabComponentPanel implements ConfigObserver {
     }
 
     private ActionListener createHeloChangeEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                HeloType heloType = (HeloType) ServerPanel.this.heloTypeBox.getSelectedItem();
-                ServerPanel.this.heloDomainField.setEnabled(heloType != HeloType.NONE);
-            }
+        return event -> {
+            HeloType heloType = (HeloType) ServerPanel.this.heloTypeBox.getSelectedItem();
+            ServerPanel.this.heloDomainField.setEnabled(heloType != HeloType.NONE);
         };
     }
 
     private ActionListener createAuthChangeEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AuthOption authOption = (AuthOption) ServerPanel.this.authOptionBox.getSelectedItem();
-                if (authOption == AuthOption.NONE) {
-                    ServerPanel.this.setEnableAccountField(false);
-                } else {
-                    ServerPanel.this.setEnableAccountField(true);
-                }
-            }
+        return event -> {
+            AuthOption authOption = (AuthOption) ServerPanel.this.authOptionBox.getSelectedItem();
+            ServerPanel.this.setEnableAccountField(authOption != AuthOption.NONE);
         };
     }
 

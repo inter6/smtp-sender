@@ -3,7 +3,11 @@ package com.inter6.mail.model;
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient.AUTH_METHOD;
 
 public enum AuthOption {
-    NONE("NONE", null), PLAIN("PLAIN", AUTH_METHOD.PLAIN), LOGIN("LOGIN", AUTH_METHOD.LOGIN), CRAM_MD5("CRAM_MD5", AUTH_METHOD.CRAM_MD5), XOAUTH("XOAUTH", AUTH_METHOD.XOAUTH);
+    NONE("NONE", null),
+    PLAIN("PLAIN", AUTH_METHOD.PLAIN),
+    LOGIN("LOGIN", AUTH_METHOD.LOGIN),
+    CRAM_MD5("CRAM_MD5", AUTH_METHOD.CRAM_MD5),
+    XOAUTH("XOAUTH", AUTH_METHOD.XOAUTH);
 
     private String text;
     private AUTH_METHOD method;

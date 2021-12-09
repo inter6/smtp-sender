@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.util.Date;
 
@@ -57,37 +55,23 @@ public class LogPanel extends TabComponentPanel {
     }
 
     private ActionListener createAutoScrollCheckEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LogPanel.this.isAutoScroll = !LogPanel.this.isAutoScroll;
-            }
-        };
+        return event -> LogPanel.this.isAutoScroll = !LogPanel.this.isAutoScroll;
     }
 
     private AdjustmentListener createAutoScrollEvent() {
-        return new AdjustmentListener() {
-
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                if (!LogPanel.this.isAutoScroll) {
-                    return;
-                }
-                JScrollBar src = (JScrollBar) e.getSource();
-                src.setValue(src.getMaximum());
+        return event -> {
+            if (!LogPanel.this.isAutoScroll) {
+                return;
             }
+            JScrollBar src = (JScrollBar) event.getSource();
+            src.setValue(src.getMaximum());
         };
     }
 
     private ActionListener createClearEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                synchronized (LogPanel.this.appendLock) {
-                    LogPanel.this.logArea.setText("");
-                }
+        return event -> {
+            synchronized (LogPanel.this.appendLock) {
+                LogPanel.this.logArea.setText("");
             }
         };
     }

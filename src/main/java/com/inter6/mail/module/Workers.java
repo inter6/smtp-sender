@@ -38,7 +38,7 @@ public class Workers {
     private int keepAliveTime = 1;
     private TimeUnit timeUnit = TimeUnit.SECONDS;
 
-    public void initailize(final String workersName) {
+    public void initialize(final String workersName) {
         if (this.workerPoolExecutor != null) {
             throw new IllegalStateException("worker pool already initialized !");
         }

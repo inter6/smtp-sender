@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -51,32 +51,28 @@ public class MimeSourcePanel extends TabComponentPanel implements SendJobBuilder
     }
 
     private ActionListener createSaveEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                try {
-                    byte[] message = MimeSourcePanel.this.mimeArea.getText().getBytes("UTF-8");
-                    JFileChooser fileChooser = new JFileChooser();
-                    if (fileChooser.showSaveDialog(MimeSourcePanel.this) != JFileChooser.APPROVE_OPTION) {
-                        MimeSourcePanel.this.logPanel.info("save to eml cancel.");
-                        return;
-                    }
-                    File saveFile = fileChooser.getSelectedFile();
-                    FileUtils.writeByteArrayToFile(saveFile, message);
-                    MimeSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
-                } catch (Throwable e) {
-                    MimeSourcePanel.this.logPanel.error("save to eml fail !", e);
+        return event -> {
+            try {
+                byte[] message = MimeSourcePanel.this.mimeArea.getText().getBytes(StandardCharsets.UTF_8);
+                JFileChooser fileChooser = new JFileChooser();
+                if (fileChooser.showSaveDialog(MimeSourcePanel.this) != JFileChooser.APPROVE_OPTION) {
+                    MimeSourcePanel.this.logPanel.info("save to eml cancel.");
+                    return;
                 }
+                File saveFile = fileChooser.getSelectedFile();
+                FileUtils.writeByteArrayToFile(saveFile, message);
+                MimeSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
+            } catch (Throwable e) {
+                MimeSourcePanel.this.logPanel.error("save to eml fail !", e);
             }
         };
     }
 
     @Override
-    public AbstractSmtpSendJob buildSendJob() throws Throwable {
+    public AbstractSmtpSendJob buildSendJob() {
         MimeSmtpSendJob mimeSmtpSendJob = ModuleService.getBean(MimeSmtpSendJob.class);
         mimeSmtpSendJob.setTabName(tabName);
-        mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.mimeArea.getText().getBytes("UTF-8")));
+        mimeSmtpSendJob.setMessageStream(new ByteArrayInputStream(this.mimeArea.getText().getBytes(StandardCharsets.UTF_8)));
         return mimeSmtpSendJob;
     }
 }

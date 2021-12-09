@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TabComponentManager {
 
-    private MultiKeyMap tabComponents = new MultiKeyMap();
+    private MultiKeyMap<Object, Object> tabComponents = new MultiKeyMap<>();
 
     public <T extends TabComponent> T getTabComponent(String tabName, Class<T> type) {
         Object component = tabComponents.get(tabName, type.getName());

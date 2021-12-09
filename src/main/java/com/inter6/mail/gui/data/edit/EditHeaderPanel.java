@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,26 +69,18 @@ public class EditHeaderPanel extends TabComponentPanel {
     }
 
     private ActionListener createAddEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EditHeaderPanel.this.add(EditHeaderPanel.this.createHeaderPanel(), EditHeaderPanel.this.getComponentCount() - 1);
-                EditHeaderPanel.this.updateUI();
-            }
+        return event -> {
+            EditHeaderPanel.this.add(EditHeaderPanel.this.createHeaderPanel(), EditHeaderPanel.this.getComponentCount() - 1);
+            EditHeaderPanel.this.updateUI();
         };
     }
 
     private ActionListener createRemoveEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Container wrapPanel = ((JButton) e.getSource()).getParent();
-                EditHeaderPanel.this.headerPanels.remove(wrapPanel.getComponent(0));
-                EditHeaderPanel.this.remove(wrapPanel);
-                EditHeaderPanel.this.updateUI();
-            }
+        return event -> {
+            Container wrapPanel = ((JButton) event.getSource()).getParent();
+            EditHeaderPanel.this.headerPanels.remove(wrapPanel.getComponent(0));
+            EditHeaderPanel.this.remove(wrapPanel);
+            EditHeaderPanel.this.updateUI();
         };
     }
 

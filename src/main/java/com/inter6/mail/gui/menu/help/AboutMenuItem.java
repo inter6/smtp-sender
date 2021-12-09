@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class AboutMenuItem extends JMenuItem implements ActionListener {
@@ -31,7 +32,7 @@ public class AboutMenuItem extends JMenuItem implements ActionListener {
         InputStream msgStream = null;
         try {
             msgStream = ModuleService.getContext().getResource("message/about.msg").getInputStream();
-            TextViewDialog.createDialog(IOUtils.toString(msgStream)).setModal().setTitle("About smtp-sender").setSize(400, 600).show();
+            TextViewDialog.createDialog(IOUtils.toString(msgStream, StandardCharsets.UTF_8)).setModal().setTitle("About smtp-sender").setSize(400, 600).show();
         } catch (IOException e) {
             LogPanel logPanel = tabComponentManager.getActiveTabComponent(LogPanel.class);
             logPanel.error("read about message fail !", e);
