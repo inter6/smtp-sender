@@ -4,7 +4,6 @@ import com.inter6.mail.model.component.DateData;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class DatePanel extends JPanel {
@@ -31,13 +30,7 @@ public class DatePanel extends JPanel {
 	}
 
 	private ActionListener createNowEvent() {
-		return new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				DatePanel.this.textField.setEnabled(!DatePanel.this.nowCheckBox.isSelected());
-			}
-		};
+		return event -> DatePanel.this.textField.setEnabled(!DatePanel.this.nowCheckBox.isSelected());
 	}
 
 	public DateData getDateData() {

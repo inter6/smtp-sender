@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.*;
@@ -116,49 +115,35 @@ public class ScpSourcePanel extends TabComponentPanel implements SendJobBuilder,
     }
 
     private ActionListener createAddEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ScpSourcePanel.this.pathListModel.addElement(pathField.getText());
-            }
-        };
+        return event -> ScpSourcePanel.this.pathListModel.addElement(pathField.getText());
     }
 
     private ActionListener createRemoveEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (String path : ScpSourcePanel.this.pathList.getSelectedValuesList()) {
-                    ScpSourcePanel.this.pathListModel.removeElement(path);
-                }
+        return event -> {
+            for (String path : ScpSourcePanel.this.pathList.getSelectedValuesList()) {
+                ScpSourcePanel.this.pathListModel.removeElement(path);
             }
         };
     }
 
     private ActionListener createDedupAndSortEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (ScpSourcePanel.this.pathListModel.isEmpty()) {
-                    return;
-                }
-                Set<String> paths = new TreeSet<>();
-                for (int i = 0; i < ScpSourcePanel.this.pathListModel.size(); i++) {
-                    paths.add(ScpSourcePanel.this.pathListModel.get(i));
-                }
-                ScpSourcePanel.this.pathListModel.clear();
-                for (String path : paths) {
-                    ScpSourcePanel.this.pathListModel.addElement(path);
-                }
+        return event -> {
+            if (ScpSourcePanel.this.pathListModel.isEmpty()) {
+                return;
+            }
+            Set<String> paths = new TreeSet<>();
+            for (int i = 0; i < ScpSourcePanel.this.pathListModel.size(); i++) {
+                paths.add(ScpSourcePanel.this.pathListModel.get(i));
+            }
+            ScpSourcePanel.this.pathListModel.clear();
+            for (String path : paths) {
+                ScpSourcePanel.this.pathListModel.addElement(path);
             }
         };
     }
 
     @Override
-    public AbstractSmtpSendJob buildSendJob() throws Throwable {
+    public AbstractSmtpSendJob buildSendJob() {
         ScpSmtpSendJob scpSmtpSendJob = ModuleService.getBean(ScpSmtpSendJob.class);
         scpSmtpSendJob.setTabName(tabName);
         scpSmtpSendJob.setScpSourceData(this.getScpSourceData());

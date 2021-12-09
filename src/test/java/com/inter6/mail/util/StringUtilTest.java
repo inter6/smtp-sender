@@ -11,21 +11,21 @@ import java.util.Set;
 public class StringUtilTest {
 
     @Test
-    public void testSplitToSet_case1() throws Exception {
+    public void testSplitToSet_case1() {
         String input = "";
         Set<String> result = StringUtil.splitToSet(input, ",");
         Assert.assertTrue(result.isEmpty());
     }
 
     @Test
-    public void testSplitToSet_case2() throws Exception {
+    public void testSplitToSet_case2() {
         String input = ",";
         Set<String> result = StringUtil.splitToSet(input, ",");
         Assert.assertTrue(result.isEmpty());
     }
 
     @Test
-    public void testSplitToSet_case3() throws Exception {
+    public void testSplitToSet_case3() {
         String input = "a,b,c";
         Set<String> result = StringUtil.splitToSet(input, ",");
         Assert.assertTrue(result.contains("a"));

@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,28 +74,20 @@ public class EditAddressPanel extends TabComponentPanel {
     }
 
     private ActionListener createAddEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String type = (String) EditAddressPanel.this.typeOptionBox.getSelectedItem();
-                JPanel addressPanel = EditAddressPanel.this.createAddressPanel(type);
-                EditAddressPanel.this.add(addressPanel, EditAddressPanel.this.getComponentCount() - 1);
-                EditAddressPanel.this.updateUI();
-            }
+        return event -> {
+            String type = (String) EditAddressPanel.this.typeOptionBox.getSelectedItem();
+            JPanel addressPanel = EditAddressPanel.this.createAddressPanel(type);
+            EditAddressPanel.this.add(addressPanel, EditAddressPanel.this.getComponentCount() - 1);
+            EditAddressPanel.this.updateUI();
         };
     }
 
     private ActionListener createRemoveEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Container wrapPanel = ((JButton) e.getSource()).getParent();
-                EditAddressPanel.this.addressPanels.remove(wrapPanel.getComponent(0));
-                EditAddressPanel.this.remove(wrapPanel);
-                EditAddressPanel.this.updateUI();
-            }
+        return event -> {
+            Container wrapPanel = ((JButton) event.getSource()).getParent();
+            EditAddressPanel.this.addressPanels.remove(wrapPanel.getComponent(0));
+            EditAddressPanel.this.remove(wrapPanel);
+            EditAddressPanel.this.updateUI();
         };
     }
 

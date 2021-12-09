@@ -156,7 +156,7 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
 
                         if (scpSourceData.getSendDelayData().isUse()) {
                             mimeSmtpSendJob.execute();
-                            Thread.sleep(scpSourceData.getSendDelayData().getDelaySecond() * 1000);
+                            Thread.sleep(scpSourceData.getSendDelayData().getDelaySecond() * 1000L);
                         } else {
                             this.orderWorker(mimeSmtpSendJob);
                         }
@@ -200,10 +200,10 @@ public class ScpSmtpSendJob extends AbstractSmtpSendMasterJob {
                 sb.append((char) c);
             } while (c != '\n');
             if (b == 1) { // error
-                logPanel.error("access remote file fail ! - " + sb.toString(), null);
+                logPanel.error("access remote file fail ! - " + sb, null);
             }
             if (b == 2) { // fatal error
-                logPanel.error("access remote file fail ! - " + sb.toString(), null);
+                logPanel.error("access remote file fail ! - " + sb, null);
             }
         }
         return b;

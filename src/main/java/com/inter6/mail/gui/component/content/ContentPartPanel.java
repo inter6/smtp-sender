@@ -14,7 +14,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,13 +86,7 @@ public abstract class ContentPartPanel extends TabComponentPanel {
         return childPanels;
     }
 
-    private final ActionListener addChildEvent = new ActionListener() {
-
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            ContentPartPanel.this.addChildPanel((ContentType) ContentPartPanel.this.childTypeSelectBox.getSelectedItem());
-        }
-    };
+    private final ActionListener addChildEvent = event -> ContentPartPanel.this.addChildPanel((ContentType) ContentPartPanel.this.childTypeSelectBox.getSelectedItem());
 
     private ContentPartPanel addChildPanel(ContentType childType) {
         try {
@@ -181,35 +174,15 @@ public abstract class ContentPartPanel extends TabComponentPanel {
         }
 
         private ActionListener createUpEvent() {
-            return new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    ContentPartPanel.this.upChildPanel(ChildWrapPanel.this);
-                }
-
-            };
+            return event -> ContentPartPanel.this.upChildPanel(ChildWrapPanel.this);
         }
 
         private ActionListener createDownEvent() {
-            return new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    ContentPartPanel.this.downChildPanel(ChildWrapPanel.this);
-                }
-
-            };
+            return event -> ContentPartPanel.this.downChildPanel(ChildWrapPanel.this);
         }
 
         private ActionListener createRemoveEvent() {
-            return new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    ContentPartPanel.this.removeChildPanel(ChildWrapPanel.this);
-                }
-            };
+            return event -> ContentPartPanel.this.removeChildPanel(ChildWrapPanel.this);
         }
     }
 

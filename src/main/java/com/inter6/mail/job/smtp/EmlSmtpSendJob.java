@@ -33,7 +33,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
     private boolean isTerminated;
 
     @Override
-    protected void doMasterJob() throws Throwable {
+    protected void doMasterJob() {
         List<File> emlFiles = new ArrayList<>();
         LogPanel logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
@@ -70,7 +70,7 @@ public class EmlSmtpSendJob extends AbstractSmtpSendMasterJob {
 
                 if (emlSourceData.getSendDelayData().isUse()) {
                     mimeSmtpSendJob.execute();
-                    Thread.sleep(emlSourceData.getSendDelayData().getDelaySecond() * 1000);
+                    Thread.sleep(emlSourceData.getSendDelayData().getDelaySecond() * 1000L);
                 } else {
                     this.orderWorker(mimeSmtpSendJob);
                 }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @Component
@@ -77,20 +76,16 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
     }
 
     private ActionListener createSourceSelectChangeEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Object sourceButton = e.getSource();
-                if (sourceButton == DataPanel.this.editSourceButton) {
-                    DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, EditSourcePanel.class));
-                } else if (sourceButton == DataPanel.this.mimeSourceButton) {
-                    DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, MimeSourcePanel.class));
-                } else if (sourceButton == DataPanel.this.emlSourceButton) {
-                    DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, EmlSourcePanel.class));
-                } else if (sourceButton == DataPanel.this.scpSourceButton) {
-                    DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, ScpSourcePanel.class));
-                }
+        return event -> {
+            Object sourceButton = event.getSource();
+            if (sourceButton == DataPanel.this.editSourceButton) {
+                DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, EditSourcePanel.class));
+            } else if (sourceButton == DataPanel.this.mimeSourceButton) {
+                DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, MimeSourcePanel.class));
+            } else if (sourceButton == DataPanel.this.emlSourceButton) {
+                DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, EmlSourcePanel.class));
+            } else if (sourceButton == DataPanel.this.scpSourceButton) {
+                DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, ScpSourcePanel.class));
             }
         };
     }

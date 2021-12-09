@@ -26,7 +26,7 @@ public class AdvancedMimeMessageTest {
 
             mime.setSentDate(new Date());
             mime.saveChanges();
-            Assert.assertTrue(messageID.equals(mime.getMessageID()));
+            Assert.assertEquals(messageID, mime.getMessageID());
         } finally {
             IOUtils.closeQuietly(emlStream);
         }

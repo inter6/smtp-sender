@@ -42,12 +42,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -108,38 +108,30 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
     }
 
     private ActionListener createViewEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                try {
-                    byte[] message = EditSourcePanel.this.buildMessage();
-                    TextViewDialog.createDialog(new String(message, "UTF-8")).setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
-                } catch (Throwable e) {
-                    EditSourcePanel.this.logPanel.error("build mime fail !", e);
-                }
+        return event -> {
+            try {
+                byte[] message = EditSourcePanel.this.buildMessage();
+                TextViewDialog.createDialog(new String(message, StandardCharsets.UTF_8)).setModal().setTitle("View MIME text - smtp-sender").setSize(600, 600).show();
+            } catch (Throwable e) {
+                EditSourcePanel.this.logPanel.error("build mime fail !", e);
             }
         };
     }
 
     private ActionListener createSaveEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                try {
-                    byte[] message = EditSourcePanel.this.buildMessage();
-                    JFileChooser fileChooser = new JFileChooser();
-                    if (fileChooser.showSaveDialog(EditSourcePanel.this) != JFileChooser.APPROVE_OPTION) {
-                        EditSourcePanel.this.logPanel.info("save to eml cancel.");
-                        return;
-                    }
-                    File saveFile = fileChooser.getSelectedFile();
-                    FileUtils.writeByteArrayToFile(saveFile, message);
-                    EditSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
-                } catch (Throwable e) {
-                    EditSourcePanel.this.logPanel.error("save to eml fail !", e);
+        return event -> {
+            try {
+                byte[] message = EditSourcePanel.this.buildMessage();
+                JFileChooser fileChooser = new JFileChooser();
+                if (fileChooser.showSaveDialog(EditSourcePanel.this) != JFileChooser.APPROVE_OPTION) {
+                    EditSourcePanel.this.logPanel.info("save to eml cancel.");
+                    return;
                 }
+                File saveFile = fileChooser.getSelectedFile();
+                FileUtils.writeByteArrayToFile(saveFile, message);
+                EditSourcePanel.this.logPanel.info("save to eml success - FILE:" + saveFile);
+            } catch (Throwable e) {
+                EditSourcePanel.this.logPanel.error("save to eml fail !", e);
             }
         };
     }
@@ -154,9 +146,9 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
         } else if (contentPart instanceof MimeBodyPart) {
             MimeBodyPart bodyPart = (MimeBodyPart) contentPart;
             mimeMessage.setDataHandler(bodyPart.getDataHandler());
-            Enumeration headers = bodyPart.getAllHeaderLines();
+            Enumeration<String> headers = bodyPart.getAllHeaderLines();
             while (headers.hasMoreElements()) {
-                mimeMessage.addHeaderLine((String) headers.nextElement());
+                mimeMessage.addHeaderLine(headers.nextElement());
             }
         }
         mimeMessage.saveChanges();

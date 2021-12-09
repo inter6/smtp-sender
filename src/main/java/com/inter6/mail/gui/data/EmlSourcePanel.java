@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
@@ -82,60 +81,48 @@ public class EmlSourcePanel extends TabComponentPanel implements SendJobBuilder,
     }
 
     private ActionListener createAddEvent() {
-        return new ActionListener() {
+        return event -> {
+            JFileChooser fileChooser = new JFileChooser(EmlSourcePanel.this.appSession.getLastSelectSourceDir());
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            if (fileChooser.showOpenDialog(EmlSourcePanel.this) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                EmlSourcePanel.this.fileListModel.addElement(file.getAbsolutePath());
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser(EmlSourcePanel.this.appSession.getLastSelectSourceDir());
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                if (fileChooser.showOpenDialog(EmlSourcePanel.this) == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-                    EmlSourcePanel.this.fileListModel.addElement(file.getAbsolutePath());
-
-                    File dir = file;
-                    if (dir.isFile()) {
-                        dir = dir.getParentFile();
-                    }
-                    EmlSourcePanel.this.appSession.setLastSelectSourceDir(dir.getAbsolutePath());
+                File dir = file;
+                if (dir.isFile()) {
+                    dir = dir.getParentFile();
                 }
+                EmlSourcePanel.this.appSession.setLastSelectSourceDir(dir.getAbsolutePath());
             }
         };
     }
 
     private ActionListener createRemoveEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (String file : EmlSourcePanel.this.fileList.getSelectedValuesList()) {
-                    EmlSourcePanel.this.fileListModel.removeElement(file);
-                }
+        return event -> {
+            for (String file : EmlSourcePanel.this.fileList.getSelectedValuesList()) {
+                EmlSourcePanel.this.fileListModel.removeElement(file);
             }
         };
     }
 
     private ActionListener createDedupAndSortEvent() {
-        return new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (EmlSourcePanel.this.fileListModel.isEmpty()) {
-                    return;
-                }
-                Set<String> files = new TreeSet<>();
-                for (int i = 0; i < EmlSourcePanel.this.fileListModel.size(); i++) {
-                    files.add(EmlSourcePanel.this.fileListModel.get(i));
-                }
-                EmlSourcePanel.this.fileListModel.clear();
-                for (String file : files) {
-                    EmlSourcePanel.this.fileListModel.addElement(file);
-                }
+        return event -> {
+            if (EmlSourcePanel.this.fileListModel.isEmpty()) {
+                return;
+            }
+            Set<String> files = new TreeSet<>();
+            for (int i = 0; i < EmlSourcePanel.this.fileListModel.size(); i++) {
+                files.add(EmlSourcePanel.this.fileListModel.get(i));
+            }
+            EmlSourcePanel.this.fileListModel.clear();
+            for (String file : files) {
+                EmlSourcePanel.this.fileListModel.addElement(file);
             }
         };
     }
 
     @Override
-    public AbstractSmtpSendJob buildSendJob() throws Throwable {
+    public AbstractSmtpSendJob buildSendJob() {
         EmlSmtpSendJob emlSmtpSendJob = ModuleService.getBean(EmlSmtpSendJob.class);
         emlSmtpSendJob.setTabName(tabName);
         emlSmtpSendJob.setEmlSourceData(this.getEmlSourceData());

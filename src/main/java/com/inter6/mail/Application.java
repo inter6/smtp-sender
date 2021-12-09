@@ -18,13 +18,11 @@ public class Application {
 
     public static void main(String[] args) {
         log.info("application start");
-        ConfigurableApplicationContext context = null;
-        try {
-            context = new SpringApplicationBuilder(Application.class)
-                    .registerShutdownHook(true)
-                    .headless(false)
-                    .bannerMode(Banner.Mode.OFF)
-                    .run(args);
+        try (ConfigurableApplicationContext context = new SpringApplicationBuilder(Application.class)
+                .registerShutdownHook(true)
+                .headless(false)
+                .bannerMode(Banner.Mode.OFF)
+                .run(args)) {
             log.debug("load beans list - " + ArrayUtils.toString(context.getBeanDefinitionNames()));
 
             XTrustProvider.install();
@@ -38,9 +36,6 @@ public class Application {
             log.error("occurred application kill !", e);
         } finally {
             log.info("application exit");
-            if (context != null) {
-                context.close();
-            }
         }
     }
 

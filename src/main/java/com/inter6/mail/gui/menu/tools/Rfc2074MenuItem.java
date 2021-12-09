@@ -69,35 +69,27 @@ public class Rfc2074MenuItem extends JMenuItem implements ActionListener {
         }
 
         private ActionListener createEncodeAction() {
-            return new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent event) {
-                    try {
-                        String encodeText = MimeUtility.encodeWord(StringUtils.defaultIfEmpty(Rfc2074Dialog.this.decodeTextArea.getText(), ""), StringUtils.defaultIfBlank(Rfc2074Dialog.this.charsetField.getText(), "UTF-8"), (String) Rfc2074Dialog.this.encodingOptionBox.getSelectedItem());
-                        Rfc2074Dialog.this.encodeTextArea.setText(encodeText);
-                    } catch (Throwable e) {
-                        JOptionPane.showMessageDialog(Rfc2074Dialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "Encoding fail !", JOptionPane.ERROR_MESSAGE);
-                    }
+            return event -> {
+                try {
+                    String encodeText = MimeUtility.encodeWord(StringUtils.defaultIfEmpty(Rfc2074Dialog.this.decodeTextArea.getText(), ""), StringUtils.defaultIfBlank(Rfc2074Dialog.this.charsetField.getText(), "UTF-8"), (String) Rfc2074Dialog.this.encodingOptionBox.getSelectedItem());
+                    Rfc2074Dialog.this.encodeTextArea.setText(encodeText);
+                } catch (Throwable e) {
+                    JOptionPane.showMessageDialog(Rfc2074Dialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "Encoding fail !", JOptionPane.ERROR_MESSAGE);
                 }
             };
         }
 
         private ActionListener createDecodeAction() {
-            return new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent event) {
-                    try {
-                        String encodeText = StringUtils.defaultIfEmpty(Rfc2074Dialog.this.encodeTextArea.getText(), "");
-                        String decodeText = encodeText;
-                        if (encodeText.startsWith("=?")) {
-                            decodeText = MimeUtility.decodeWord(encodeText);
-                        }
-                        Rfc2074Dialog.this.decodeTextArea.setText(decodeText);
-                    } catch (Throwable e) {
-                        JOptionPane.showMessageDialog(Rfc2074Dialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "Decoding fail !", JOptionPane.ERROR_MESSAGE);
+            return event -> {
+                try {
+                    String encodeText = StringUtils.defaultIfEmpty(Rfc2074Dialog.this.encodeTextArea.getText(), "");
+                    String decodeText = encodeText;
+                    if (encodeText.startsWith("=?")) {
+                        decodeText = MimeUtility.decodeWord(encodeText);
                     }
+                    Rfc2074Dialog.this.decodeTextArea.setText(decodeText);
+                } catch (Throwable e) {
+                    JOptionPane.showMessageDialog(Rfc2074Dialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "Decoding fail !", JOptionPane.ERROR_MESSAGE);
                 }
             };
         }

@@ -78,7 +78,7 @@ public class TextPartPanel extends ContentPartPanel {
 
     @Override
     protected Vector<ContentType> getAvailableChildTypes(List<ContentPartPanel> addedChildPanels) {
-        // text part can not hava childs.
+        // text part can not have childs.
         return null;
     }
 }
