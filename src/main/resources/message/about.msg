@@ -1,9 +1,12 @@
-smtp-sender v1.2.2 (released: 15/12/18)
+smtp-sender v1.2.3 (released: 21/12/10)
 
 Developer: inter6 <inter6@inter6.com>
 Repository: https://github.com/inter6/smtp-sender
 
 Release History
+
+v1.2.3
+- Fix gradle config
 
 v1.2.2
 - Custom HELO command
