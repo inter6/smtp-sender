@@ -23,12 +23,9 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
     @Autowired
     private AppConfig appConfig;
 
-    private EnvelopePanel envelopePanel;
-
     private final JRadioButton editSourceButton = new JRadioButton("Editor");
     private final JRadioButton mimeSourceButton = new JRadioButton("MIME");
     private final JRadioButton emlSourceButton = new JRadioButton("EML");
-    private final JRadioButton scpSourceButton = new JRadioButton("SCP");
     private final JPanel sourceInputPanel = new JPanel(new BorderLayout());
     private SendJobBuilder selectedJobBuilder;
 
@@ -38,14 +35,12 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
 
     @PostConstruct
     private void init() {
-        envelopePanel = tabComponentManager.getTabComponent(tabName, EnvelopePanel.class);
         tabComponentManager.getTabComponent(tabName, EditSourcePanel.class);
         tabComponentManager.getTabComponent(tabName, MimeSourcePanel.class);
         tabComponentManager.getTabComponent(tabName, EmlSourcePanel.class);
-        tabComponentManager.getTabComponent(tabName, ScpSourcePanel.class);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.add(envelopePanel);
+        this.add(tabComponentManager.getTabComponent(tabName, EnvelopePanel.class));
 
         JPanel sourcePanel = new JPanel(new BorderLayout());
         {
@@ -55,17 +50,14 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
                 this.editSourceButton.addActionListener(sourceSelectChangeEvent);
                 this.mimeSourceButton.addActionListener(sourceSelectChangeEvent);
                 this.emlSourceButton.addActionListener(sourceSelectChangeEvent);
-                this.scpSourceButton.addActionListener(sourceSelectChangeEvent);
                 sourceSelectPanel.add(this.editSourceButton);
                 sourceSelectPanel.add(this.mimeSourceButton);
                 sourceSelectPanel.add(this.emlSourceButton);
-                sourceSelectPanel.add(this.scpSourceButton);
 
                 ButtonGroup sourceSelectGroup = new ButtonGroup();
                 sourceSelectGroup.add(this.editSourceButton);
                 sourceSelectGroup.add(this.mimeSourceButton);
                 sourceSelectGroup.add(this.emlSourceButton);
-                sourceSelectGroup.add(this.scpSourceButton);
 
                 this.editSourceButton.doClick();
             }
@@ -84,8 +76,6 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
                 DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, MimeSourcePanel.class));
             } else if (sourceButton == DataPanel.this.emlSourceButton) {
                 DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, EmlSourcePanel.class));
-            } else if (sourceButton == DataPanel.this.scpSourceButton) {
-                DataPanel.this.setSourcePanel(tabComponentManager.getTabComponent(tabName, ScpSourcePanel.class));
             }
         };
     }
@@ -110,8 +100,6 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
             this.mimeSourceButton.doClick();
         } else if ("eml".equals(sourcePanel)) {
             this.emlSourceButton.doClick();
-        } else if ("scp".equals(sourcePanel)) {
-            this.scpSourceButton.doClick();
         } else {
             this.editSourceButton.doClick();
         }
@@ -126,8 +114,6 @@ public class DataPanel extends TabComponentPanel implements ConfigObserver {
             selectType = "mime";
         } else if (this.emlSourceButton.isSelected()) {
             selectType = "eml";
-        } else if (this.scpSourceButton.isSelected()) {
-            selectType = "scp";
         } else {
             selectType = "edit";
         }
