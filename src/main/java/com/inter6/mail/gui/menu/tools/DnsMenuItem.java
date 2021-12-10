@@ -39,15 +39,19 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
         private static final long serialVersionUID = -8148265075267497887L;
 
         private final JTextField searchHostField = new JTextField(30);
+        private final JCheckBox typeACheckBox = new JCheckBox(org.xbill.DNS.Type.string(org.xbill.DNS.Type.A), true);
+        private final JCheckBox typeCNameCheckBox = new JCheckBox(org.xbill.DNS.Type.string(org.xbill.DNS.Type.CNAME), true);
+        private final JCheckBox typeMXCheckBox = new JCheckBox(org.xbill.DNS.Type.string(org.xbill.DNS.Type.MX), true);
+        private final JCheckBox typeTXTCheckBox = new JCheckBox(org.xbill.DNS.Type.string(org.xbill.DNS.Type.TXT), true);
         private final JCheckBox serverUseCheckBox = new JCheckBox("DNS Server: ");
         private final JTextField serverIpField = new JTextField("8.8.8.8", 20);
         private final JTextField serverPortField = new JTextField("53", 5);
-        private final JTextArea resultArea = new JTextArea(9, 30);
+        private final JTextArea resultArea = new JTextArea(30, 30);
 
         private DnsDialog() {
             super(ModuleService.getBean(MainFrame.class));
             this.setTitle("DNS Query");
-            this.setSize(600, 300);
+            this.setSize(600, 500);
             this.setResizable(false);
             this.initLayout();
         }
@@ -67,6 +71,15 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
                     targetPanel.add(queryButton);
                 }
                 wrapPanel.add(targetPanel);
+
+                JPanel typePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                {
+                    typePanel.add(this.typeACheckBox);
+                    typePanel.add(this.typeCNameCheckBox);
+                    typePanel.add(this.typeMXCheckBox);
+                    typePanel.add(this.typeTXTCheckBox);
+                }
+                wrapPanel.add(typePanel);
 
                 JPanel serverPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 {
@@ -93,20 +106,32 @@ public class DnsMenuItem extends JMenuItem implements ActionListener {
                         if (DnsDialog.this.serverUseCheckBox.isSelected()) {
                             resolver.setAddress(new InetSocketAddress(DnsDialog.this.serverIpField.getText(), Integer.parseInt(DnsDialog.this.serverPortField.getText())));
                         }
-                        this.queryDns(searchHost, "A", resolver);
-                        this.queryDns(searchHost, "MX", resolver);
+
+                        if (typeACheckBox.isSelected()) {
+                            queryDns(searchHost, org.xbill.DNS.Type.A, resolver);
+                        }
+                        if (typeCNameCheckBox.isSelected()) {
+                            queryDns(searchHost, org.xbill.DNS.Type.CNAME, resolver);
+                        }
+                        if (typeMXCheckBox.isSelected()) {
+                            queryDns(searchHost, org.xbill.DNS.Type.MX, resolver);
+                        }
+                        if (typeTXTCheckBox.isSelected()) {
+                            queryDns(searchHost, org.xbill.DNS.Type.TXT, resolver);
+                        }
+                        resultArea.append("-----\n");
                     } catch (Throwable e) {
                         JOptionPane.showMessageDialog(DnsDialog.this, e.getClass().getSimpleName() + " - " + e.getMessage(), "DNS Query fail !", JOptionPane.ERROR_MESSAGE);
                     }
                 }
 
-                private void queryDns(String searchHost, String type, SimpleResolver resolver) {
+                private void queryDns(String searchHost, int type, SimpleResolver resolver) {
                     try {
-                        Lookup lookup = new Lookup(searchHost, org.xbill.DNS.Type.value(type));
+                        Lookup lookup = new Lookup(searchHost, type);
                         lookup.setResolver(resolver);
                         Record[] records = lookup.run();
                         if (ArrayUtils.isEmpty(records)) {
-                            DnsDialog.this.resultArea.append("not found " + type + " record of " + searchHost + "\n");
+                            DnsDialog.this.resultArea.append("not found " + org.xbill.DNS.Type.string(type) + " record of " + searchHost + "\n");
                             return;
                         }
                         for (Record record : lookup.run()) {
