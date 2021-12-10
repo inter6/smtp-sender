@@ -8,6 +8,7 @@ import com.inter6.mail.gui.component.DatePanel;
 import com.inter6.mail.gui.component.EncodingTextPanel;
 import com.inter6.mail.gui.component.TextViewDialog;
 import com.inter6.mail.gui.data.edit.EditAddressPanel;
+import com.inter6.mail.gui.data.edit.EditDkimPanel;
 import com.inter6.mail.gui.data.edit.EditHeaderPanel;
 import com.inter6.mail.gui.data.edit.EditMessagePanel;
 import com.inter6.mail.gui.tab.TabComponentPanel;
@@ -63,6 +64,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
 
     private EditAddressPanel editAddressPanel;
     private EditHeaderPanel editHeaderPanel;
+    private EditDkimPanel editDkimPanel;
     private EditMessagePanel editMessagePanel;
     private LogPanel logPanel;
 
@@ -77,6 +79,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
     private void init() {
         editAddressPanel = tabComponentManager.getTabComponent(tabName, EditAddressPanel.class);
         editHeaderPanel = tabComponentManager.getTabComponent(tabName, EditHeaderPanel.class);
+        editDkimPanel = tabComponentManager.getTabComponent(tabName, EditDkimPanel.class);
         editMessagePanel = tabComponentManager.getTabComponent(tabName, EditMessagePanel.class);
         logPanel = tabComponentManager.getTabComponent(tabName, LogPanel.class);
 
@@ -89,6 +92,7 @@ public class EditSourcePanel extends TabComponentPanel implements SendJobBuilder
             wrapPanel.add(this.datePanel);
             wrapPanel.add(this.editAddressPanel);
             wrapPanel.add(this.editHeaderPanel);
+            wrapPanel.add(this.editDkimPanel);
             wrapPanel.add(this.editMessagePanel);
         }
         this.add(wrapPanel, BorderLayout.CENTER);
